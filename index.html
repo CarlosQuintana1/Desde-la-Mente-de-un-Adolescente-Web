@@ -1,257 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
-    
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="DLMDUA">
-    <meta name="description" content="Esta pagina es sobre el podcast Desde la Mente de un Adolescente.">
-    <title>dmadolescente</title>
+    <meta name="description" content="Podcast Desde la Mente de un Adolescente - Entrevistando a Mentes Brillantes">
+    <title>Desde la Mente de un Adolescente</title>
     <link rel="icon" href="dm.png" type="image/x-icon">
-    <link rel="stylesheet" href="main.css" type="text/css">
-    <!-- <link rel="stylesheet" href="main2.css" type="text/css"> -->
+    <link rel="stylesheet" href="main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700;800;900&family=Lexend:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-logo">
+            <img src="assets/img/dm.png" alt="Logo DMA">
+            <span>DM Adolescente</span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#episodios">Episodios</a></li>
+            <li><a href="#acercadma">Acerca</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
 
-    <!-- <header id="home">
-        <a href="#iniciame"><img src="assets/img/dm.png" alt="Logo DMA" width="60" height="60"></a>
-        <nav>
-            <b>
-            <a target="_blank" id="episodios" href="episodios.html">Episodios ></a>
-            <a id="acercadma" href="#acercadma">Acerca DMA</a>
-            <a id="nosotros" href="#nosotros">Nosotros ></a>
-            </b>
-        </nav>
-    </header> -->
-        
     <main>
-        <article class="hero">
+        <section class="hero" id="inicio">
             <div class="hero-content">
-            <h1>Desde la Mente de un Adolescente</h1>
-            <p class="subtitulo">"Entrevistando a Mentes Brillantes"</p>
-            <a target="_blank" href="https://open.spotify.com/show/0aOMar0gio93MweMk2YNJT?si=4220a05c2ae2481e"><button class="btn-reproducir">▶ Reproducir</button></a>
-                <div class="botones-secundarios">
-                <a href="#episodios-content"><button>Episodios</button></a>
-                <a href="#acercadma-content"><button>Acerca DMA</button></a>
-                <button>Nosotros</button>
+                <h1>Desde la Mente de un Adolescente</h1>
+                <p class="subtitulo">"Entrevistando a Mentes Brillantes"</p>
+                <div class="hero-buttons">
+                    <a href="https://open.spotify.com/show/0aOMar0gio93MweMk2YNJT?si=4220a05c2ae2481e" target="_blank" rel="noopener">
+                        <button class="btn-primary">▶ Reproducir</button>
+                    </a>
+                    <a href="#episodios">
+                        <button class="btn-secondary">Ver Episodios</button>
+                    </a>
+                    <a href="#acercadma">
+                        <button class="btn-secondary">Acerca de DMA</button>
+                    </a>
                 </div>
             </div>
-        </article>
+            <div class="scroll-indicator">
+                <span></span>
+            </div>
+        </section>
 
-        <article class="acercadma">
-            <div id="acercadma-content">
+        <section class="acercadma" id="acercadma">
+            <div class="acercadma-content">
                 <span>¿Qué es Desde la Mente de un Adolescente?</span>
                 <p>Desde la Mente de un Adolescente es un podcast creado por Carlos Quintana, donde se realizan entrevistas a personas destacadas en diversas áreas. El objetivo es explorar sus pensamientos, experiencias y consejos para inspirar a la audiencia.</p>
             </div>
-        </article>
+        </section>
 
-    <article class="episodios">
-        <div id="episodios-content">
-            <h1>Episodios</h1>
+        <section class="episodios" id="episodios">
+            <div class="episodios-header">
+                <h1>Episodios</h1>
+            </div>
             <div class="episodios-grid">
                 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep10.png" alt="Episodio 10">
-                    <div class="episodio-titulo">Dedicar tu vida a la Química</div>
-                    <span class="nombres">Nina Padme</span>
-                    <span class="descrip">•Destacada mujer mexicana en el campo de la química y la ciencia. 
-                    <p class="descrip2">•Miembro de The New York Academy of Sciences.</p>
-                    <p id="cursiva"> "No solo contemples, crea, no aguardes, lidera. Altera lo inesperado y desata una revolución dejando huella en cada acción".</p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/ninapadme/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/3VsUCQ1OCVqEosjfWMpRGd?si=7d462b3581554dff"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-qu%C3%ADmica-nina-padme/id1726697685?i=1000660379256"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Química</h3>
+                        <span class="nombres">Nina Padme</span>
+                        <span class="descrip">•Destacada mujer mexicana en el campo de la química y la ciencia.<span class="descrip2">•Miembro de The New York Academy of Sciences.</span></span>
+                        <span id="cursiva">"No solo contemples, crea, no aguardes, lidera."</span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/ninapadme/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/3VsUCQ1OCVqEosjfWMpRGd?si=7d462b3581554dff" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-qu%C3%ADmica-nina-padme/id1726697685?i=1000660379256" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep9.png" alt="Episodio 9">
-                    <div class="episodio-titulo">Dedicar tu vida <br>a  los <br> Semiconductores</div>
-                    <span class="nombres">Dr. Ricardo Lozano</span>
-                    <span class="descrip">•Ingeniero Mecatrónico.
-                    <span class="descrip2">•Doctor en dispositivos semiconductores. </span>
-                    <p class="descrip2">Esta entrevista nos brinda una profunda mirada a la vida y carrera de un profesional dedicado y apasionado, ofreciéndonos valiosas lecciones para quienes deseen seguir una carrera en la ciencia.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/ricardo.lozanor/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/7LOza7GoGV3uPwCFJ9ncFT?si=0f803a13a9034456"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-los-semiconductores-dr-ricardo-lozano/id1726697685?i=1000656235514"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a los Semiconductores</h3>
+                        <span class="nombres">Dr. Ricardo Lozano</span>
+                        <span class="descrip">•Ingeniero Mecatrónico.<span class="descrip2">•Doctor en dispositivos semiconductores.</span><span class="descrip2">Esta entrevista nos brinda una profunda mirada a la vida y carrera de un profesional dedicado y apasionado.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/ricardo.lozanor/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/7LOza7GoGV3uPwCFJ9ncFT?si=0f803a13a9034456" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-los-semiconductores-dr-ricardo-lozano/id1726697685?i=1000656235514" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep8.png" alt="Episodio 8">
-                    <div class="episodio-titulo">Dedicar tu vida a la Biología Marina</div>
-                    <span class="nombres">Allison Centeno</span>
-                    <span class="descrip">•Bióloga Marina.
-                    <span  class="descrip2">•Divulgadora a través de Bióloga Ilustrada.
-                    <p class="descrip 2">Nos comparte sus consejos y un increíble mensaje para aquellos que aspiran a ser Biólogos Marinos, subrayando la importancia de la perseverancia y la dedicación en un campo tan competitivo como este.  
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/biologa_ilustrada/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/2r5ro5l2VqU3rCPL9mr19u?si=ed131188e69a465c"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-biolog%C3%ADa-marina-allison-centeno/id1726697685?i=1000655232951"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Biología Marina</h3>
+                        <span class="nombres">Allison Centeno</span>
+                        <span class="descrip">•Bióloga Marina.<span class="descrip2">•Divulgadora a través de Bióloga Ilustrada.</span><span class="descrip2">Nos comparte sus consejos y un increíble mensaje para quienes aspiran a ser Biólogos Marinos.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/biologa_ilustrada/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/2r5ro5l2VqU3rCPL9mr19u?si=ed131188e69a465c" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-biolog%C3%ADa-marina-allison-centeno/id1726697685?i=1000655232951" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep7.png" alt="Episodio 7">
-                    <div class="episodio-titulo">Dedicar tu vida a la Astrofísica</div>
-                    <span class="nombres">Tomás Fuentes</span>
-                    <span class="descrip">•Licenciado en Astrofísica.
-                    <span class="descrip2">•Actualmente cursando el doctorado en Física.
-                    <p class="descrip2"> Descubrimos qué lo inspiró a convertirse en astrofísico, explorando las experiencias que despertaron su curiosidad por el Universo, así como los retos y decisiones más importantes que cambiaron su vida. </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/astrotomi/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/47cB9LWYGkpBvL46UECyt3?si=14a5738a79f042c6"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-astrof%C3%ADsica-tom%C3%A1s-fuentes/id1726697685?i=1000653156518"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Astrofísica</h3>
+                        <span class="nombres">Tomás Fuentes</span>
+                        <span class="descrip">•Licenciado en Astrofísica.<span class="descrip2">•Actualmente cursando el doctorado en Física.</span><span class="descrip2">Descubrimos qué lo inspiró a convertirse en astrofísico y las experiencias que despertaron su curiosidad por el Universo.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/astrotomi/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/47cB9LWYGkpBvL46UECyt3?si=14a5738a79f042c6" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-astrof%C3%ADsica-tom%C3%A1s-fuentes/id1726697685?i=1000653156518" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep6.png" alt="Episodio 6">
-                    <div class="episodio-titulo">Dedicar tu vida a la Biotecnología</div>
-                    <span class="nombres">Jazmín Soto</span>
-                    <span class="descrip">•Ingeniera en Biotecnología.
-                    <span class="descrip2">•Maestra en Ciencias Químico Biológicas.
-                    <p class="descrip2">Nos habla desde el por qué decidió estudiar Biotecnología, qué es, a qué se puede dedicar un Biotecnólogo y los colores en los que se divide.</p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/jaz_soto_science/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/0zjiNwHUzuw9vpW6ozvORS?si=8494e84f74e84ec6"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-biotecnolog%C3%ADa-jazm%C3%ADn-soto/id1726697685?i=1000642393520"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Biotecnología</h3>
+                        <span class="nombres">Jazmín Soto</span>
+                        <span class="descrip">•Ingeniera en Biotecnología.<span class="descrip2">•Maestra en Ciencias Químico Biológicas.</span><span class="descrip2">Nos habla desde el por qué decidió estudiar Biotecnología, qué es y a qué se puede dedicar.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/jaz_soto_science/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/0zjiNwHUzuw9vpW6ozvORS?si=8494e84f74e84ec6" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/us/podcast/dedicar-tu-vida-a-la-biotecnolog%C3%ADa-jazm%C3%ADn-soto/id1726697685?i=1000642393520" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep5.png" alt="Episodio 5">
-                    <div class="episodio-titulo">Dedicar tu vida a la Aeronáutica</div>
-                    <span class="nombres">Ximena Jovana</span>
-                    <span class="descrip">•Estudiante de Aeronáutica en Manufactura en la UNAQ
-                    •Líder de NASA Space Apps Querétaro
-                    <p class="descrip2">Nos habla desde cómo nació su interés por la divulgación científica, el haber sido aceptada en Quantum CuaT's, impartir talleres, conferencias y charlas.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/ximena.jovana/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/05uwzcqSuKgXdpqeDicHuu?si=caa5f03a6977492c"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-aeron%C3%A1utica-ximena-jovana/id1726697685?i=1000642293620"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Aeronáutica</h3>
+                        <span class="nombres">Ximena Jovana</span>
+                        <span class="descrip">•Estudiante de Aeronáutica en Manufactura en la UNAQ<span class="descrip2">•Líder de NASA Space Apps Querétaro</span><span class="descrip2">Nos habla desde cómo nació su interés por la divulgación científica.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/ximena.jovana/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/05uwzcqSuKgXdpqeDicHuu?si=caa5f03a6977492c" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-aeron%C3%A1utica-ximena-jovana/id1726697685?i=1000642293620" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep4.png" alt="Episodio 4">
-                    <div class="episodio-titulo">Dedicar tu vida al Cine</div>
-                    <span class="nombres">Antonio Jiménez</span>
-                    <span class="descrip">•Cineasta. Guionista, director y productor. <br>
-                    •Fundador de la @escuelalibredecine
-                    •Director de “Revueltas, la película
-                    <p class="descrip2">"Queretano de nacimiento más no de costumbres". <br> <br>
-                    Nos habla desde el quién es, su trabajo, la historia de la creación de PAIDEIA y la Escuela Libre de Cine.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/escuelalibredecine/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/3cRNdgwQLnKc0mQcP7EgVC?si=65e812e49e6b454c"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-al-cine-antonio-jim%C3%A9nez/id1726697685?i=1000642293537"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida al Cine</h3>
+                        <span class="nombres">Antonio Jiménez</span>
+                        <span class="descrip">•Cineasta. Guionista, director y productor.<span class="descrip2">•Fundador de la @escuelalibredecine</span><span class="descrip2">"Queretano de nacimiento más no de costumbres".</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/escuelalibredecine/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/3cRNdgwQLnKc0mQcP7EgVC?si=65e812e49e6b454c" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-al-cine-antonio-jim%C3%A9nez/id1726697685?i=1000642293537" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep3.png" alt="Episodio 3">
-                    <div class="episodio-titulo">Dedicar tu vida a la Divulgación Astronómica</div>
-                    <span class="nombres">Aletta Casazza</span>
-                    <span class="descrip">•Presidenta del Club Astronómico de Querétaro
-                    <p class="descrip2">Nos habla desde el cómo llegó a convertirse en presidente del club, las actividades que realiza, aprender mediante enseñar, el cómo contactar a personas con el fin de compartir su experiencia y conocimientos mediante conferencias.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/alettacasazza/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/5PN7Pogwc89eN6LVMdVA2H?si=4e68405623504081"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-divulgaci%C3%B3n-astron%C3%B3mica-aletta/id1726697685?i=1000642293719"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Divulgación Astronómica</h3>
+                        <span class="nombres">Aletta Casazza</span>
+                        <span class="descrip">•Presidenta del Club Astronómico de Querétaro<span class="descrip2">Nos habla desde el cómo llegó a convertirse en presidente del club y las actividades que realiza.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/alettacasazza/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/5PN7Pogwc89eN6LVMdVA2H?si=4e68405623504081" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-divulgaci%C3%B3n-astron%C3%B3mica-aletta/id1726697685?i=1000642293719" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep2.png" alt="Episodio 2">
-                    <div class="episodio-titulo">Dedicar tu vida <br> a la <br> Nanotecnología</div>
-                    <span class="nombres">Dr. Yosemik León</span>
-                    <span class="descrip">•Director del Instituto de Nanotecnología Aplicada
-                    •Egresado de la <br> primera generación  de nanotecnólogos en <br> América Latina
-                    <p class="descrip2">Nos habla desde el descubrir y estudiar la Nanotecnología a la creación del INA.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/inabenano/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/1hSqyjz988DVKkjK8nkXX4?si=59d1c55729944508"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-nanotecnolog%C3%ADa-dr-yosemik-le%C3%B3n/id1726697685?i=1000642293652"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Nanotecnología</h3>
+                        <span class="nombres">Dr. Yosemik León</span>
+                        <span class="descrip">•Director del Instituto de Nanotecnología Aplicada<span class="descrip2">•Egresado de la primera generación de nanotecnólogos en América Latina</span><span class="descrip2">Nos habla desde el descubrir y estudiar la Nanotecnología a la creación del INA.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/inabenano/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/1hSqyjz988DVKkjK8nkXX4?si=59d1c55729944508" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-nanotecnolog%C3%ADa-dr-yosemik-le%C3%B3n/id1726697685?i=1000642293652" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
-                <div class="episodio-card">
+                <article class="episodio-card">
                     <img class="episodio-img" src="assets/img/ep1.png" alt="Episodio 1">
-                    <div class="episodio-titulo">Dedicar tu vida a la Biología</div>
-                    <span class="nombres">Lupita Chávez <br> Hernández</span>
-                    <span class="descrip">•Bióloga egresada de la UNAM <br>
-                    •MSc (QMUL-Kew Gardens)
-                    <p class="descrip2">Nos habla desde el por qué decidió estudiar biología, el descubrir nuevas especies, tener una conexión especial con alguna de ellas, hasta el dedicar su vida a lo que más le gusta.
-                    </p>
-                    <div id="logos">
-                    <a target="_blank" href="https://www.instagram.com/lupitabiolover/"><img src="assets/img/instagram.png" alt="instagram" width="35" height="35"></a>
-                    <a target="_blank" href="https://open.spotify.com/episode/1rJqB4Qc10RKSt8jjpCCy1?si=65043858b5634054"><img src="assets/img/spotify.png" alt="spotify" width="35" height="35"></a>
-                    <a target="_blank" href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-biolog%C3%ADa-lupita-ch%C3%A1vez/id1726697685?i=1000642293558"><img src="assets/img/applepodcast.png" alt="applepodcast" width="35" height="35"></a>
+                    <div class="episodio-info">
+                        <h3 class="episodio-titulo">Dedicar tu vida a la Biología</h3>
+                        <span class="nombres">Lupita Chávez Hernández</span>
+                        <span class="descrip">•Bióloga egresada de la UNAM<span class="descrip2">•MSc (QMUL-Kew Gardens)</span><span class="descrip2">Nos habla desde el por qué decidió estudiar biología hasta el dedicar su vida a lo que más le gusta.</span></span>
+                        <div class="episodio-links">
+                            <a href="https://www.instagram.com/lupitabiolover/" target="_blank" rel="noopener" aria-label="Instagram">
+                                <img src="assets/img/instagram.png" alt="Instagram" width="20" height="20">
+                            </a>
+                            <a href="https://open.spotify.com/episode/1rJqB4Qc10RKSt8jjpCCy1?si=65043858b5634054" target="_blank" rel="noopener" aria-label="Spotify">
+                                <img src="assets/img/spotify.png" alt="Spotify" width="20" height="20">
+                            </a>
+                            <a href="https://podcasts.apple.com/mx/podcast/dedicar-tu-vida-a-la-biolog%C3%ADa-lupita-ch%C3%A1vez/id1726697685?i=1000642293558" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+                                <img src="assets/img/applepodcast.png" alt="Apple Podcasts" width="20" height="20">
+                            </a>
+                        </div>
                     </div>
-                    </span>
-                </div>
+                </article>
 
             </div>
-        </div>
-    </article>
-        
-    <!-- <table>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-        </tr>
-        <tr>
-            <td>Nicolas</td>
-            <td>Schurmann</td>
-        </tr>
-        <tr>
-            <td>Chanchito</td>
-            <td>Feliz</td>
-        </tr>
-        <tr>
-            <td>Felipe</td>
-            <td>Triste</td>
-        </tr>
-    </table> -->
-
-        <!-- <h2 id="h2fontmain">Episodios</h2>
-        <div class="forma"></div> -->
-
+        </section>
     </main>
     
-   <footer>
-        <section>
-        &copy; 2025 Desde la Mente de un Adolescente. Todos los derechos reservados.
-
-        <a id="contactame" href="#contacto">Contactame</a>
-        <a id="iniciame" href="#home">Inicio</a>
-        </section>
+    <footer id="contacto">
+        <div class="footer-content">
+            <p>&copy; 2025 Desde la Mente de un Adolescente. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#episodios">Episodios</a>
+                <a href="#acercadma">Acerca</a>
+            </div>
+        </div>
     </footer>
-    
-</body>
 
+    <script>
+        const navbar = document.getElementById('navbar');
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
 </html>
