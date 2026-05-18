@@ -1,0 +1,32 @@
+{
+  "name": "desde-la-mente-de-un-adolescente-web",
+  "version": "1.0.0",
+  "description": "Repositorio del Proyecto: Desarrollo del sitio web del podcast \"Desde la Mente de un Adolescente\"",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlosQuintana1/Desde-la-Mente-de-un-Adolescente-Web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/CarlosQuintana1/Desde-la-Mente-de-un-Adolescente-Web/issues"
+  },
+  "homepage": "https://github.com/CarlosQuintana1/Desde-la-Mente-de-un-Adolescente-Web#readme",
+  "dependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.0.13"
+  }
+}
