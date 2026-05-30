@@ -8,7 +8,7 @@ function RouterGuard() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (pathname.endsWith('episodios.html') || pathname.endsWith('episodios')) {
+    if (pathname.endsWith('episodios.html')) {
       navigate('/episodios', { replace: true });
     }
   }, [pathname, navigate]);

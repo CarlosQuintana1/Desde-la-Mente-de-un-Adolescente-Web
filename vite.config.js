@@ -4,11 +4,13 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    allowedHosts: true,
+  },
   build: {
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        episodios: resolve(__dirname, 'episodios.html'),
       },
     },
   },

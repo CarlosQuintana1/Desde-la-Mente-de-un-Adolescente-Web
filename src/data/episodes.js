@@ -1,7 +1,7 @@
 export const episodes = [
   {
     number: '10',
-    img: 'assets/img/ep10.png',
+    img: '/assets/img/ep10.webp',
     alt: 'Nina Padme - Química',
     category: 'Ciencia · Química',
     title: 'Dedicar tu vida a la Química',
@@ -16,7 +16,7 @@ export const episodes = [
   },
   {
     number: '09',
-    img: 'assets/img/ep9.png',
+    img: '/assets/img/ep9.webp',
     alt: 'Dr. Ricardo Lozano - Semiconductores',
     category: 'Tecnología · Semiconductores',
     title: 'Dedicar tu vida a los Semiconductores',
@@ -30,7 +30,7 @@ export const episodes = [
   },
   {
     number: '08',
-    img: 'assets/img/ep8.png',
+    img: '/assets/img/ep8.webp',
     alt: 'Allison Centeno - Biología Marina',
     category: 'Ciencia · Biología Marina',
     title: 'Dedicar tu vida a la Biología Marina',
@@ -44,7 +44,7 @@ export const episodes = [
   },
   {
     number: '07',
-    img: 'assets/img/ep7.png',
+    img: '/assets/img/ep7.webp',
     alt: 'Tomás Fuentes - Astrofísica',
     category: 'Ciencia · Astrofísica',
     title: 'Dedicar tu vida a la Astrofísica',
@@ -58,7 +58,7 @@ export const episodes = [
   },
   {
     number: '06',
-    img: 'assets/img/ep6.png',
+    img: '/assets/img/ep6.webp',
     alt: 'Jazmín Soto - Biotecnología',
     category: 'Ciencia · Biotecnología',
     title: 'Dedicar tu vida a la Biotecnología',
@@ -72,7 +72,7 @@ export const episodes = [
   },
   {
     number: '05',
-    img: 'assets/img/ep5.png',
+    img: '/assets/img/ep5.webp',
     alt: 'Ximena Jovana - Aeronáutica',
     category: 'Tecnología · Aeronáutica',
     title: 'Dedicar tu vida a la Aeronáutica',
@@ -86,7 +86,7 @@ export const episodes = [
   },
   {
     number: '04',
-    img: 'assets/img/ep4.png',
+    img: '/assets/img/ep4.webp',
     alt: 'Antonio Jiménez - Cine',
     category: 'Arte · Cine',
     title: 'Dedicar tu vida al Cine',
@@ -100,7 +100,7 @@ export const episodes = [
   },
   {
     number: '03',
-    img: 'assets/img/ep3.png',
+    img: '/assets/img/ep3.webp',
     alt: 'Aletta Casazza - Divulgación Astronómica',
     category: 'Ciencia · Astronomía',
     title: 'Dedicar tu vida a la Divulgación Astronómica',
@@ -114,7 +114,7 @@ export const episodes = [
   },
   {
     number: '02',
-    img: 'assets/img/ep2.png',
+    img: '/assets/img/ep2.webp',
     alt: 'Dr. Yosemik León - Nanotecnología',
     category: 'Tecnología · Nanotecnología',
     title: 'Dedicar tu vida a la Nanotecnología',
@@ -128,7 +128,7 @@ export const episodes = [
   },
   {
     number: '01',
-    img: 'assets/img/ep1.png',
+    img: '/assets/img/ep1.webp',
     alt: 'Lupita Chávez Hernández - Biología',
     category: 'Ciencia · Biología',
     title: 'Dedicar tu vida a la Biología',

@@ -1,0 +1,5 @@
+# robots.txt for Desde la Mente de un Adolescente
+User-agent: *
+Allow: /
+
+Sitemap: https://desdelamentedeunadolescente.com/sitemap.xml

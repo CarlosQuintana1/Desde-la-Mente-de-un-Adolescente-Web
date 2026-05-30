@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useScrollTo } from '../hooks/useScrollTo';
 import { SCROLL } from '../data/constants';
+import './Navbar.css';
+
 
 const navItems = [
   { sectionId: 'acercadma', label: 'Acerca' },
   { sectionId: 'episodios', label: 'Episodios' },
+  { sectionId: 'contacto', label: 'Contacto' },
   { sectionId: 'escuchar', label: 'Escuchar', cta: true },
 ];
 
@@ -19,13 +22,16 @@ function NavLink({ sectionId, label, onScroll }) {
       </a>
     );
   }
-  return <Link to={`/#${sectionId}`}>{label}</Link>;
+  return <Link to={`/#${sectionId}`} viewTransition>{label}</Link>;
 }
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollTo = useScrollTo();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > SCROLL.threshold);
@@ -33,17 +39,25 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
+  const toggleMenu = () => {
+    setMenuOpen((prev) => {
+      const next = !prev;
+      document.body.style.overflow = next ? 'hidden' : '';
+      return next;
+    });
+  };
 
-  const handleScroll = (id) => scrollTo(id, { onNav: () => setMenuOpen(false) });
+  const handleScroll = (id) => scrollTo(id, { 
+    onNav: () => {
+      setMenuOpen(false);
+      document.body.style.overflow = '';
+    } 
+  });
 
   return (
-    <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
-      <Link className="navbar-logo" to="/">
-        <img src="assets/img/dm.png" alt="Logo DM Adolescente" />
+    <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}`}>
+      <Link className="navbar-logo" to="/" viewTransition>
+        <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
         <span>DM <span className="highlight">Adolescente</span></span>
       </Link>
       <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
@@ -53,14 +67,15 @@ export default function Navbar() {
           </li>
         ))}
       </ul>
-      <div
+      <button
+        type="button"
         className={`nav-toggle${menuOpen ? ' active' : ''}`}
-        onClick={() => setMenuOpen((v) => !v)}
+        onClick={toggleMenu}
         aria-label="Menú"
         aria-expanded={menuOpen}
       >
         <span /><span /><span />
-      </div>
+      </button>
     </nav>
   );
 }

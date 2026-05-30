@@ -1,0 +1,71 @@
+/* EPISODES SECTION STRUCTURE */
+.episodios {
+  padding: 2rem 3rem 8rem;
+}
+
+.episodios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  max-width: var(--content-max-width);
+  margin: 0 auto 4rem;
+  gap: 2rem;
+}
+
+.episodios-header-left h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 700;
+  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.episodios-header-left .count {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+.episodios-header-left p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.episodios-header-right {
+  flex-shrink: 0;
+}
+
+.episodios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+.episodios-grid > * {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}
+
+/* RESPONSIVE EPISODES STRUCTURE */
+@media (max-width: 1024px) {
+  .episodios-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .episodios {
+    padding: 1.5rem 1.5rem 5rem;
+  }
+
+  .episodios-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .episodios-grid {
+    grid-template-columns: 1fr;
+  }
+}

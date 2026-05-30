@@ -27,12 +27,12 @@ export const GLOW = {
 };
 
 export const TILT = {
-  maxAngle: 4,
-  perspective: 600,
-  lift: 6,
+  maxAngle: 2,
+  perspective: 1000,
+  lift: 2,
 };
 
 export const SCROLL = {
   threshold: 80,
-  rootMargin: '-80px',
+  rootMargin: '-20px',
 };

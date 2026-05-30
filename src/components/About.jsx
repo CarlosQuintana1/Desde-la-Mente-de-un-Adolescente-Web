@@ -1,5 +1,7 @@
 import { useInView } from '../hooks/useInView';
 import { fadeUp } from '../utils/classNames';
+import './About.css';
+
 
 export default function About() {
   const [ref, visible] = useInView();

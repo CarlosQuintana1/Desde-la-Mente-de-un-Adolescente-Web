@@ -3,6 +3,8 @@ import { episodes } from '../data/episodes';
 import { useInView } from '../hooks/useInView';
 import { fadeUp } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
+import './Episodes.css';
+
 
 export default function Episodes() {
   const [ref, visible] = useInView();
@@ -15,7 +17,7 @@ export default function Episodes() {
           <p>Cada conversación, una nueva perspectiva.</p>
         </div>
         <div className="episodios-header-right">
-          <Link to="/episodios" className="btn-secondary">Ver todos →</Link>
+          <Link to="/episodios" viewTransition className="btn-secondary">Ver todos →</Link>
         </div>
       </div>
 

@@ -1,0 +1,74 @@
+/* ABOUT SECTION */
+.acercadma {
+  padding: 8rem 3rem 4rem;
+  position: relative;
+}
+
+.acercadma-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.acercadma-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 1.5rem;
+}
+
+.acercadma-content h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.acercadma-content h2 .accent {
+  color: var(--accent-light);
+}
+
+.acercadma-content p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.acercadma-host {
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.acercadma-host .line {
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.acercadma-host span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.acercadma-host strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* RESPONSIVE ABOUT */
+@media (max-width: 768px) {
+  .acercadma {
+    padding: 5rem 1.5rem 3rem;
+  }
+}

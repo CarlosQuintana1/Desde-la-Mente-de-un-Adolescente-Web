@@ -1,5 +1,15 @@
 import { useRef, useCallback } from 'react';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
+import ScienceIcon from './icons/ScienceIcon';
+import TechIcon from './icons/TechIcon';
+import ArtIcon from './icons/ArtIcon';
+import './EpisodeCard.css';
+
+const CATEGORY_CONFIG = {
+  Ciencia: { className: 'episodio-category episodio-category-ciencia', icon: <ScienceIcon /> },
+  Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <TechIcon /> },
+  Arte: { className: 'episodio-category episodio-category-arte', icon: <ArtIcon /> },
+};
 
 export default function EpisodeCard({ ep, index, sectionVisible }) {
   const wrapperRef = useRef(null);
@@ -38,6 +48,25 @@ export default function EpisodeCard({ ep, index, sectionVisible }) {
     }, TIMING.tiltResetDelay);
   }, []);
 
+  const renderCategoryBadge = (category) => {
+    let config = { className: "episodio-category", icon: null };
+    
+    if (category.startsWith('Ciencia')) {
+      config = CATEGORY_CONFIG.Ciencia;
+    } else if (category.startsWith('Tecnología')) {
+      config = CATEGORY_CONFIG.Tecnologia;
+    } else if (category.startsWith('Arte')) {
+      config = CATEGORY_CONFIG.Arte;
+    }
+
+    return (
+      <span className={config.className}>
+        {config.icon}
+        {category}
+      </span>
+    );
+  };
+
   const stagger = (index % 4) + 1;
 
   return (
@@ -53,25 +82,25 @@ export default function EpisodeCard({ ep, index, sectionVisible }) {
         className="episodio-card"
         ref={cardRef}
       >
-        <div className="episodio-img-wrap">
+        <div className="episodio-img-wrap" style={{ aspectRatio: '1 / 1' }}>
           <span className="episodio-number">EP {ep.number}</span>
-          <img className="episodio-img" src={ep.img} alt={ep.alt} loading="lazy" />
+          <img className="episodio-img" src={ep.img} alt={ep.alt} loading="lazy" width={400} height={400} style={{ aspectRatio: '1 / 1', objectFit: 'cover' }} />
         </div>
         <div className="episodio-info">
-          <span className="episodio-category">{ep.category}</span>
+          {renderCategoryBadge(ep.category)}
           <h3 className="episodio-titulo">{ep.title}</h3>
           <span className="episodio-nombres">{ep.name}</span>
           <span className="episodio-descrip">{ep.desc}</span>
           {ep.quote && <span className="episodio-cita">{ep.quote}</span>}
           <div className="episodio-links">
             <a href={ep.links.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <img src="assets/img/instagram.png" alt="Instagram" />
+              <img src="/assets/img/instagram.webp" alt="Instagram" width={18} height={18} />
             </a>
             <a href={ep.links.spotify} target="_blank" rel="noopener noreferrer" aria-label="Spotify">
-              <img src="assets/img/spotify.png" alt="Spotify" />
+              <img src="/assets/img/spotify.webp" alt="Spotify" width={18} height={18} />
             </a>
             <a href={ep.links.apple} target="_blank" rel="noopener noreferrer" aria-label="Apple Podcasts">
-              <img src="assets/img/applepodcast.png" alt="Apple Podcasts" />
+              <img src="/assets/img/applepodcast.webp" alt="Apple Podcasts" width={18} height={18} />
             </a>
           </div>
         </div>
