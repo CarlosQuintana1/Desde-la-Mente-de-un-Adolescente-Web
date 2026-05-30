@@ -1,71 +1,426 @@
-/* EPISODES SECTION STRUCTURE */
+/* EPISODES MAIN SECTION */
 .episodios {
-  padding: 2rem 3rem 8rem;
-}
-
-.episodios-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  max-width: var(--content-max-width);
-  margin: 0 auto 4rem;
-  gap: 2rem;
-}
-
-.episodios-header-left h2 {
-  font-family: var(--font-primary);
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 700;
-  font-variation-settings: 'SOFT' 50, 'WONK' 0;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
-}
-
-.episodios-header-left .count {
-  color: var(--accent-light);
-  font-weight: 600;
-}
-
-.episodios-header-left p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-.episodios-header-right {
-  flex-shrink: 0;
-}
-
-.episodios-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  padding: 4rem 3rem 8rem;
   max-width: var(--content-max-width);
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
-.episodios-grid > * {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 480px;
+/* SECTION HEADERS & LINE WRAPPERS */
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
-/* RESPONSIVE EPISODES STRUCTURE */
+.section-title-wrap .line {
+  flex-grow: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+}
+
+.section-tag-title {
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-light);
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid var(--border-strong);
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.05);
+}
+
+/* 1. FEATURED ÚLTIMO EPISODIO CARD */
+.ultimo-episodio-section {
+  margin-bottom: 6rem;
+}
+
+.ultimo-episodio-card {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3rem;
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 3rem;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.ultimo-episodio-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.08);
+}
+
+
+
+.ultimo-img-wrap {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ultimo-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ultimo-episodio-card:hover .ultimo-img-wrap img {
+  transform: scale(1.06);
+}
+
+.ultimo-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ultimo-titulo {
+  font-family: var(--font-primary);
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.ultimo-titulo .highlight {
+  color: var(--accent-light);
+  background: linear-gradient(120deg, var(--text-primary) 0%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ultimo-desc {
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.ultimo-cita {
+  font-family: var(--font-secondary);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-muted);
+  border-left: 3px solid var(--accent-light);
+  padding-left: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.ultimo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ultimo-actions .btn-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #ffffff;
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+}
+
+.ultimo-actions .btn-play:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px var(--accent-glow);
+}
+
+.ultimo-actions .btn-play-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.ultimo-actions .episodio-links {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+.ultimo-actions .episodio-links a {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm); /* Matches the rounded-square shape of the other cards */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ultimo-actions .episodio-links a:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+}
+
+.ultimo-actions .episodio-links a img {
+  width: 24px; /* Enlarged for maximum visibility and visual weight! */
+  height: 24px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.ultimo-actions .episodio-links a:hover img {
+  transform: scale(1.15);
+}
+
+/* 2. RECENT EPISODES CAROUSEL SLIDER */
+.recientes-section {
+  position: relative;
+}
+
+.recientes-header {
+  margin-bottom: 2.5rem;
+}
+
+.recientes-header h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 -2.5rem;
+}
+
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  flex-grow: 1;
+  padding: 1.5rem 2.5rem;
+}
+
+/* PREMIUM ATMOSPHERIC EDGE BLUR-FADES */
+.carousel-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4rem; /* Soft gradient width over horizontal padding */
+  height: 100%;
+  background: linear-gradient(to right, var(--bg-primary) 30%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.carousel-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 100%;
+  background: linear-gradient(to left, var(--bg-primary) 30%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  align-items: stretch; /* Level the cards perfectly in height! */
+  padding-bottom: 0.5rem;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.carousel-item {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-item > * {
+  height: 100%;
+}
+
+/* FLOATING SIDE NAVIGATION ARROWS */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(26, 27, 58, 0.95);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  font-size: 1.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  box-shadow: var(--shadow);
+  padding-bottom: 4px; /* Align arrow vertically */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.carousel-arrow:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-light);
+  color: var(--accent-light);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+}
+
+.carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-arrow.btn-prev {
+  left: 0.5rem;
+}
+
+.carousel-arrow.btn-next {
+  right: 0.5rem;
+}
+
+.recientes-view-all {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.recientes-view-all .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.recientes-view-all .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--accent-light);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVE LAYOUT */
 @media (max-width: 1024px) {
-  .episodios-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  .episodios {
+    padding: 3rem 2rem 6rem;
+  }
+  
+  .ultimo-episodio-card {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .carousel-wrapper {
+    margin: 0 -1.5rem; /* Safe narrower margin for medium laptops */
+  }
+
+  .carousel-container {
+    padding: 1.5rem 1.5rem;
+  }
+
+  .carousel-container::before,
+  .carousel-container::after {
+    width: 3rem; /* Slightly narrower mask for medium screen widths */
   }
 }
 
 @media (max-width: 768px) {
   .episodios {
-    padding: 1.5rem 1.5rem 5rem;
+    padding: 2rem 1.5rem 5rem;
   }
 
-  .episodios-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .episodios-grid {
+  .ultimo-episodio-card {
     grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+  }
+
+
+
+  .ultimo-img-wrap {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .recientes-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .carousel-wrapper {
+    margin: 0 -1.5rem;
+  }
+
+  .carousel-container {
+    padding: 1rem 0;
+  }
+
+  .carousel-arrow {
+    display: none; /* Hide arrows on mobile touch swipe */
+  }
+
+  .carousel-track {
+    padding: 0 1.5rem 0.5rem;
+  }
+
+  .carousel-item {
+    flex: 0 0 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ultimo-actions {
+    flex-direction: column;
+  }
+  
+  .ultimo-actions a {
+    width: 100%;
+    justify-content: center;
   }
 }

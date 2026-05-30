@@ -13,7 +13,7 @@ const EMAIL_REGEX = /\S+@\S+\.\S+/;
 const ContactFormContext = createContext(null);
 
 export function ContactFormProvider({ children }) {
-  const [ref, visible] = useInView();
+  const [ref, visible] = useInView({ rootMargin: '0px 0px -150px 0px', threshold: 0.15 });
   const [formState, setFormState] = useState({
     nombre: '',
     email: '',

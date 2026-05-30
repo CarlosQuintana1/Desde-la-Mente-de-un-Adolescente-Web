@@ -28,16 +28,41 @@ function NavLink({ sectionId, label, onScroll }) {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
   const scrollTo = useScrollTo();
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > SCROLL.threshold);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateNavbar = () => {
+      const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > SCROLL.threshold);
+
+      // Hide on scroll down past 120px, reveal on scroll up
+      if (currentScrollY > lastScrollY && currentScrollY > 120 && !menuOpen) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+      }
+      
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [menuOpen]);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => {
@@ -55,7 +80,7 @@ export default function Navbar() {
   });
 
   return (
-    <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}`}>
+    <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}`}>
       <Link className="navbar-logo" to="/" viewTransition>
         <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
         <span>DM <span className="highlight">Adolescente</span></span>

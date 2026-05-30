@@ -294,6 +294,10 @@
 }
 
 @media (max-width: 768px) {
+  .hero::before {
+    background-image: url('/assets/img/fondoDM.webp');
+  }
+
   .hero-scroll {
     display: none;
   }

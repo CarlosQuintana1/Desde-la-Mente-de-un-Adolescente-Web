@@ -38,6 +38,12 @@
   /* Inherits everything from .navbar, kept for class reference compatibility */
 }
 
+.navbar.navbar-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .navbar-logo {
   display: flex;
   align-items: center;
