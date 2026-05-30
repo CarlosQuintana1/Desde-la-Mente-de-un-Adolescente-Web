@@ -45,7 +45,7 @@
 }
 
 .episodio-card:hover .episodio-img {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 
 .episodio-number {

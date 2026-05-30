@@ -267,3 +267,16 @@ body {
     opacity: 1;
   }
 }
+
+/* Dynamic content scaling for premium aesthetics on larger monitors */
+@media (min-width: 1440px) {
+  :root {
+    --content-max-width: 1320px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --content-max-width: 1440px;
+  }
+}

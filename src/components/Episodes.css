@@ -80,7 +80,7 @@
 }
 
 .ultimo-episodio-card:hover .ultimo-img-wrap img {
-  transform: scale(1.06);
+  transform: scale(1.02);
 }
 
 .ultimo-info {
@@ -137,7 +137,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  background: linear-gradient(135deg, var(--accent), #4f46e5);
   color: #ffffff;
   padding: 0.8rem 1.8rem;
   border-radius: 50px;
@@ -203,7 +203,7 @@
 }
 
 .recientes-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .recientes-header h2 {
@@ -224,7 +224,7 @@
   overflow: hidden;
   position: relative;
   flex-grow: 1;
-  padding: 1.5rem 2.5rem;
+  padding: 0.6rem 0;
 }
 
 /* PREMIUM ATMOSPHERIC EDGE BLUR-FADES */
@@ -258,7 +258,7 @@
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
   align-items: stretch; /* Level the cards perfectly in height! */
-  padding-bottom: 0.5rem;
+  padding: 0 2.5rem 0.5rem;
 }
 
 .carousel-track::-webkit-scrollbar {
@@ -362,7 +362,11 @@
   }
 
   .carousel-container {
-    padding: 1.5rem 1.5rem;
+    padding: 1.5rem 0;
+  }
+
+  .carousel-track {
+    padding: 0 1.5rem 0.5rem;
   }
 
   .carousel-container::before,
@@ -399,7 +403,7 @@
   }
 
   .carousel-container {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
   }
 
   .carousel-arrow {
@@ -423,5 +427,21 @@
   .ultimo-actions a {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ALL EPISODES PAGE GRID */
+.episodios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 3rem 2rem;
+  margin-top: 2rem;
+  padding: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .episodios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem 1.5rem;
   }
 }

@@ -5,12 +5,8 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   
   /* Glassmorphic styles by default (statically applied to eliminate animation paint overhead) */
-  padding: 0.85rem 3rem;
   background-color: rgba(13, 14, 31, 0.92);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -26,6 +22,16 @@
   transition: 
     transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0.85rem 3rem;
 }
 
 .navbar.is-home:not(.scrolled) {
@@ -150,7 +156,7 @@
 
 /* RESPONSIVE NAVBAR */
 @media (max-width: 768px) {
-  .navbar {
+  .navbar-container {
     padding: 0.7rem 1.5rem;
   }
 

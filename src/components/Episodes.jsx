@@ -142,8 +142,10 @@ export default function Episodes() {
             
             <div className="ultimo-actions">
               <a href={latestEp.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
-                <PlayIcon className="btn-play-icon" />
-                Reproducir ahora
+                <span>
+                  <PlayIcon className="btn-play-icon" />
+                  Reproducir ahora
+                </span>
               </a>
               <div className="episodio-links">
                 <a href={latestEp.links.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">

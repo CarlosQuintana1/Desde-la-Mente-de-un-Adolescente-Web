@@ -81,26 +81,28 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}`}>
-      <Link className="navbar-logo" to="/" viewTransition>
-        <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
-        <span>DM <span className="highlight">Adolescente</span></span>
-      </Link>
-      <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
-        {navItems.map(({ sectionId, label, cta }) => (
-          <li key={sectionId} className={cta ? 'nav-cta' : ''}>
-            <NavLink sectionId={sectionId} label={label} onScroll={handleScroll} />
-          </li>
-        ))}
-      </ul>
-      <button
-        type="button"
-        className={`nav-toggle${menuOpen ? ' active' : ''}`}
-        onClick={toggleMenu}
-        aria-label="Menú"
-        aria-expanded={menuOpen}
-      >
-        <span /><span /><span />
-      </button>
+      <div className="navbar-container">
+        <Link className="navbar-logo" to="/" viewTransition>
+          <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
+          <span>DM <span className="highlight">Adolescente</span></span>
+        </Link>
+        <ul className={`nav-links${menuOpen ? ' active' : ''}`}>
+          {navItems.map(({ sectionId, label, cta }) => (
+            <li key={sectionId} className={cta ? 'nav-cta' : ''}>
+              <NavLink sectionId={sectionId} label={label} onScroll={handleScroll} />
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          className={`nav-toggle${menuOpen ? ' active' : ''}`}
+          onClick={toggleMenu}
+          aria-label="Menú"
+          aria-expanded={menuOpen}
+        >
+          <span /><span /><span />
+        </button>
+      </div>
     </nav>
   );
 }

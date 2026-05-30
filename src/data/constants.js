@@ -27,9 +27,9 @@ export const GLOW = {
 };
 
 export const TILT = {
-  maxAngle: 2,
-  perspective: 1000,
-  lift: 2,
+  maxAngle: 0.8,
+  perspective: 1500,
+  lift: 0.5,
 };
 
 export const SCROLL = {
