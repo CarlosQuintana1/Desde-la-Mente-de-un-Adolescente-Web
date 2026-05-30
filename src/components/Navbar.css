@@ -34,9 +34,6 @@
   pointer-events: none;
 }
 
-.navbar.scrolled {
-  /* Inherits everything from .navbar, kept for class reference compatibility */
-}
 
 .navbar.navbar-hidden {
   transform: translateY(-100%);

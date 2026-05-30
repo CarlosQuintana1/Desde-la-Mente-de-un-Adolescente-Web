@@ -103,6 +103,7 @@
   color: var(--accent-light);
   background: linear-gradient(120deg, var(--text-primary) 0%, var(--accent-light) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
