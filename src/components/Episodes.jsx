@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import { useInView } from '../hooks/useInView';
@@ -32,8 +32,37 @@ export default function Episodes() {
   const scrollAnimationRef = useRef(null);
   const targetScrollLeftRef = useRef(0);
 
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
   const latestEp = episodes[0];
   const recentEpisodes = episodes.slice(1);
+
+  const updateScrollButtons = () => {
+    if (!sliderRef.current) return;
+    const container = sliderRef.current;
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    setCanScrollLeft(currentScroll > 8);
+    setCanScrollRight(currentScroll < maxScroll - 40);
+  };
+
+  useEffect(() => {
+    const container = sliderRef.current;
+    if (!container) return;
+
+    // Run initially
+    updateScrollButtons();
+
+    // Listen to manual gestures/swipes and window resizing
+    container.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons);
+
+    return () => {
+      container.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+    };
+  }, []);
 
   const scroll = (direction) => {
     if (!sliderRef.current) return;
@@ -82,6 +111,7 @@ export default function Episodes() {
       const ease = easeInOutCubic(progress);
       
       container.scrollLeft = start + distance * ease;
+      updateScrollButtons();
 
       if (progress < 1) {
         scrollAnimationRef.current = requestAnimationFrame(animate);
@@ -170,7 +200,7 @@ export default function Episodes() {
         </div>
 
         <div className="carousel-wrapper">
-          <button className="carousel-arrow btn-prev" onClick={() => scroll('left')} aria-label="Deslizar izquierda">‹</button>
+          <button className={`carousel-arrow btn-prev${!canScrollLeft ? ' hidden' : ''}`} onClick={() => scroll('left')} aria-label="Deslizar izquierda">‹</button>
           
           <div className="carousel-container">
             <div className="carousel-track" ref={sliderRef}>
@@ -182,7 +212,7 @@ export default function Episodes() {
             </div>
           </div>
 
-          <button className="carousel-arrow btn-next" onClick={() => scroll('right')} aria-label="Deslizar derecha">›</button>
+          <button className={`carousel-arrow btn-next${!canScrollRight ? ' hidden' : ''}`} onClick={() => scroll('right')} aria-label="Deslizar derecha">›</button>
         </div>
 
         <div className="recientes-view-all">
