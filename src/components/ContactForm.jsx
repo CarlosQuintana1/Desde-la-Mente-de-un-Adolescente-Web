@@ -223,7 +223,7 @@ export function ContactFormSubmit({ children }) {
       disabled={state.isSubmitting}
     >
       <span>{state.isSubmitting ? 'Enviando…' : children}</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <line x1="22" y1="2" x2="11" y2="13" />
         <polygon points="22 2 15 22 11 13 2 9 22 2" />
       </svg>
@@ -236,10 +236,10 @@ export function ContactFormSuccess({ title, description, backButtonText }) {
   if (!state.isSubmitted) return null;
 
   return (
-    <div className="contacto-success">
+    <div className="contacto-success" role="status" aria-live="polite">
       <div className="success-icon-wrap">
-        <div className="success-pulse" />
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="success-pulse" aria-hidden="true" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polyline points="20 6 9 17 4 12" />
         </svg>
       </div>

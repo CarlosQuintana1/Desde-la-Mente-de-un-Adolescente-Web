@@ -1,11 +1,34 @@
+import { useState, useEffect } from 'react';
 import { SITE } from '../data/constants';
 import PlayIcon from './icons/PlayIcon';
 import './Hero.css';
 
-
 export default function Hero() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section className="hero" id="inicio">
+      <div 
+        className="hero-background" 
+        style={{ 
+          transform: `translateY(${scrollY * 0.28}px) scale(${1 + scrollY * 0.00015})`,
+        }} 
+      />
       <div className="hero-content">
         <div className="hero-badge">
           <span className="dot" />

@@ -203,7 +203,12 @@
 }
 
 .recientes-header {
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .recientes-header h2 {
@@ -325,26 +330,22 @@
   right: 0.5rem;
 }
 
-.recientes-view-all {
-  text-align: center;
-  margin-top: 4rem;
-}
-
-.recientes-view-all .btn-secondary {
+.header-view-all {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-secondary);
-  padding: 0.8rem 2rem;
+  padding: 0.7rem 1.6rem;
   border-radius: 50px;
   font-weight: 600;
+  font-size: 0.85rem;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
-.recientes-view-all .btn-secondary:hover {
+.header-view-all:hover {
   background: rgba(255, 255, 255, 0.04);
   border-color: var(--accent-light);
   color: #ffffff;

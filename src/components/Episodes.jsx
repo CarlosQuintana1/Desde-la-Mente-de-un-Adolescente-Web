@@ -197,26 +197,49 @@ export default function Episodes() {
       <div className={fadeUp('recientes-section', visible)}>
         <div className="recientes-header">
           <h2>Episodios Recientes</h2>
+          <Link to="/episodios" viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
         </div>
 
-        <div className="carousel-wrapper">
-          <button className={`carousel-arrow btn-prev${!canScrollLeft ? ' hidden' : ''}`} onClick={() => scroll('left')} aria-label="Deslizar izquierda">‹</button>
+        <div className="carousel-wrapper" role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
+          <button 
+            className={`carousel-arrow btn-prev${!canScrollLeft ? ' hidden' : ''}`} 
+            onClick={() => scroll('left')} 
+            aria-label="Ir al episodio anterior"
+            disabled={!canScrollLeft}
+            tabIndex={!canScrollLeft ? -1 : 0}
+          >
+            ‹
+          </button>
           
           <div className="carousel-container">
-            <div className="carousel-track" ref={sliderRef}>
+            <div 
+              className="carousel-track" 
+              ref={sliderRef}
+              role="presentation"
+            >
               {recentEpisodes.map((ep, i) => (
-                <div key={ep.number} className="carousel-item">
+                <div 
+                  key={ep.number} 
+                  className="carousel-item"
+                  role="group"
+                  aria-roledescription="diapositiva"
+                  aria-label={`${i + 1} de ${recentEpisodes.length}`}
+                >
                   <EpisodeCard ep={ep} index={i} sectionVisible={true} />
                 </div>
               ))}
             </div>
           </div>
 
-          <button className={`carousel-arrow btn-next${!canScrollRight ? ' hidden' : ''}`} onClick={() => scroll('right')} aria-label="Deslizar derecha">›</button>
-        </div>
-
-        <div className="recientes-view-all">
-          <Link to="/episodios" viewTransition className="btn-secondary">Ver todos los episodios →</Link>
+          <button 
+            className={`carousel-arrow btn-next${!canScrollRight ? ' hidden' : ''}`} 
+            onClick={() => scroll('right')} 
+            aria-label="Ir al siguiente episodio"
+            disabled={!canScrollRight}
+            tabIndex={!canScrollRight ? -1 : 0}
+          >
+            ›
+          </button>
         </div>
       </div>
     </section>

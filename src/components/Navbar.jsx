@@ -40,12 +40,14 @@ export default function Navbar() {
 
     const updateNavbar = () => {
       const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      
       setScrolled(currentScrollY > SCROLL.threshold);
 
-      // Hide on scroll down past 120px, reveal on scroll up
-      if (currentScrollY > lastScrollY && currentScrollY > 120 && !menuOpen) {
+      // Hide immediately on scroll down past threshold, reveal on scroll up
+      if (isScrollingDown && currentScrollY > SCROLL.threshold && !menuOpen) {
         setVisible(false);
-      } else {
+      } else if (!isScrollingDown || currentScrollY <= SCROLL.threshold) {
         setVisible(true);
       }
       
@@ -79,10 +81,19 @@ export default function Navbar() {
     } 
   });
 
+  const handleLogoClick = (e) => {
+    if (isHomePage) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    setMenuOpen(false);
+    document.body.style.overflow = '';
+  };
+
   return (
     <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}`}>
       <div className="navbar-container">
-        <Link className="navbar-logo" to="/" viewTransition>
+        <Link className="navbar-logo" to="/" onClick={handleLogoClick} viewTransition>
           <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
           <span>DM <span className="highlight">Adolescente</span></span>
         </Link>

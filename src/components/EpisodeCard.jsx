@@ -1,4 +1,5 @@
 import { useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
@@ -82,6 +83,12 @@ export default function EpisodeCard({ ep, index, sectionVisible }) {
         className="episodio-card"
         ref={cardRef}
       >
+        <Link 
+          to={`/episodio/${ep.number}`} 
+          viewTransition 
+          className="stretched-link" 
+          aria-label={`Ver episodio ${ep.number}: ${ep.title}`}
+        />
         <div className="episodio-img-wrap" style={{ aspectRatio: '1 / 1' }}>
           <span className="episodio-number">EP {ep.number}</span>
           <img className="episodio-img" src={ep.img} alt={ep.alt} loading="lazy" width={400} height={400} style={{ aspectRatio: '1 / 1', objectFit: 'cover' }} />

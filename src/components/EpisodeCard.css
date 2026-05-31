@@ -23,6 +23,16 @@
   box-shadow: var(--shadow-lg);
 }
 
+.stretched-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .episodio-img-wrap {
   position: relative;
   overflow: hidden;
@@ -76,6 +86,8 @@
   padding-top: 1rem;
   border-top: 1px solid var(--border);
   margin-top: auto;
+  position: relative;
+  z-index: 2;
 }
 
 .episodio-links a {
