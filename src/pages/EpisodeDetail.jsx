@@ -82,7 +82,7 @@ export default function EpisodeDetail() {
           <div className="ultimo-info">
             {renderCategoryBadge(ep.category)}
             <h2 className="ultimo-titulo" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0' }}>
-              Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="highlight">{ep.name}</span>
+              Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
             <p className="ultimo-desc" style={{ fontSize: '1.05rem', marginBottom: '1.5rem' }}>{ep.desc}</p>
             {ep.quote && <p className="ultimo-cita">{ep.quote}</p>}

@@ -165,7 +165,7 @@ export default function Episodes() {
           <div className="ultimo-info">
             {renderCategoryBadge(latestEp.category)}
             <h3 className="ultimo-titulo">
-              Ep #{latestEp.number}: {cleanTitle(latestEp.title)} con <span className="highlight">{latestEp.name}</span>
+              Ep #{latestEp.number}: {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
             <p className="ultimo-desc">{latestEp.desc}</p>
             {latestEp.quote && <p className="ultimo-cita">{latestEp.quote}</p>}
@@ -173,19 +173,24 @@ export default function Episodes() {
             <div className="ultimo-actions">
               <a href={latestEp.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
                 <span>
-                  <PlayIcon className="btn-play-icon" />
+                  <img 
+                    src="/assets/img/spotify.webp" 
+                    alt="" 
+                    width={18} 
+                    height={18} 
+                    style={{ objectFit: 'contain', verticalAlign: 'middle' }} 
+                  />
                   Reproducir ahora
                 </span>
               </a>
               <div className="episodio-links">
-                <a href={latestEp.links.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <img src="/assets/img/instagram.webp" alt="Instagram" width={18} height={18} />
+                <a href={latestEp.links.instagram} target="_blank" rel="noopener noreferrer">
+                  <img src="/assets/img/instagram.webp" alt="" width={18} height={18} />
+                  <span>Instagram</span>
                 </a>
-                <a href={latestEp.links.spotify} target="_blank" rel="noopener noreferrer" aria-label="Spotify">
-                  <img src="/assets/img/spotify.webp" alt="Spotify" width={18} height={18} />
-                </a>
-                <a href={latestEp.links.apple} target="_blank" rel="noopener noreferrer" aria-label="Apple Podcasts">
-                  <img src="/assets/img/applepodcast.webp" alt="Apple Podcasts" width={18} height={18} />
+                <a href={latestEp.links.apple} target="_blank" rel="noopener noreferrer">
+                  <img src="/assets/img/applepodcast.webp" alt="" width={18} height={18} />
+                  <span>Apple Podcasts</span>
                 </a>
               </div>
             </div>
@@ -211,7 +216,7 @@ export default function Episodes() {
             ‹
           </button>
           
-          <div className="carousel-container">
+          <div className={`carousel-container${!canScrollLeft ? ' at-start' : ''}${!canScrollRight ? ' at-end' : ''}`}>
             <div 
               className="carousel-track" 
               ref={sliderRef}

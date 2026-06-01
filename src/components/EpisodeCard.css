@@ -136,9 +136,9 @@
 }
 
 .episodio-category-ciencia {
-  background: rgba(124, 58, 237, 0.15);
-  color: var(--accent-light);
-  border: 1px solid rgba(124, 58, 237, 0.25);
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 
 .episodio-category-tecnologia {

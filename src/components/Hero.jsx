@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { SITE } from '../data/constants';
-import PlayIcon from './icons/PlayIcon';
 import './Hero.css';
 
 export default function Hero() {
@@ -51,7 +50,14 @@ export default function Hero() {
             className="btn-primary"
           >
             <span>
-              <PlayIcon className="btn-play-icon" />
+              <img 
+                src="/assets/img/spotify.webp" 
+                alt="" 
+                className="btn-play-icon" 
+                width={20} 
+                height={20} 
+                style={{ objectFit: 'contain' }}
+              />
               Escuchar en Spotify
             </span>
           </a>
