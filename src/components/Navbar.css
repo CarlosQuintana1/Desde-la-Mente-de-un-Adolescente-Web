@@ -17,6 +17,7 @@
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
+  will-change: transform, opacity;
   
   /* ONLY transition transform and opacity for butter-smooth GPU rendering */
   transition: 

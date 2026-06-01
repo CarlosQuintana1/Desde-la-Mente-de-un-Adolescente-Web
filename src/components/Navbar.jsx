@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useScrollTo } from '../hooks/useScrollTo';
 import { SCROLL } from '../data/constants';
@@ -34,24 +34,40 @@ export default function Navbar() {
 
   const isHomePage = location.pathname === '/';
 
+  // Track previous values with refs to avoid unnecessary React re-renders
+  const lastScrollYRef = useRef(window.scrollY);
+  const scrolledRef = useRef(false);
+  const visibleRef = useRef(true);
+
   useEffect(() => {
-    let lastScrollY = window.scrollY;
     let ticking = false;
 
     const updateNavbar = () => {
       const currentScrollY = window.scrollY;
-      const isScrollingDown = currentScrollY > lastScrollY;
+      const isScrollingDown = currentScrollY > lastScrollYRef.current;
       
-      setScrolled(currentScrollY > SCROLL.threshold);
+      const nowScrolled = currentScrollY > SCROLL.threshold;
+      if (nowScrolled !== scrolledRef.current) {
+        scrolledRef.current = nowScrolled;
+        setScrolled(nowScrolled);
+      }
 
       // Hide immediately on scroll down past threshold, reveal on scroll up
+      let nowVisible;
       if (isScrollingDown && currentScrollY > SCROLL.threshold && !menuOpen) {
-        setVisible(false);
+        nowVisible = false;
       } else if (!isScrollingDown || currentScrollY <= SCROLL.threshold) {
-        setVisible(true);
+        nowVisible = true;
+      } else {
+        nowVisible = visibleRef.current;
+      }
+
+      if (nowVisible !== visibleRef.current) {
+        visibleRef.current = nowVisible;
+        setVisible(nowVisible);
       }
       
-      lastScrollY = currentScrollY;
+      lastScrollYRef.current = currentScrollY;
       ticking = false;
     };
 

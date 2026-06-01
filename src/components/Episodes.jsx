@@ -27,7 +27,7 @@ const DocumentIcon = () => (
 );
 
 export default function Episodes() {
-  const [ref, visible] = useInView({ rootMargin: '0px 0px -150px 0px', threshold: 0.1 });
+  const [ref, visible] = useInView();
   const sliderRef = useRef(null);
   const scrollAnimationRef = useRef(null);
   const targetScrollLeftRef = useRef(0);
@@ -150,14 +150,14 @@ export default function Episodes() {
   return (
     <section className="episodios" id="episodios" ref={ref}>
       {/* 1. FEATURED LATEST EPISODE HIGHLIGHT */}
-      <div className={fadeUp('ultimo-episodio-section', visible)}>
-        <div className="section-title-wrap">
+      <div className="ultimo-episodio-section">
+        <div className={fadeUp('section-title-wrap', visible)}>
           <div className="line" />
           <h2 className="section-tag-title">Último Episodio</h2>
           <div className="line" />
         </div>
 
-        <div className="ultimo-episodio-card">
+        <div className={fadeUp('ultimo-episodio-card stagger-1', visible)}>
           <div className="ultimo-img-wrap">
             <span className="episodio-number">EP {latestEp.number}</span>
             <img src={latestEp.img} alt={latestEp.alt} width={400} height={400} loading="eager" />
@@ -199,8 +199,8 @@ export default function Episodes() {
       </div>
 
       {/* 2. RECENT EPISODES SLIDER */}
-      <div className={fadeUp('recientes-section', visible)}>
-        <div className="recientes-header">
+      <div className="recientes-section">
+        <div className={fadeUp('recientes-header', visible)}>
           <h2>Episodios Recientes</h2>
           <Link to="/episodios" viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
         </div>
@@ -230,7 +230,7 @@ export default function Episodes() {
                   aria-roledescription="diapositiva"
                   aria-label={`${i + 1} de ${recentEpisodes.length}`}
                 >
-                  <EpisodeCard ep={ep} index={i} sectionVisible={true} />
+                  <EpisodeCard ep={ep} index={i} sectionVisible={visible} />
                 </div>
               ))}
             </div>

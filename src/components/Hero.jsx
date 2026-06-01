@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { SITE } from '../data/constants';
 import './Hero.css';
 
 export default function Hero() {
-  const [scrollY, setScrollY] = useState(0);
+  const backgroundRef = useRef(null);
 
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
+          const sy = window.scrollY;
+          if (backgroundRef.current) {
+            backgroundRef.current.style.transform = `translateY(${sy * 0.28}px) scale(${1 + sy * 0.00015})`;
+          }
           ticking = false;
         });
         ticking = true;
@@ -24,9 +27,7 @@ export default function Hero() {
     <section className="hero" id="inicio">
       <div 
         className="hero-background" 
-        style={{ 
-          transform: `translateY(${scrollY * 0.28}px) scale(${1 + scrollY * 0.00015})`,
-        }} 
+        ref={backgroundRef}
       />
       <div className="hero-content">
         <div className="hero-badge">
