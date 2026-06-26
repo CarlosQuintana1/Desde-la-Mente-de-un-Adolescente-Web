@@ -1,11 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SITE } from '../data/constants';
 import './Hero.css';
 
 export default function Hero() {
   const backgroundRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    // Trigger entrance animation shortly after mount
+    const timer = setTimeout(() => setLoaded(true), 100);
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
@@ -20,8 +23,13 @@ export default function Hero() {
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  const l = (base) => `${base} reveal${loaded ? ' visible' : ''}`;
 
   return (
     <section className="hero" id="inicio">
@@ -30,21 +38,21 @@ export default function Hero() {
         ref={backgroundRef}
       />
       <div className="hero-content">
-        <div className="hero-badge">
+        <div className={l('hero-badge reveal-up')}>
           <span className="dot" />
           Podcast · Temporada 1
         </div>
-        <h1>
+        <h1 className={l('reveal-left')}>
           Desde la<br />
           <span className="accent">Mente</span> de un<br />
           <span className="accent2">Adolescente</span>
         </h1>
-        <p className="hero-sub">
+        <p className={l('hero-sub reveal-right')}>
           Un espacio donde las ideas no tienen edad. Conversaciones con científicos,
           artistas y visionarios que están transformando el mundo desde la pasión
           y el conocimiento.
         </p>
-        <div className="hero-actions">
+        <div className={l('hero-actions reveal-up')}>
           <a
             href={SITE.spotify}
             target="_blank" rel="noopener noreferrer"
@@ -72,7 +80,7 @@ export default function Hero() {
           </a>
         </div>
       </div>
-      <div className="hero-scroll">
+      <div className={l('hero-scroll reveal-blur')}>
         <span>Desliza</span>
         <div className="line" />
       </div>

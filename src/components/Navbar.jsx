@@ -33,6 +33,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
+  const isEpisodeDetail = location.pathname.startsWith('/episodio/');
 
   // Track previous values with refs to avoid unnecessary React re-renders
   const lastScrollYRef = useRef(window.scrollY);
@@ -107,7 +108,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}`}>
+    <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}${isEpisodeDetail ? ' navbar--hidden-episode' : ''}`}>
       <div className="navbar-container">
         <Link className="navbar-logo" to="/" onClick={handleLogoClick} viewTransition>
           <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />

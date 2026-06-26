@@ -4,7 +4,6 @@ import SEO from '../components/SEO';
 import ScienceIcon from '../components/icons/ScienceIcon';
 import TechIcon from '../components/icons/TechIcon';
 import ArtIcon from '../components/icons/ArtIcon';
-import PlayIcon from '../components/icons/PlayIcon';
 import '../components/Episodes.css';
 
 const CATEGORY_CONFIG = {
@@ -67,8 +66,11 @@ export default function EpisodeDetail() {
         type="video.episode"
       />
 
-      <div className="page-hero fade-up visible page-hero--inner">
-        <Link to="/episodios" className="back-link">← Todos los episodios</Link>
+      <div className="page-hero fade-up visible page-hero--inner" style={{ paddingTop: '2rem' }}>
+        <div className="episode-nav">
+          <Link to="/" state={{ scrollTo: 'episodios' }} viewTransition className="back-link">← Inicio</Link>
+          <Link to="/episodios" viewTransition className="back-link">Todos los episodios →</Link>
+        </div>
         <h1>Detalle del <span className="accent">Episodio</span></h1>
         <p>Conoce más a fondo sobre la trayectoria y pasiones de nuestro invitado especial.</p>
       </div>
@@ -80,7 +82,9 @@ export default function EpisodeDetail() {
             <img src={ep.img} alt={ep.alt} width={400} height={400} loading="eager" />
           </div>
           <div className="ultimo-info">
-            {renderCategoryBadge(ep.category)}
+            <div>
+              {renderCategoryBadge(ep.category)}
+            </div>
             <h2 className="ultimo-titulo" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0' }}>
               Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
@@ -90,19 +94,24 @@ export default function EpisodeDetail() {
             <div className="ultimo-actions">
               <a href={ep.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
                 <span>
-                  <PlayIcon className="btn-play-icon" />
-                  Escuchar en Spotify
+                  <img 
+                    src="/assets/img/spotify.webp" 
+                    alt="" 
+                    width={18} 
+                    height={18} 
+                    style={{ objectFit: 'contain', verticalAlign: 'middle' }} 
+                  />
+                  Reproducir ahora
                 </span>
               </a>
               <div className="episodio-links">
-                <a href={ep.links.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                  <img src="/assets/img/instagram.webp" alt="Instagram" width={18} height={18} />
+                <a href={ep.links.instagram} target="_blank" rel="noopener noreferrer">
+                  <img src="/assets/img/instagram.webp" alt="" width={18} height={18} />
+                  <span>Instagram</span>
                 </a>
-                <a href={ep.links.spotify} target="_blank" rel="noopener noreferrer" aria-label="Spotify">
-                  <img src="/assets/img/spotify.webp" alt="Spotify" width={18} height={18} />
-                </a>
-                <a href={ep.links.apple} target="_blank" rel="noopener noreferrer" aria-label="Apple Podcasts">
-                  <img src="/assets/img/applepodcast.webp" alt="Apple Podcasts" width={18} height={18} />
+                <a href={ep.links.apple} target="_blank" rel="noopener noreferrer">
+                  <img src="/assets/img/applepodcast.webp" alt="" width={18} height={18} />
+                  <span>Apple Podcasts</span>
                 </a>
               </div>
             </div>

@@ -48,6 +48,10 @@
   pointer-events: none;
 }
 
+.navbar.navbar--hidden-episode {
+  display: none;
+}
+
 .navbar-logo {
   display: flex;
   align-items: center;

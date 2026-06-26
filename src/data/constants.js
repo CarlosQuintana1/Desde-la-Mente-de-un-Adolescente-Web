@@ -34,5 +34,5 @@ export const TILT = {
 
 export const SCROLL = {
   threshold: 80,
-  rootMargin: '-20px',
+  rootMargin: '-120px',
 };

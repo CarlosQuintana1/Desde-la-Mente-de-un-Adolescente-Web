@@ -12,9 +12,9 @@ React single-page application for the podcast "Desde la Mente de un Adolescente"
 - `public/sitemap.xml` - Production route map for SEO indexing.
 
 ## Development & Commands
-- **Dev server:** `npm run dev`
-- **Build:** `npm run build`
-- **Preview:** `npm run preview`
+- **Dev server:** `pnpm dev`
+- **Build:** `pnpm run build`
+- **Preview:** `pnpm run preview`
 No linter or test runner configured by default.
 
 ## Quirks & Conventions
@@ -22,6 +22,8 @@ No linter or test runner configured by default.
 - **Assets:** Images and icons are typically in `public/assets/img/`.
 - **React 19 Hook Usage:** Context consumption is performed using the React 19 native `use(Context)` API instead of `useContext`.
 - **Compound Components Pattern:** Complex state-heavy components (like `ContactForm`) are structured as compound components with decoupled states and shared contexts, exporting subcomponents via dot-notation (e.g., `ContactForm.Input`).
+- **Scroll-Driven Animations:** Section reveals use `useScrollProgress` hook (status-based `IntersectionObserver` replacement) which returns a `progress` value (0→1) mapped directly to scroll position. Inline styles via `scrollRevealStyle(progress, type)` and `stagger(progress, offset)` replace CSS transition classes for smooth, progressive entry animations.
+- **Preact & XState Usage:** Preact signals and XState machines are used where beneficial for state and animation orchestration.
 - **Accessibility Landmark Routing:** All keyboard actions use a dedicated Skip Link (`Saltar al contenido principal`) at the top of the body pointing to `<main id="main-content">`. Focus indicators use active, high-visibility glows on `:focus-visible`.
 
 ## Available Skills

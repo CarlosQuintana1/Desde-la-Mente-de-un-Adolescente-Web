@@ -1,6 +1,6 @@
 import { useState, createContext, use } from 'react';
-import { useInView } from '../hooks/useInView';
-import { fadeUp } from '../utils/classNames';
+import { useScrollProgress } from '../hooks/useScrollProgress';
+import { stagger, scrollRevealStyle } from '../utils/classNames';
 import UserIcon from './icons/UserIcon';
 import MailIcon from './icons/MailIcon';
 import SubjectIcon from './icons/SubjectIcon';
@@ -9,11 +9,10 @@ import './ContactForm.css';
 
 const EMAIL_REGEX = /\S+@\S+\.\S+/;
 
-// Define clean, structured Context for Compound Components
 const ContactFormContext = createContext(null);
 
 export function ContactFormProvider({ children }) {
-  const [ref, visible] = useInView();
+  const [ref, progress] = useScrollProgress();
   const [formState, setFormState] = useState({
     nombre: '',
     email: '',
@@ -47,7 +46,6 @@ export function ContactFormProvider({ children }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
-    // Clear error on keypress
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -59,7 +57,6 @@ export function ContactFormProvider({ children }) {
 
     setIsSubmitting(true);
 
-    // Simulate sending email with a premium experience
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -78,7 +75,7 @@ export function ContactFormProvider({ children }) {
 
   return (
     <ContactFormContext value={{
-      state: { formState, errors, isSubmitting, isSubmitted, visible },
+      state: { formState, errors, isSubmitting, isSubmitted, progress },
       actions: { handleChange, handleSubmit, resetForm },
       meta: { ref }
     }}>
@@ -101,7 +98,7 @@ export function ContactFormSection({ children }) {
 export function ContactFormHeader({ title, description }) {
   const { state } = use(ContactFormContext);
   return (
-    <div className={fadeUp('contacto-header', state.visible)}>
+    <div className="contacto-header" style={scrollRevealStyle(stagger(state.progress, 0), 'up')}>
       <h2>{title}</h2>
       <p>{description}</p>
     </div>
@@ -111,7 +108,7 @@ export function ContactFormHeader({ title, description }) {
 export function ContactFormCard({ children }) {
   const { state } = use(ContactFormContext);
   return (
-    <div className={fadeUp('contacto-form-card', state.visible)}>
+    <div className="contacto-form-card" style={scrollRevealStyle(stagger(state.progress, 0.1), 'rotate')}>
       {children}
     </div>
   );

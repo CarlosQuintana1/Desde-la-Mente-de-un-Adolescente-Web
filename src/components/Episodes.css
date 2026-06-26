@@ -470,3 +470,10 @@
     gap: 2rem 1.5rem;
   }
 }
+
+.episode-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}

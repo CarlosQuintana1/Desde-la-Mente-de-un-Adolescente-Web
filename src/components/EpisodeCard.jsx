@@ -1,6 +1,7 @@
 import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
+import { stagger, scrollRevealStyle } from '../utils/classNames';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
 import ArtIcon from './icons/ArtIcon';
@@ -12,14 +13,16 @@ const CATEGORY_CONFIG = {
   Arte: { className: 'episodio-category episodio-category-arte', icon: <ArtIcon /> },
 };
 
-export default function EpisodeCard({ ep, index, sectionVisible }) {
+export default function EpisodeCard({ ep, index, sectionProgress }) {
   const wrapperRef = useRef(null);
   const cardRef = useRef(null);
   const rectRef = useRef(null);
 
+  const staggerDelay = (index % 4) * 0.08;
+  const cardStyle = scrollRevealStyle(stagger(sectionProgress, staggerDelay), 'up', { transition: true });
+
   const handleMouseEnter = useCallback(() => {
     if (wrapperRef.current && cardRef.current) {
-      // Use the stable wrapper for bounding rect to prevent jitter
       rectRef.current = wrapperRef.current.getBoundingClientRect();
       cardRef.current.style.transition = 'transform 0.15s ease-out';
     }
@@ -68,16 +71,13 @@ export default function EpisodeCard({ ep, index, sectionVisible }) {
     );
   };
 
-  const stagger = (index % 4) + 1;
-
   return (
     <div 
-      className={`fade-up stagger-${stagger}${sectionVisible ? ' visible' : ''}`}
       ref={wrapperRef}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ height: '100%', perspective: '1000px' }}
+      style={{ ...cardStyle, height: '100%', perspective: '1000px' }}
     >
       <article
         className="episodio-card"

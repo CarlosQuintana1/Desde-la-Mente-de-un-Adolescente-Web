@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
-import { useInView } from '../hooks/useInView';
-import { fadeUp } from '../utils/classNames';
+import { useScrollProgress } from '../hooks/useScrollProgress';
+import { stagger, scrollRevealStyle } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
@@ -27,7 +27,7 @@ const DocumentIcon = () => (
 );
 
 export default function Episodes() {
-  const [ref, visible] = useInView();
+  const [ref, progress] = useScrollProgress();
   const sliderRef = useRef(null);
   const scrollAnimationRef = useRef(null);
   const targetScrollLeftRef = useRef(0);
@@ -51,10 +51,8 @@ export default function Episodes() {
     const container = sliderRef.current;
     if (!container) return;
 
-    // Run initially
     updateScrollButtons();
 
-    // Listen to manual gestures/swipes and window resizing
     container.addEventListener('scroll', updateScrollButtons, { passive: true });
     window.addEventListener('resize', updateScrollButtons);
 
@@ -69,7 +67,6 @@ export default function Episodes() {
     const container = sliderRef.current;
     const firstItem = container.querySelector('.carousel-item');
     
-    // Determine scroll step width + gap
     let scrollStep = 344;
     if (firstItem) {
       const cardWidth = firstItem.offsetWidth;
@@ -78,28 +75,24 @@ export default function Episodes() {
       scrollStep = cardWidth + gap;
     }
 
-    // Cancel any active animation to allow fluid rapid-fire clicks
     if (scrollAnimationRef.current) {
       cancelAnimationFrame(scrollAnimationRef.current);
     }
 
     const currentScroll = container.scrollLeft;
     
-    // If the user manually swiped or scrolled, synchronize our target ref
     if (Math.abs(currentScroll - targetScrollLeftRef.current) > 10) {
       targetScrollLeftRef.current = currentScroll;
     }
 
-    // Calculate new target scroll position
     const change = direction === 'left' ? -scrollStep : scrollStep;
     const maxScroll = container.scrollWidth - container.clientWidth;
     const targetScroll = Math.max(0, Math.min(targetScrollLeftRef.current + change, maxScroll));
     targetScrollLeftRef.current = targetScroll;
 
-    // Custom fluid easing transition (easeInOutCubic)
     const start = container.scrollLeft;
     const distance = targetScroll - start;
-    const duration = 500; // Perfect 500ms fluid duration
+    const duration = 500;
     let startTime = null;
 
     const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -107,13 +100,13 @@ export default function Episodes() {
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeInOutCubic(progress);
+      const p = Math.min(elapsed / duration, 1);
+      const ease = easeInOutCubic(p);
       
       container.scrollLeft = start + distance * ease;
       updateScrollButtons();
 
-      if (progress < 1) {
+      if (p < 1) {
         scrollAnimationRef.current = requestAnimationFrame(animate);
       } else {
         scrollAnimationRef.current = null;
@@ -142,35 +135,46 @@ export default function Episodes() {
     );
   };
 
-  // Clean the title prefix to show field name concisely (e.g. Ep #10: Química con Nina Padme)
   const cleanTitle = (title) => {
     return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
   };
 
+  const titleStyle = scrollRevealStyle(stagger(progress, 0), 'up');
+  const cardStyle = scrollRevealStyle(stagger(progress, 0.1), 'scale');
+  const imgStyle = scrollRevealStyle(stagger(progress, 0.15), 'left');
+  const categoryStyle = scrollRevealStyle(stagger(progress, 0.2), 'up');
+  const episodeTitleStyle = scrollRevealStyle(stagger(progress, 0.25), 'right');
+  const descStyle = scrollRevealStyle(stagger(progress, 0.3), 'blur');
+  const citaStyle = scrollRevealStyle(stagger(progress, 0.35), 'scale');
+  const actionsStyle = scrollRevealStyle(stagger(progress, 0.4), 'up');
+  const recentHeaderStyle = scrollRevealStyle(stagger(progress, 0.5), 'up');
+  const carouselStyle = scrollRevealStyle(stagger(progress, 0.6), 'scale');
+
   return (
     <section className="episodios" id="episodios" ref={ref}>
-      {/* 1. FEATURED LATEST EPISODE HIGHLIGHT */}
       <div className="ultimo-episodio-section">
-        <div className={fadeUp('section-title-wrap', visible)}>
+        <div className="section-title-wrap" style={titleStyle}>
           <div className="line" />
           <h2 className="section-tag-title">Último Episodio</h2>
           <div className="line" />
         </div>
 
-        <div className={fadeUp('ultimo-episodio-card stagger-1', visible)}>
-          <div className="ultimo-img-wrap">
+        <div className="ultimo-episodio-card" style={cardStyle}>
+          <div className="ultimo-img-wrap" style={imgStyle}>
             <span className="episodio-number">EP {latestEp.number}</span>
             <img src={latestEp.img} alt={latestEp.alt} width={400} height={400} loading="eager" />
           </div>
           <div className="ultimo-info">
-            {renderCategoryBadge(latestEp.category)}
-            <h3 className="ultimo-titulo">
+            <div style={categoryStyle}>
+              {renderCategoryBadge(latestEp.category)}
+            </div>
+            <h3 className="ultimo-titulo" style={episodeTitleStyle}>
               Ep #{latestEp.number}: {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
-            <p className="ultimo-desc">{latestEp.desc}</p>
-            {latestEp.quote && <p className="ultimo-cita">{latestEp.quote}</p>}
+            <p className="ultimo-desc" style={descStyle}>{latestEp.desc}</p>
+            {latestEp.quote && <p className="ultimo-cita" style={citaStyle}>{latestEp.quote}</p>}
             
-            <div className="ultimo-actions">
+            <div className="ultimo-actions" style={actionsStyle}>
               <a href={latestEp.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
                 <span>
                   <img 
@@ -198,14 +202,13 @@ export default function Episodes() {
         </div>
       </div>
 
-      {/* 2. RECENT EPISODES SLIDER */}
       <div className="recientes-section">
-        <div className={fadeUp('recientes-header', visible)}>
+        <div className="recientes-header" style={recentHeaderStyle}>
           <h2>Episodios Recientes</h2>
           <Link to="/episodios" viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
         </div>
 
-        <div className="carousel-wrapper" role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
+        <div className="carousel-wrapper" style={carouselStyle} role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
           <button 
             className={`carousel-arrow btn-prev${!canScrollLeft ? ' hidden' : ''}`} 
             onClick={() => scroll('left')} 
@@ -230,7 +233,7 @@ export default function Episodes() {
                   aria-roledescription="diapositiva"
                   aria-label={`${i + 1} de ${recentEpisodes.length}`}
                 >
-                  <EpisodeCard ep={ep} index={i} sectionVisible={visible} />
+                  <EpisodeCard ep={ep} index={i} sectionProgress={progress} />
                 </div>
               ))}
             </div>
