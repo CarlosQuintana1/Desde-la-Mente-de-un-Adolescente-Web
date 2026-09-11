@@ -324,3 +324,17 @@ select.form-control:focus + .select-arrow {
     padding: 5rem 1.5rem;
   }
 }
+
+.form-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.form-error-envio {
+  display: block;
+  margin-bottom: 0.75rem;
+}

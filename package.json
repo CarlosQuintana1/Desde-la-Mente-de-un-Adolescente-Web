@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mensajes": "wrangler d1 execute dm-contacto --remote --command \"SELECT id, creado, nombre, email, asunto, mensaje FROM mensajes ORDER BY id DESC LIMIT 20\"",
+    "deploy": "vite build && wrangler pages deploy"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.2",
-    "vite": "^8.0.13"
+    "vite": "^8.0.13",
+    "wrangler": "^4.131.1"
   }
 }

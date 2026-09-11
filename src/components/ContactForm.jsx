@@ -18,6 +18,7 @@ export function ContactFormProvider({ children }) {
     email: '',
     asunto: 'general',
     mensaje: '',
+    sitio: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -51,22 +52,40 @@ export function ContactFormProvider({ children }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch('/api/contacto', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(formState),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        setErrors(data.errores || {
+          envio: data.error || 'No se pudo enviar el mensaje. Intenta de nuevo.',
+        });
+        return;
+      }
+
       setIsSubmitted(true);
       setFormState({
         nombre: '',
         email: '',
         asunto: 'general',
         mensaje: '',
+        sitio: '',
       });
-    }, 1500);
+    } catch {
+      setErrors({ envio: 'No se pudo enviar el mensaje. Revisa tu conexión e intenta de nuevo.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -119,6 +138,16 @@ export function ContactFormFrame({ children }) {
   if (state.isSubmitted) return null;
   return (
     <form onSubmit={actions.handleSubmit} noValidate>
+      <input
+        type="text"
+        name="sitio"
+        className="form-hp"
+        value={state.formState.sitio}
+        onChange={actions.handleChange}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+      />
       {children}
     </form>
   );
@@ -214,7 +243,13 @@ export function ContactFormTextarea({ name, placeholder }) {
 export function ContactFormSubmit({ children }) {
   const { state } = use(ContactFormContext);
   return (
-    <button
+    <>
+      {state.errors.envio && (
+        <span className="form-error form-error-envio" role="alert">
+          {state.errors.envio}
+        </span>
+      )}
+      <button
       type="submit"
       className="btn-submit"
       disabled={state.isSubmitting}
@@ -224,7 +259,8 @@ export function ContactFormSubmit({ children }) {
         <line x1="22" y1="2" x2="11" y2="13" />
         <polygon points="22 2 15 22 11 13 2 9 22 2" />
       </svg>
-    </button>
+      </button>
+    </>
   );
 }
 

@@ -87,3 +87,6 @@ dist-ssr/
 # Antigravity IDE artifacts & logs
 .agents/
 skills-lock.json
+
+# Cloudflare
+.wrangler/

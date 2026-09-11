@@ -10,12 +10,29 @@ React single-page application for the podcast "Desde la Mente de un Adolescente"
 - `src/styles/main.css` - Active CSS file containing global typography, visual layout, and customized glowing `:focus-visible` indicators.
 - `public/robots.txt` - Crawl configurations and sitemap indexing directives.
 - `public/sitemap.xml` - Production route map for SEO indexing.
+- `public/_redirects` - Cloudflare Pages SPA fallback (`/* /index.html 200`). Required for client-side routes to survive a direct hit or a reload.
+- `functions/api/contacto.js` - Pages Function backing the contact form (POST only). Validates, rate-limits, writes to D1, then fires an optional Telegram notification.
+- `wrangler.toml` - Pages project config and the D1 binding (`DB`).
+- `schema.sql` - D1 schema for the `mensajes` table.
 
 ## Development & Commands
-- **Dev server:** `pnpm dev`
+- **Dev server (front only):** `pnpm dev`
+- **Dev server with Functions + local D1:** `pnpm exec wrangler pages dev`
 - **Build:** `pnpm run build`
 - **Preview:** `pnpm run preview`
+- **Deploy:** `pnpm run deploy` (builds, then `wrangler pages deploy`)
+- **Read contact messages:** `pnpm run mensajes`
 No linter or test runner configured by default.
+
+## Hosting & Backend
+- Hosted on Cloudflare Pages, project `desde-la-mente`, production branch `main`.
+- The contact form POSTs JSON to `/api/contacto`. Messages are stored in the D1 database `dm-contacto`, table `mensajes`.
+- Anti-abuse: a hidden `sitio` honeypot field, and a cap of 3 submissions per 10 minutes keyed on a truncated SHA-256 of the client IP. The raw IP is never stored.
+- Telegram notifications are optional and off unless both secrets exist:
+  `wrangler pages secret put TELEGRAM_BOT_TOKEN` and `wrangler pages secret put TELEGRAM_CHAT_ID`.
+  Without them the message is still stored; only the notification is skipped.
+- Schema changes: edit `schema.sql`, then `wrangler d1 execute dm-contacto --remote --file=schema.sql`.
+- `compatibility_date` in `wrangler.toml` must not be newer than the local workerd binary, or `wrangler pages dev` refuses to boot.
 
 ## Quirks & Conventions
 - **CSS:** Plain CSS is used (no Tailwind/Sass). Global styles are imported directly in `App.jsx`.

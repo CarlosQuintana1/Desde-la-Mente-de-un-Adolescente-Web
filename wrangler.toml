@@ -1,0 +1,13 @@
+name = "desde-la-mente"
+compatibility_date = "2026-08-27"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dm-contacto"
+database_id = "f227a61e-32a8-46ac-b85b-0bf2e00f8f44"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "dm-contacto"
+database_id = "f227a61e-32a8-46ac-b85b-0bf2e00f8f44"
