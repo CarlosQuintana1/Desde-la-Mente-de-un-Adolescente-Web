@@ -65,75 +65,99 @@ function ScrollManager({ lenis }) {
     const prev = prevPathRef.current;
     prevPathRef.current = pathname;
 
-    try {
-      if (sessionStorage.getItem('dm_redirected_from_reload') === 'true') {
-        sessionStorage.removeItem('dm_redirected_from_reload');
-        sessionStorage.removeItem('dm_home_scroll');
-        if (lenis) {
-          lenis.scrollTo(0, { immediate: true });
-        } else {
-          window.scrollTo(0, 0);
-        }
-        return;
-      }
-    } catch (e) {
-      console.error('SessionStorage access failed:', e);
-    }
+    let timer = null;
+    let onLoad = null;
+    let cancelled = false;
+    const stop = () => { cancelled = true; };
+    const userEvents = ['wheel', 'touchstart', 'keydown'];
+    const listen = () => userEvents.forEach((e) => window.addEventListener(e, stop, { passive: true }));
+    const unlisten = () => userEvents.forEach((e) => window.removeEventListener(e, stop));
 
-    const scrollToElement = (id) => {
-      let attempts = 0;
-      const tryScroll = () => {
+    // al entrar por URL el layout sigue creciendo mientras cargan las imagenes, asi que se recorrige hasta que la seccion deja de moverse
+    const scrollToElement = (id, holdMs = 500) => {
+      const hardStop = performance.now() + 10000;
+      let deadline = performance.now() + holdMs;
+      let lastTop = null;
+
+      if (document.readyState !== 'complete') {
+        onLoad = () => { deadline = Math.max(deadline, performance.now() + 500); };
+        window.addEventListener('load', onLoad, { once: true });
+      }
+
+      const attempt = () => {
+        timer = null;
+        if (cancelled) return unlisten();
+
         const el = document.getElementById(id);
         if (el) {
-          if (lenis) {
-            lenis.scrollTo(el, { immediate: true });
-          } else {
-            el.scrollIntoView({ behavior: 'instant' });
+          const top = Math.round(el.getBoundingClientRect().top);
+          if (top !== lastTop) {
+            lastTop = top;
+            if (lenis) {
+              lenis.resize();
+              lenis.scrollTo(el, { immediate: true, force: true });
+            } else {
+              el.scrollIntoView({ behavior: 'instant', block: 'start' });
+            }
           }
-        } else if (attempts < 10) {
-          attempts++;
-          requestAnimationFrame(tryScroll);
         }
+
+        const now = performance.now();
+        if (now < deadline && now < hardStop) timer = setTimeout(attempt, 50);
+        else unlisten();
       };
-      requestAnimationFrame(tryScroll);
+
+      listen();
+      attempt();
     };
 
-    if (hash) {
-      scrollToElement(hash.replace('#', ''));
-      return;
-    }
-
-    if (state?.scrollTo) {
-      scrollToElement(state.scrollTo);
-      // Clear the scrollTo state from history so a page reload won't re-scroll
-      navigate(pathname, { replace: true, state: {} });
-      return;
-    }
-
-    if (pathname === "/" && prev !== "/") {
-      const saved = sessionStorage.getItem('dm_home_scroll');
-      if (saved) {
-        const y = parseInt(saved, 10);
-        if (!isNaN(y)) {
-          if (lenis) {
-            lenis.scrollTo(y, { immediate: true });
-          } else {
-            window.scrollTo(0, y);
-          }
-        }
-        sessionStorage.removeItem('dm_home_scroll');
+    const run = () => {
+      if (hash) {
+        scrollToElement(hash.replace('#', ''), 2000);
         return;
       }
-    } else if (prev === "/" && pathname !== "/") {
-      sessionStorage.setItem('dm_home_scroll', String(window.scrollY || 0));
-    }
 
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true });
-    } else {
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }
+      if (state?.scrollTo) {
+        scrollToElement(state.scrollTo);
+        // Clear the scrollTo state from history so a page reload won't re-scroll
+        navigate(pathname, { replace: true, state: {} });
+        return;
+      }
+
+      if (pathname === "/" && prev !== "/") {
+        const saved = sessionStorage.getItem('dm_home_scroll');
+        if (saved) {
+          const y = parseInt(saved, 10);
+          if (!isNaN(y)) {
+            if (lenis) {
+              lenis.scrollTo(y, { immediate: true });
+            } else {
+              window.scrollTo(0, y);
+            }
+          }
+          sessionStorage.removeItem('dm_home_scroll');
+          return;
+        }
+      } else if (prev === "/" && pathname !== "/") {
+        sessionStorage.setItem('dm_home_scroll', String(window.scrollY || 0));
+      }
+
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true });
+      } else {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+      if (timer != null) clearTimeout(timer);
+      if (onLoad) window.removeEventListener('load', onLoad);
+      unlisten();
+    };
   }, [pathname, hash, state, lenis]);
 
   return null;
