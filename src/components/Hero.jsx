@@ -38,10 +38,6 @@ export default function Hero() {
         ref={backgroundRef}
       />
       <div className="hero-content">
-        <div className={l('hero-badge reveal-up')}>
-          <span className="dot" />
-          Podcast · Temporada 1
-        </div>
         <h1 className={l('reveal-left')}>
           Desde la<br />
           <span className="accent">Mente</span> de un<br />
