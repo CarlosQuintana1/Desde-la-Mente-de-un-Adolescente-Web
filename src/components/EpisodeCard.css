@@ -59,8 +59,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(13, 14, 31, 0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(13, 14, 31, 0.92);
   padding: 0.3rem 0.7rem;
   border-radius: 6px;
   font-size: 0.7rem;
