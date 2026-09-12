@@ -20,7 +20,7 @@ export default function CtaSection() {
     <section className="cta-section" id="escuchar" ref={ref}>
       <div className="cta-content">
         <h2 style={headingStyle}>Escucha donde prefieras</h2>
-        <p style={paragraphStyle}>Disponible en todas las plataformas. Suscríbete y no te pierdas ningún episodio.</p>
+        <p style={paragraphStyle}>Disponible en todas las plataformas.</p>
         <div className="cta-platforms" style={platformsStyle}>
           {platforms.map(({ href, img, label }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="cta-platform">
