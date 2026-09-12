@@ -14,6 +14,8 @@ React single-page application for the podcast "Desde la Mente de un Adolescente"
 - `functions/api/contacto.js` - Pages Function backing the contact form (POST only). Validates, rate-limits, writes to D1, then fires an optional Telegram notification.
 - `wrangler.toml` - Pages project config and the D1 binding (`DB`).
 - `schema.sql` - D1 schema for the `mensajes` table.
+- `scripts/sitemap.mjs` - Generates `public/sitemap.xml` from `src/data/episodes.js` on every build. The file is gitignored; never edit it by hand.
+- `public/site.webmanifest`, `public/favicon.ico`, `public/icon-*.png`, `public/apple-touch-icon.png` - Icons and PWA manifest, wired from the `<head>` of `index.html`.
 
 ## Development & Commands
 - **Dev server (front only):** `pnpm dev`
