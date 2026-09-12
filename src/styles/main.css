@@ -417,14 +417,11 @@ html.lenis body {
   }
 }
 
-/* CSS keeps reveals visible even before React effects run or after a resize. */
-@media (pointer: coarse), (max-width: 768px), (prefers-reduced-motion: reduce) {
+/* Mobile keeps the reveals lightweight while preserving the visual entrance. */
+@media (pointer: coarse), (max-width: 768px) {
   :root {
-    --reveal-opacity: 1;
-    --reveal-transform: none;
     --reveal-filter: none;
-    --reveal-transition: none;
-    --reveal-delay: 0s;
+    --reveal-transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     --card-perspective: none;
   }
 
@@ -434,35 +431,8 @@ html.lenis body {
 
   .reveal,
   .fade-up {
-    opacity: 1 !important;
-    transform: none !important;
     filter: none !important;
-    transition: none !important;
     will-change: auto !important;
-  }
-
-  .hero h1,
-  .hero-sub,
-  .hero-actions,
-  .hero-scroll,
-  .contacto-success,
-  .success-pulse,
-  .soundwave-bar {
-    animation: none;
-  }
-
-  .hero-scroll.reveal {
-    transform: translateX(-50%) !important;
-  }
-
-  .episodio-card,
-  .episodio-img,
-  .ultimo-episodio-card,
-  .ultimo-img-wrap img {
-    transform: none !important;
-    transition: none !important;
-    clip-path: none;
-    box-shadow: none;
   }
 
   .btn-primary::after {
@@ -472,5 +442,29 @@ html.lenis body {
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --reveal-transition: none;
+  }
+
+  .reveal,
+  .fade-up,
+  .hero-background,
+  .hero h1,
+  .hero-sub,
+  .hero-actions,
+  .hero-scroll,
+  .contacto-success,
+  .success-pulse,
+  .soundwave-bar {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .hero-scroll {
+    transform: translateX(-50%) !important;
   }
 }
