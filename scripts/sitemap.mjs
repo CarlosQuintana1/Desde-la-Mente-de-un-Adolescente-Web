@@ -11,7 +11,7 @@ const urls = [
   { loc: '/', lastmod: hoy, changefreq: 'weekly', priority: '1.0' },
   { loc: '/episodios', lastmod: hoy, changefreq: 'weekly', priority: '0.8' },
   // mismo formato que los enlaces de EpisodeCard, para no declarar rutas que el sitio no usa
-  ...episodes.map((ep) => ({ loc: `/episodio/${ep.number}`, changefreq: 'monthly', priority: '0.6' })),
+  ...episodes.map((ep) => ({ loc: `/episodio/${ep.number}`, lastmod: ep.fecha, changefreq: 'monthly', priority: '0.6' })),
 ];
 
 const bloque = ({ loc, lastmod, changefreq, priority }) => [

@@ -35,6 +35,13 @@ const cleanTitle = (title) => {
   return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
 };
 
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+function formatoFecha(iso) {
+  const [a, m, d] = iso.split('-').map(Number);
+  return `${d} de ${MESES[m - 1]} de ${a}`;
+}
+
 export default function EpisodeDetail() {
   const { id } = useParams();
   
@@ -72,7 +79,7 @@ export default function EpisodeDetail() {
           <Link to="/episodios" viewTransition className="back-link">Todos los episodios →</Link>
         </div>
         <h1>Detalle del <span className="accent">Episodio</span></h1>
-        <p>Conoce más a fondo sobre la trayectoria y pasiones de nuestro invitado especial.</p>
+        <p style={{ maxWidth: 'none' }}>Conoce más a fondo sobre la trayectoria y pasiones de nuestro invitado.</p>
       </div>
 
       <section className="episodios" style={{ paddingTop: '1rem', paddingBottom: '8rem' }}>
@@ -88,6 +95,13 @@ export default function EpisodeDetail() {
             <h2 className="ultimo-titulo" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0' }}>
               Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
+            {(ep.fecha || ep.duracion) && (
+              <p className="episodio-meta">
+                {ep.fecha && <time dateTime={ep.fecha}>{formatoFecha(ep.fecha)}</time>}
+                {ep.fecha && ep.duracion && ' · '}
+                {ep.duracion && `${ep.duracion} min`}
+              </p>
+            )}
             <p className="ultimo-desc" style={{ fontSize: '1.05rem', marginBottom: '1.5rem' }}>{ep.desc}</p>
             {ep.quote && <p className="ultimo-cita">{ep.quote}</p>}
             
@@ -117,6 +131,15 @@ export default function EpisodeDetail() {
             </div>
           </div>
         </div>
+
+        {ep.notas && (
+          <details className="episodio-notas">
+            <summary>Sobre este episodio</summary>
+            <div className="episodio-notas-cuerpo">
+              {ep.notas.split('\n').map((linea, i) => <p key={i}>{linea}</p>)}
+            </div>
+          </details>
+        )}
       </section>
     </div>
   );
