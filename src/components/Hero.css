@@ -292,11 +292,3 @@
     justify-content: center;
   }
 }
-
-/* entran con animacion propia al cargar: la capa de GPU las mantiene fluidas mientras dura */
-.hero h1,
-.hero-sub,
-.hero-actions,
-.hero-scroll {
-  will-change: transform, opacity;
-}
