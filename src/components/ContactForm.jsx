@@ -1,6 +1,6 @@
 import { useState, createContext, use } from 'react';
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import UserIcon from './icons/UserIcon';
 import MailIcon from './icons/MailIcon';
 import SubjectIcon from './icons/SubjectIcon';
@@ -117,7 +117,7 @@ export function ContactFormSection({ children }) {
 export function ContactFormHeader({ title, description }) {
   const { state } = use(ContactFormContext);
   return (
-    <div className="contacto-header" style={scrollRevealStyle(stagger(state.progress, 0), 'up')}>
+    <div className="contacto-header" style={scrollRevealStyle(state.progress, 'up', 0)}>
       <h2>{title}</h2>
       <p>{description}</p>
     </div>
@@ -127,7 +127,7 @@ export function ContactFormHeader({ title, description }) {
 export function ContactFormCard({ children }) {
   const { state } = use(ContactFormContext);
   return (
-    <div className="contacto-form-card" style={scrollRevealStyle(stagger(state.progress, 0.1), 'rotate')}>
+    <div className="contacto-form-card" style={scrollRevealStyle(state.progress, 'rotate', 0.1)}>
       {children}
     </div>
   );

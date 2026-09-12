@@ -1,15 +1,15 @@
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import './About.css';
 
 
 export default function About() {
   const [ref, progress] = useScrollProgress();
 
-  const tagStyle = scrollRevealStyle(stagger(progress, 0), 'up');
-  const headingStyle = scrollRevealStyle(stagger(progress, 0.08), 'left');
-  const paragraphStyle = scrollRevealStyle(stagger(progress, 0.16), 'right');
-  const hostStyle = scrollRevealStyle(stagger(progress, 0.24), 'scale');
+  const tagStyle = scrollRevealStyle(progress, 'up', 0);
+  const headingStyle = scrollRevealStyle(progress, 'left', 0.08);
+  const paragraphStyle = scrollRevealStyle(progress, 'right', 0.16);
+  const hostStyle = scrollRevealStyle(progress, 'scale', 0.24);
 
   return (
     <section className="acercadma" id="acercadma" ref={ref}>

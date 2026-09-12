@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
@@ -139,16 +139,16 @@ export default function Episodes() {
     return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
   };
 
-  const titleStyle = scrollRevealStyle(stagger(progress, 0), 'up');
-  const cardStyle = scrollRevealStyle(stagger(progress, 0.1), 'scale');
-  const imgStyle = scrollRevealStyle(stagger(progress, 0.15), 'left');
-  const categoryStyle = scrollRevealStyle(stagger(progress, 0.2), 'up');
-  const episodeTitleStyle = scrollRevealStyle(stagger(progress, 0.25), 'right');
-  const descStyle = scrollRevealStyle(stagger(progress, 0.3), 'blur');
-  const citaStyle = scrollRevealStyle(stagger(progress, 0.35), 'scale');
-  const actionsStyle = scrollRevealStyle(stagger(progress, 0.4), 'up');
-  const recentHeaderStyle = scrollRevealStyle(stagger(progress, 0.5), 'up');
-  const carouselStyle = scrollRevealStyle(stagger(progress, 0.6), 'scale');
+  const titleStyle = scrollRevealStyle(progress, 'up', 0);
+  const cardStyle = scrollRevealStyle(progress, 'scale', 0.1);
+  const imgStyle = scrollRevealStyle(progress, 'left', 0.15);
+  const categoryStyle = scrollRevealStyle(progress, 'up', 0.2);
+  const episodeTitleStyle = scrollRevealStyle(progress, 'right', 0.25);
+  const descStyle = scrollRevealStyle(progress, 'blur', 0.3);
+  const citaStyle = scrollRevealStyle(progress, 'scale', 0.35);
+  const actionsStyle = scrollRevealStyle(progress, 'up', 0.4);
+  const recentHeaderStyle = scrollRevealStyle(progress, 'up', 0.5);
+  const carouselStyle = scrollRevealStyle(progress, 'scale', 0.6);
 
   return (
     <section className="episodios" id="episodios" ref={ref}>

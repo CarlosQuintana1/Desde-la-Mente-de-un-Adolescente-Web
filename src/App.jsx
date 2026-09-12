@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useRef, useState, lazy, Suspense } from 're
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import Lenis from 'lenis';
-import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Episodes from './components/Episodes';
@@ -198,7 +197,6 @@ export default function App() {
       <a href="#main-content" className="skip-link">Saltar al contenido principal</a>
       <div className="grain-overlay" />
       <Particles />
-      <Navbar />
       <ScrollManager lenis={lenis} />
       <main id="main-content">
         <Suspense fallback={<RouteLoader />}>

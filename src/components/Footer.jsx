@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import { useScrollTo } from '../hooks/useScrollTo';
 import './Footer.css';
 
@@ -9,9 +9,9 @@ export default function Footer() {
   const scrollTo = useScrollTo();
   const [ref, progress] = useScrollProgress();
 
-  const brandStyle = scrollRevealStyle(stagger(progress, 0), 'up');
-  const copyrightStyle = scrollRevealStyle(stagger(progress, 0.1), 'blur');
-  const linksStyle = scrollRevealStyle(stagger(progress, 0.2), 'scale');
+  const brandStyle = scrollRevealStyle(progress, 'up', 0);
+  const copyrightStyle = scrollRevealStyle(progress, 'blur', 0.1);
+  const linksStyle = scrollRevealStyle(progress, 'scale', 0.2);
 
   return (
     <footer ref={ref}>

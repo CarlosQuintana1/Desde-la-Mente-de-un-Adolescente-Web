@@ -1,7 +1,7 @@
 import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
 import ArtIcon from './icons/ArtIcon';
@@ -19,7 +19,7 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
   const rectRef = useRef(null);
 
   const staggerDelay = (index % 4) * 0.08;
-  const cardStyle = scrollRevealStyle(stagger(sectionProgress, staggerDelay), 'up', { transition: true });
+  const cardStyle = scrollRevealStyle(sectionProgress, 'up', staggerDelay);
 
   const handleMouseEnter = useCallback(() => {
     if (wrapperRef.current && cardRef.current) {

@@ -6,17 +6,13 @@ export function reveal(base, visible, type = 'up') {
   return `${base} reveal reveal-${type}${visible ? ' visible' : ''}`;
 }
 
-export function stagger(progress, offset = 0) {
-  return Math.max(0, Math.min(1, (progress - offset) / (1 - offset)));
-}
-
 const TRANSITION = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
 
-export function scrollRevealStyle(progress, type = 'up', { transition } = {}) {
+export function scrollRevealStyle(progress, type = 'up', retraso = 0) {
   const p = Math.max(0, Math.min(1, progress));
-  // ya revelado: sin transform ni will-change para no dejar viva la capa de GPU
-  if (p >= 1) return { opacity: 1 };
-  const base = transition ? { willChange: 'transform, opacity', transition: TRANSITION } : { willChange: 'transform, opacity' };
+  const base = { transition: TRANSITION, transitionDelay: `${retraso}s` };
+  // ya revelado: sin transform ni will-change, la transicion se encarga de la entrada
+  if (p >= 1) return { ...base, opacity: 1 };
   switch (type) {
     case 'up':
       return { ...base, opacity: p, transform: `translateY(${(1 - p) * 40}px)` };

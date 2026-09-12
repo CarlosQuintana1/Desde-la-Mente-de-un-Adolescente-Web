@@ -1,5 +1,5 @@
 import { useScrollProgress } from '../hooks/useScrollProgress';
-import { stagger, scrollRevealStyle } from '../utils/classNames';
+import { scrollRevealStyle } from '../utils/classNames';
 import { SITE } from '../data/constants';
 import './CtaSection.css';
 
@@ -12,9 +12,9 @@ const platforms = [
 export default function CtaSection() {
   const [ref, progress] = useScrollProgress();
 
-  const headingStyle = scrollRevealStyle(stagger(progress, 0), 'scale');
-  const paragraphStyle = scrollRevealStyle(stagger(progress, 0.1), 'up');
-  const platformsStyle = scrollRevealStyle(stagger(progress, 0.2), 'scale');
+  const headingStyle = scrollRevealStyle(progress, 'scale', 0);
+  const paragraphStyle = scrollRevealStyle(progress, 'up', 0.1);
+  const platformsStyle = scrollRevealStyle(progress, 'scale', 0.2);
 
   return (
     <section className="cta-section" id="escuchar" ref={ref}>
