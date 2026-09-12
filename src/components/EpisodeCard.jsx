@@ -92,11 +92,19 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
         />
         <div className="episodio-img-wrap" style={{ aspectRatio: '1 / 1' }}>
           <span className="episodio-number">EP {ep.number}</span>
-          <img className="episodio-img" src={ep.img} alt={ep.alt} loading="lazy" width={400} height={400} style={{ aspectRatio: '1 / 1', objectFit: 'cover' }} />
+          <img
+            className="episodio-img"
+            src={ep.img}
+            alt={ep.alt}
+            loading="lazy"
+            width={400}
+            height={400}
+            style={{ aspectRatio: '1 / 1', objectFit: 'cover', viewTransitionName: `episode-cover-${ep.number}` }}
+          />
         </div>
         <div className="episodio-info">
           {renderCategoryBadge(ep.category)}
-          <h3 className="episodio-titulo">{ep.title}</h3>
+          <h3 className="episodio-titulo" style={{ viewTransitionName: `episode-title-${ep.number}` }}>{ep.title}</h3>
           <span className="episodio-nombres">{ep.name}</span>
           <span className="episodio-descrip">{ep.desc}</span>
           {ep.quote && <span className="episodio-cita">{ep.quote}</span>}

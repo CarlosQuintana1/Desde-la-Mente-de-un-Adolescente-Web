@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
@@ -40,6 +41,50 @@ const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', '
 function formatoFecha(iso) {
   const [a, m, d] = iso.split('-').map(Number);
   return `${d} de ${MESES[m - 1]} de ${a}`;
+}
+
+function getSpotifyEpisodeId(url) {
+  try {
+    const segments = new URL(url).pathname.split('/').filter(Boolean);
+    const episodeIndex = segments.indexOf('episode');
+    return episodeIndex >= 0 ? segments[episodeIndex + 1] : null;
+  } catch {
+    return null;
+  }
+}
+
+function SpotifyEmbed({ spotifyUrl, episodeTitle }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const episodeId = getSpotifyEpisodeId(spotifyUrl);
+
+  if (!episodeId) return null;
+
+  const embedId = `spotify-embed-${episodeId}`;
+
+  return (
+    <div className="spotify-embed">
+      <button
+        type="button"
+        className="spotify-embed-control"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? embedId : undefined}
+      >
+        <img src="/assets/img/spotify.webp" alt="" width="18" height="18" aria-hidden="true" />
+        {isOpen ? 'Ocultar reproductor' : 'Escuchar en la página'}
+      </button>
+      {isOpen && (
+        <div className="spotify-embed-panel" id={embedId}>
+          <iframe
+            src={`https://open.spotify.com/embed/episode/${episodeId}?utm_source=generator&theme=0`}
+            title={`Reproductor de Spotify: ${episodeTitle}`}
+            loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function EpisodeDetail() {
@@ -86,13 +131,23 @@ export default function EpisodeDetail() {
         <div className="ultimo-episodio-card" style={{ cursor: 'default' }}>
           <div className="ultimo-img-wrap">
             <span className="episodio-number">EP {ep.number}</span>
-            <img src={ep.img} alt={ep.alt} width={400} height={400} loading="eager" />
+            <img
+              src={ep.img}
+              alt={ep.alt}
+              width={400}
+              height={400}
+              loading="eager"
+              style={{ viewTransitionName: `episode-cover-${ep.number}` }}
+            />
           </div>
           <div className="ultimo-info">
             <div>
               {renderCategoryBadge(ep.category)}
             </div>
-            <h2 className="ultimo-titulo" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0' }}>
+            <h2
+              className="ultimo-titulo"
+              style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0', viewTransitionName: `episode-title-${ep.number}` }}
+            >
               Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
             {(ep.fecha || ep.duracion) && (
@@ -129,6 +184,7 @@ export default function EpisodeDetail() {
                 </a>
               </div>
             </div>
+            <SpotifyEmbed spotifyUrl={ep.links.spotify} episodeTitle={`Ep. ${ep.number}: ${ep.name}`} />
           </div>
         </div>
 

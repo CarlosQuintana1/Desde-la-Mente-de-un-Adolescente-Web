@@ -162,13 +162,23 @@ export default function Episodes() {
         <div className="ultimo-episodio-card" style={cardStyle}>
           <div className="ultimo-img-wrap" style={imgStyle}>
             <span className="episodio-number">EP {latestEp.number}</span>
-            <img src={latestEp.img} alt={latestEp.alt} width={400} height={400} loading="eager" />
+            <img
+              src={latestEp.img}
+              alt={latestEp.alt}
+              width={400}
+              height={400}
+              loading="eager"
+              style={{ viewTransitionName: `episode-cover-${latestEp.number}` }}
+            />
           </div>
           <div className="ultimo-info">
             <div style={categoryStyle}>
               {renderCategoryBadge(latestEp.category)}
             </div>
-            <h3 className="ultimo-titulo" style={episodeTitleStyle}>
+            <h3
+              className="ultimo-titulo"
+              style={{ ...episodeTitleStyle, viewTransitionName: `episode-title-${latestEp.number}` }}
+            >
               Ep #{latestEp.number}: {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
             <p className="ultimo-desc" style={descStyle}>{latestEp.desc}</p>
