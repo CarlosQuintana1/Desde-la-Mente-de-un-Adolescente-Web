@@ -1,4 +1,5 @@
 export const SITE = {
+  url: 'https://desde-la-mente.pages.dev',
   spotify:
     'https://open.spotify.com/show/0aOMar0gio93MweMk2YNJT?si=4220a05c2ae2481e',
   apple:

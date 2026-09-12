@@ -10,21 +10,28 @@ export default function Hero() {
     // Trigger entrance animation shortly after mount
     const timer = setTimeout(() => setLoaded(true), 100);
     let ticking = false;
+    let visible = true;
+
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const sy = window.scrollY;
-          if (backgroundRef.current) {
-            backgroundRef.current.style.transform = `translateY(${sy * 0.28}px) scale(${1 + sy * 0.00015})`;
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
+      // fuera de pantalla el parallax no se ve: no hay por que seguir escribiendo transforms
+      if (!visible || ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        ticking = false;
+        const sy = window.scrollY;
+        if (backgroundRef.current) {
+          backgroundRef.current.style.transform = `translateY(${sy * 0.28}px) scale(${1 + sy * 0.00015})`;
+        }
+      });
     };
+
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    if (backgroundRef.current) observer.observe(backgroundRef.current);
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       clearTimeout(timer);
+      observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);

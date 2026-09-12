@@ -27,23 +27,38 @@ export function useScrollProgress({ offset = 120, endOffset = 0.1 } = {}) {
       return Math.max(0, Math.min(1, Math.max(viewProgress, interProgress)));
     };
 
-    const initial = calc();
-    maxRef.current = initial;
-    setProgress(initial);
-
     const onScroll = () => {
       if (rafRef.current != null) return;
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = null;
-        const p = calc();
-        maxRef.current = Math.max(maxRef.current, p);
-        setProgress(Math.min(1, maxRef.current));
+        aplicar(calc());
       });
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
+    let escuchando = false;
+    const desconectar = () => {
+      if (!escuchando) return;
+      escuchando = false;
       window.removeEventListener('scroll', onScroll);
+    };
+
+    // el progreso solo sube: una vez revelada la seccion ya no hay nada que medir
+    const aplicar = (p) => {
+      maxRef.current = Math.max(maxRef.current, p);
+      const v = Math.min(1, Math.round(maxRef.current * 100) / 100);
+      setProgress(v);
+      if (v >= 1) desconectar();
+    };
+
+    aplicar(calc());
+
+    if (maxRef.current < 1) {
+      escuchando = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    return () => {
+      desconectar();
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
   }, [offset, endOffset]);

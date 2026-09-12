@@ -13,6 +13,8 @@ import Particles from './components/Particles';
 import SEO from './components/SEO';
 import './styles/main.css';
 
+import NotFound from './pages/NotFound';
+
 const EpisodesPage = lazy(() => import('./pages/EpisodesPage'));
 const EpisodeDetail = lazy(() => import('./pages/EpisodeDetail'));
 
@@ -167,9 +169,9 @@ export default function App() {
   const [lenis, setLenis] = useState(null);
 
   useEffect(() => {
+    // lerp en vez de duration: el scroll sigue el gesto en vez de animar 1.2s hacia un destino
     const instance = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+      lerp: 0.12,
       smoothWheel: true,
       wheelMultiplier: 1,
     });
@@ -204,6 +206,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/episodios" element={<EpisodesPage />} />
             <Route path="/episodio/:id" element={<EpisodeDetail />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>

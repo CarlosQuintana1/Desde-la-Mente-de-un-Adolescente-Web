@@ -14,6 +14,8 @@ const TRANSITION = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s c
 
 export function scrollRevealStyle(progress, type = 'up', { transition } = {}) {
   const p = Math.max(0, Math.min(1, progress));
+  // ya revelado: sin transform ni will-change para no dejar viva la capa de GPU
+  if (p >= 1) return { opacity: 1 };
   const base = transition ? { willChange: 'transform, opacity', transition: TRANSITION } : { willChange: 'transform, opacity' };
   switch (type) {
     case 'up':

@@ -111,7 +111,7 @@ export default function Navbar() {
     <nav className={`navbar${(scrolled || !isHomePage) ? ' scrolled' : ''}${isHomePage ? ' is-home' : ''}${!visible ? ' navbar-hidden' : ''}${isEpisodeDetail ? ' navbar--hidden-episode' : ''}`}>
       <div className="navbar-container">
         <Link className="navbar-logo" to="/" onClick={handleLogoClick} viewTransition>
-          <img src="/assets/img/dm.webp" alt="Logo DM Adolescente" width={40} height={40} />
+          <img src="/assets/img/dm-logo.webp" alt="Logo DM Adolescente" width={40} height={40} />
           <span>DM <span className="highlight">Adolescente</span></span>
         </Link>
         <ul className={`nav-links${menuOpen ? ' active' : ''}`}>

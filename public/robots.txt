@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://desdelamentedeunadolescente.com/sitemap.xml
+Sitemap: https://desde-la-mente.pages.dev/sitemap.xml

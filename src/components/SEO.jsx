@@ -1,10 +1,11 @@
+import { SITE } from '../data/constants';
 import { Helmet } from 'react-helmet-async';
 
 export default function SEO({ 
   title, 
   description, 
   image = '/assets/img/dm.webp', 
-  url = 'https://desdelamentedeunadolescente.com', 
+  url = '/', 
   type = 'website' 
 }) {
   const siteTitle = 'Desde la Mente de un Adolescente';
@@ -13,8 +14,8 @@ export default function SEO({
   const fullDesc = description || defaultDesc;
   
   // Ensure the image URL is absolute if it starts with /
-  const imageUrl = image.startsWith('http') ? image : `https://desdelamentedeunadolescente.com${image}`;
-  const canonicalUrl = url.startsWith('http') ? url : `https://desdelamentedeunadolescente.com${url}`;
+  const imageUrl = image.startsWith('http') ? image : `${SITE.url}${image}`;
+  const canonicalUrl = url.startsWith('http') ? url : `${SITE.url}${url}`;
 
   return (
     <Helmet>

@@ -17,7 +17,7 @@ export default function Footer() {
     <footer ref={ref}>
       <div className="footer-inner">
         <div className="footer-brand" style={brandStyle}>
-          <img src="/assets/img/dm.webp" alt="Logo DMA" width={32} height={32} />
+          <img src="/assets/img/dm-logo.webp" alt="Logo DMA" width={32} height={32} />
           <span>DM Adolescente</span>
         </div>
         <p style={copyrightStyle}>&copy; 2026 Desde la Mente de un Adolescente.</p>
