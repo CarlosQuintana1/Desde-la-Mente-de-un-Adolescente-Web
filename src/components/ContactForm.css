@@ -39,7 +39,6 @@
   padding: 3rem;
   box-shadow: var(--shadow-lg);
   position: relative;
-  overflow: hidden;
 }
 
 .contacto-form-card::before {
@@ -49,9 +48,9 @@
   left: -1px;
   width: calc(100% + 2px);
   height: 4px;
-  border-radius: calc(var(--radius) + 1px) calc(var(--radius) + 1px) 0 0;
   background: linear-gradient(90deg, var(--accent), var(--accent-light));
   pointer-events: none;
+  z-index: 1;
 }
 
 .form-grid {
