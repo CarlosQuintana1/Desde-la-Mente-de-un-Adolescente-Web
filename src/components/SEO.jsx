@@ -9,7 +9,7 @@ export default function SEO({
   type = 'website' 
 }) {
   const siteTitle = 'Desde la Mente de un Adolescente';
-  const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} | Podcast de Ciencia y Tecnología`;
+  const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} | Podcast`;
   const defaultDesc = 'Desde la Mente de un Adolescente: Un podcast creado por Carlos Quintana. Entrevistas profundas a mentes brillantes de la ciencia, tecnología, arte y humanidades.';
   const fullDesc = description || defaultDesc;
   
