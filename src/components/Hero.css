@@ -17,7 +17,6 @@
   background-size: cover;
   pointer-events: none;
   animation: hero-bg-reveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: transform;
 }
 
 /* Premium smooth dark mask overlay for perfect text readability */
