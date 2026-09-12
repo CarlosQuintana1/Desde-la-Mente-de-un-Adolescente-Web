@@ -22,6 +22,7 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
   const cardStyle = scrollRevealStyle(sectionProgress, 'up', staggerDelay);
 
   const handleMouseEnter = useCallback(() => {
+    if (window.matchMedia('(pointer: coarse), (max-width: 768px), (prefers-reduced-motion: reduce)').matches) return;
     if (wrapperRef.current && cardRef.current) {
       rectRef.current = wrapperRef.current.getBoundingClientRect();
       cardRef.current.style.transition = 'transform 0.15s ease-out';
@@ -77,7 +78,7 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ ...cardStyle, height: '100%', perspective: '1000px' }}
+      style={{ ...cardStyle, height: '100%', perspective: 'var(--card-perspective, 1000px)' }}
     >
       <article
         className="episodio-card"

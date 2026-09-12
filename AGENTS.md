@@ -74,6 +74,9 @@ Schema changes: edit `schema.sql`, then
   scrolling; keep both paths working.
 - **Images are sized to their display size.** A logo shown at 40px is not a 6400px file.
   Check the rendered size before adding an image.
+- **Mobile motion is disabled in CSS as well as hooks.** Keep the `--reveal-*`
+  overrides and `scrollRevealStyle` together. The hero uses stable `svh`, not `dvh`.
+  See `docs/mobile-verification.md` for responsive regression checks and limits.
 - **Copy lives in the components**, in Spanish, not in a translation file.
 - **Accessibility.** A skip link at the top of the body points at `<main id="main-content">`;
   keep it working, and keep the `:focus-visible` styles.

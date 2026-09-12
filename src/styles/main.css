@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700;800;900&family=Lexend:wght@200;300;400;500;600;700&display=swap');
-
 :root {
   --bg-primary: #0d0e1f;
   --bg-secondary: #141843;
@@ -405,4 +403,74 @@ html.lenis body {
 
 .episodio-notas-cuerpo p:last-child {
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .page-hero--inner {
+    padding: 3rem 1rem 1.5rem;
+  }
+
+  .page-hero h1 {
+    font-size: 2rem;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* CSS keeps reveals visible even before React effects run or after a resize. */
+@media (pointer: coarse), (max-width: 768px), (prefers-reduced-motion: reduce) {
+  :root {
+    --reveal-opacity: 1;
+    --reveal-transform: none;
+    --reveal-filter: none;
+    --reveal-transition: none;
+    --reveal-delay: 0s;
+    --card-perspective: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .hero h1,
+  .hero-sub,
+  .hero-actions,
+  .hero-scroll,
+  .contacto-success,
+  .success-pulse,
+  .soundwave-bar {
+    animation: none;
+  }
+
+  .hero-scroll.reveal {
+    transform: translateX(-50%) !important;
+  }
+
+  .episodio-card,
+  .episodio-img,
+  .ultimo-episodio-card,
+  .ultimo-img-wrap img {
+    transform: none !important;
+    transition: none !important;
+    clip-path: none;
+    box-shadow: none;
+  }
+
+  .btn-primary::after {
+    display: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }

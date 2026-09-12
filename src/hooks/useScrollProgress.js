@@ -6,7 +6,8 @@ export function useScrollProgress({ offset = 120 } = {}) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
+    if (!el || typeof IntersectionObserver === 'undefined' ||
+        window.matchMedia('(pointer: coarse), (max-width: 768px), (prefers-reduced-motion: reduce)').matches) {
       setProgress(1);
       return;
     }
@@ -19,7 +20,7 @@ export function useScrollProgress({ offset = 120 } = {}) {
           observer.disconnect();
         }
       },
-      { rootMargin: `0px 0px -${offset}px 0px`, threshold: 0.1 }
+      { rootMargin: `0px 0px -${offset}px 0px`, threshold: 0 }
     );
 
     observer.observe(el);

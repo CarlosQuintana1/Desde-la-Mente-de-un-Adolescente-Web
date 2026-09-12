@@ -39,6 +39,7 @@ footer p {
 
 .footer-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
 }
 
@@ -63,5 +64,15 @@ footer p {
   .footer-inner {
     flex-direction: column;
     text-align: center;
+  }
+
+  .footer-inner > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .footer-links {
+    justify-content: center;
+    gap: 1rem 1.25rem;
   }
 }
