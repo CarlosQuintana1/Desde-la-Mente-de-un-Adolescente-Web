@@ -15,7 +15,17 @@ export default function Hero() {
 
   return (
     <section className="hero" id="inicio">
-      <div className="hero-background" />
+      <picture className="hero-background">
+        <source media="(max-width: 768px)" srcSet="/assets/img/fondoDM.webp" />
+        <img
+          src="/assets/img/fondopro.webp"
+          alt=""
+          aria-hidden="true"
+          width="1920"
+          height="1081"
+          fetchPriority="high"
+        />
+      </picture>
       <div className="hero-content">
         <h1 className={l('reveal-left')}>
           Desde la<br />

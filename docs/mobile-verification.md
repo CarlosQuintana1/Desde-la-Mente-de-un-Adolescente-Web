@@ -8,7 +8,9 @@
 - Grid tracks now use `minmax(0, 1fr)`. Images have explicit responsive widths,
   information columns can shrink, and platform links wrap inside the card.
 - The hero uses `100svh` instead of `100dvh`; its background no longer animates
-  scale or brightness. The illustration and existing copy are unchanged.
+  scale or brightness. The mobile illustration is a static `<picture>` layer,
+  so browser-toolbar changes do not recalculate a CSS `cover` background while
+  scrolling. The illustration and existing copy are unchanged.
 - Mobile, coarse-pointer and reduced-motion modes override reveal styles in CSS,
   including before effects run and after viewport changes. Keep the `--reveal-*`
   properties in `main.css` and `scrollRevealStyle` together.
