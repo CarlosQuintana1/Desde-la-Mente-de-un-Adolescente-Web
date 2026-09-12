@@ -167,6 +167,10 @@ export default function App() {
   const [lenis, setLenis] = useState(null);
 
   useEffect(() => {
+    // en tactil el scroll nativo ya es suave y corre fuera del hilo principal;
+    // Lenis solo dejaria un bucle de 60 cuadros por segundo vivo sin aportar nada
+    if (window.matchMedia('(pointer: coarse), (max-width: 768px), (prefers-reduced-motion: reduce)').matches) return;
+
     // lerp en vez de duration: el scroll sigue el gesto en vez de animar 1.2s hacia un destino
     const instance = new Lenis({
       lerp: 0.12,
@@ -175,14 +179,16 @@ export default function App() {
     });
     setLenis(instance);
 
+    let id;
     function raf(time) {
       instance.raf(time);
-      requestAnimationFrame(raf);
+      id = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    id = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(id);
       instance.destroy();
       setLenis(null);
     };
