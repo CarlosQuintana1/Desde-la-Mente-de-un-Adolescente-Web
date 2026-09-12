@@ -5,10 +5,10 @@
   "main": "app.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/sitemap.mjs && vite build",
     "preview": "vite preview",
     "mensajes": "wrangler d1 execute dm-contacto --remote --command \"SELECT id, creado, nombre, email, asunto, mensaje FROM mensajes ORDER BY id DESC LIMIT 20\"",
-    "deploy": "vite build && wrangler pages deploy"
+    "deploy": "npm run build && wrangler pages deploy"
   },
   "repository": {
     "type": "git",

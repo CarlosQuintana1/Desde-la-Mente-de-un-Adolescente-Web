@@ -90,3 +90,6 @@ skills-lock.json
 
 # Cloudflare
 .wrangler/
+
+# generado en el build
+public/sitemap.xml

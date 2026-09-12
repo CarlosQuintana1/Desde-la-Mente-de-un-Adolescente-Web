@@ -1,0 +1,16 @@
+{
+  "name": "Desde la Mente de un Adolescente",
+  "short_name": "DM Adolescente",
+  "description": "Podcast de conversaciones con mentes brillantes de la ciencia, la tecnología y las artes.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "es",
+  "background_color": "#0d0e1f",
+  "theme_color": "#6366f1",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
