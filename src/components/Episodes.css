@@ -1,6 +1,6 @@
 /* EPISODES MAIN SECTION */
 .episodios {
-  padding: 4rem 3rem 8rem;
+  padding: 4rem 3rem 5rem;
   max-width: var(--content-max-width);
   margin: 0 auto;
   position: relative;
@@ -373,7 +373,7 @@
 /* RESPONSIVE LAYOUT */
 @media (max-width: 1024px) {
   .episodios {
-    padding: 3rem 2rem 6rem;
+    padding: 3rem 2rem 4rem;
   }
   
   .ultimo-episodio-card {

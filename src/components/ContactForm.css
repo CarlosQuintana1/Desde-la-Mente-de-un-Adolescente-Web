@@ -1,7 +1,6 @@
 /* CONTACT SECTION & FORM */
 .contacto {
-  padding: 8rem 3rem;
-  background: radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.04) 0%, transparent 60%);
+  padding: 4rem 3rem 6rem;
   position: relative;
   z-index: 2;
 }
@@ -321,7 +320,7 @@ select.form-control:focus + .select-arrow {
 /* RESPONSIVE CONTACT */
 @media (max-width: 768px) {
   .contacto {
-    padding: 5rem 1.5rem;
+    padding: 3rem 1.5rem 4rem;
   }
 }
 

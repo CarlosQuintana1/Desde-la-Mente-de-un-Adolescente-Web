@@ -8,7 +8,6 @@ import Episodes from './components/Episodes';
 import ContactForm from './components/ContactForm';
 import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
-import Particles from './components/Particles';
 import SEO from './components/SEO';
 import './styles/main.css';
 
@@ -195,8 +194,6 @@ export default function App() {
     <HelmetProvider>
       <SEO />
       <a href="#main-content" className="skip-link">Saltar al contenido principal</a>
-      <div className="grain-overlay" />
-      <Particles />
       <ScrollManager lenis={lenis} />
       <main id="main-content">
         <Suspense fallback={<RouteLoader />}>

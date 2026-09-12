@@ -1,7 +1,6 @@
 /* CTA SECTION */
 .cta-section {
   padding: 6rem 3rem;
-  background: radial-gradient(ellipse at 50% 100%, rgba(99, 102, 241, 0.06) 0%, transparent 60%);
   text-align: center;
   position: relative;
   overflow: hidden;

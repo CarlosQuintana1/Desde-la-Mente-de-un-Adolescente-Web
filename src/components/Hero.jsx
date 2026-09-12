@@ -51,9 +51,7 @@ export default function Hero() {
           <span className="accent2">Adolescente</span>
         </h1>
         <p className={l('hero-sub reveal-right')}>
-          Un espacio donde las ideas no tienen edad.{' '}
-          <br />
-          Conversaciones con personas que están transformando el mundo.
+          Un espacio donde las ideas no tienen edad.
         </p>
         <div className={l('hero-actions reveal-up')}>
           <a
