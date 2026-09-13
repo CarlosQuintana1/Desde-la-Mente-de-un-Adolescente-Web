@@ -33,7 +33,7 @@
 
 .resenas-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -95,6 +95,12 @@
   font-family: var(--font-secondary);
   font-size: 0.95rem;
   line-height: 1.75;
+}
+
+@media (max-width: 1000px) {
+  .resenas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 768px) {

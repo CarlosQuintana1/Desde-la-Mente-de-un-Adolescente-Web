@@ -15,6 +15,12 @@ const reviews = [
     date: 'hace 3 años',
     text: '¡Muchas felicidades! cada episodio es súper interesante;este en particular me encantó, no tenía idea de lo maravillosa y extensa que resulta la biotecnología. Me fascinó la idea de los abejorros 💖',
   },
+  {
+    initial: 'Y',
+    name: 'yuliana.sogo',
+    date: '136 sem',
+    text: 'que episodio tan educativo 🥺, justamente voy a estudiar una carrera muy relacionada con la biotecnología roja, gracias por el aprendizaje 💗',
+  },
 ];
 
 export default function Reviews() {
