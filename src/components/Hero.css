@@ -91,16 +91,13 @@
 }
 
 .hero-quote {
-  max-width: 620px;
+  max-width: 590px;
   margin: 0;
-  padding: 1.4rem 1.5rem;
-  border: 1px solid var(--border-hover);
-  border-left: 3px solid var(--accent-light);
-  border-radius: var(--radius);
-  background: rgba(20, 24, 67, 0.92);
-  box-shadow: 0 14px 36px rgba(4, 5, 20, 0.38);
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--accent-light);
   color: var(--text-primary);
   font-family: var(--font-primary);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.55);
 }
 
 .hero-quote p {
@@ -252,13 +249,16 @@
   }
 
   .hero-content {
-    padding: 4.5rem 1.5rem 3rem;
+    align-items: flex-end;
+    padding: 4.5rem 1.5rem clamp(7rem, 16svh, 8.5rem);
   }
 
   .hero-quote {
     max-width: 100%;
-    padding: 1.1rem 1.15rem;
-    border-radius: var(--radius-sm);
+    padding-left: 1rem;
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.9),
+      0 8px 24px rgba(0, 0, 0, 0.8);
   }
 
   .hero-quote p {
