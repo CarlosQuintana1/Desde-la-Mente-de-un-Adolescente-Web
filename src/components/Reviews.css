@@ -90,6 +90,8 @@
   font-family: var(--font-secondary);
   font-size: 0.95rem;
   line-height: 1.75;
+  text-align: justify;
+  text-align-last: left;
 }
 
 @media (max-width: 1000px) {
