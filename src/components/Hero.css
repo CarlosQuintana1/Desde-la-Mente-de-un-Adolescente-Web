@@ -1,6 +1,7 @@
 /* HERO SCROLL SEQUENCE */
 .hero {
   --hero-scale: 1;
+  --hero-pan-x: 0px;
   --hero-quote-opacity: 1;
   --hero-quote-y: 0px;
   --hero-solid-opacity: 0;
@@ -46,7 +47,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: translateZ(0) scale(var(--hero-scale));
+  transform: translate3d(var(--hero-pan-x), 0, 0) scale(var(--hero-scale));
   transform-origin: 78% 50%;
 }
 

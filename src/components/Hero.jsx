@@ -36,6 +36,7 @@ export default function Hero() {
       if (reducedMotion.matches) {
         const finalFrame = progress >= 0.5;
         hero.style.setProperty('--hero-scale', '1');
+        hero.style.setProperty('--hero-pan-x', '0px');
         hero.style.setProperty('--hero-quote-opacity', finalFrame ? '0' : '1');
         hero.style.setProperty('--hero-quote-y', '0px');
         hero.style.setProperty('--hero-solid-opacity', finalFrame ? '1' : '0');
@@ -47,14 +48,16 @@ export default function Hero() {
         return;
       }
 
-      const zoom = smoothstep(0.02, 0.7, progress);
-      const quoteExit = smoothstep(0.08, 0.3, progress);
-      const solid = smoothstep(0.5, 0.76, progress);
-      const title1 = smoothstep(0.68, 0.78, progress);
-      const title2 = smoothstep(0.72, 0.82, progress);
-      const title3 = smoothstep(0.76, 0.86, progress);
+      const zoom = smoothstep(0.02, 0.64, progress);
+      const quoteExit = smoothstep(0.06, 0.25, progress);
+      const solid = smoothstep(0.4, 0.68, progress);
+      const title1 = smoothstep(0.6, 0.72, progress);
+      const title2 = smoothstep(0.64, 0.76, progress);
+      const title3 = smoothstep(0.68, 0.8, progress);
+      const panRatio = window.innerWidth <= 768 ? 0.05 : window.innerWidth <= 1024 ? -0.16 : -0.28;
 
-      hero.style.setProperty('--hero-scale', (1 + zoom * 1.7).toFixed(3));
+      hero.style.setProperty('--hero-scale', (1 + zoom * 0.95).toFixed(3));
+      hero.style.setProperty('--hero-pan-x', `${(zoom * window.innerWidth * panRatio).toFixed(1)}px`);
       hero.style.setProperty('--hero-quote-opacity', (1 - quoteExit).toFixed(3));
       hero.style.setProperty('--hero-quote-y', `${(-20 * quoteExit).toFixed(1)}px`);
       hero.style.setProperty('--hero-solid-opacity', solid.toFixed(3));
@@ -95,9 +98,13 @@ export default function Hero() {
     <section ref={heroRef} className={`hero${loaded ? ' is-loaded' : ''}`} id="inicio">
       <div className="hero-stage">
         <picture className="hero-background">
-          <source media="(max-width: 768px)" srcSet="/assets/img/hero-planeta-movil.webp" />
+          <source
+            media="(max-width: 768px)"
+            srcSet="/assets/img/hero-planeta-movil.webp 1x, /assets/img/hero-planeta-movil-hd.webp 2x"
+          />
           <img
             src="/assets/img/hero-planeta-arbol.webp"
+            srcSet="/assets/img/hero-planeta-arbol.webp 1x, /assets/img/hero-planeta-arbol-hd.webp 2x"
             alt=""
             aria-hidden="true"
             width="1672"
