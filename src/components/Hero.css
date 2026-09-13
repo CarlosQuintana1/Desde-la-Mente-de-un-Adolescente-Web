@@ -12,6 +12,7 @@
   position: relative;
   height: 200vh;
   height: 200svh;
+  margin-bottom: -24svh;
   background: var(--bg-primary);
 }
 
@@ -240,6 +241,7 @@
   .hero {
     height: 185vh;
     height: 185svh;
+    margin-bottom: -30svh;
   }
 
   .hero-background img {
