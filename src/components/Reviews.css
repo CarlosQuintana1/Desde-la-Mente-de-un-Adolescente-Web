@@ -82,11 +82,6 @@
   font-weight: 600;
 }
 
-.resena-author-info span {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-}
-
 .resena-card blockquote {
   position: relative;
   padding-left: 1rem;

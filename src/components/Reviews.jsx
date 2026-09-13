@@ -5,21 +5,18 @@ import './Reviews.css';
 const reviews = [
   {
     initial: 'L',
-    name: 'Luz Hernandez',
-    date: 'hace 3 años',
-    text: 'Es un gusto escuchar interesantes temas de mucho aprendizaje y provecho para jóvenes y adultos! Muchas felicidades a los entrevistadores muy profesionales! Fernando lo haces muy bien 🙏',
+    name: 'Luz Hernández',
+    text: 'Es un gusto escuchar interesantes temas de mucho aprendizaje y provecho para jóvenes y adultos. ¡Muchas felicidades a los entrevistadores, muy profesionales!',
   },
   {
     initial: 'L',
-    name: 'Lula Campos Jimenez',
-    date: 'hace 3 años',
-    text: '¡Muchas felicidades! cada episodio es súper interesante;este en particular me encantó, no tenía idea de lo maravillosa y extensa que resulta la biotecnología. Me fascinó la idea de los abejorros 💖',
+    name: 'Lula Campos Jiménez',
+    text: '¡Muchas felicidades! Cada episodio es súper interesante; este en particular me encantó. No tenía idea de lo maravillosa y extensa que resulta la biotecnología. Me fascinó la idea de los abejorros 💖',
   },
   {
     initial: 'Y',
     name: 'yuliana.sogo',
-    date: '136 sem',
-    text: 'que episodio tan educativo 🥺, justamente voy a estudiar una carrera muy relacionada con la biotecnología roja, gracias por el aprendizaje 💗',
+    text: '¡Qué episodio tan educativo 🥺! Justamente voy a estudiar una carrera muy relacionada con la biotecnología roja. Gracias por el aprendizaje 💗',
   },
 ];
 
@@ -45,7 +42,6 @@ export default function Reviews() {
                 <span className="resena-avatar" aria-hidden="true">{review.initial}</span>
                 <span className="resena-author-info">
                   <strong>{review.name}</strong>
-                  <span>{review.date}</span>
                 </span>
               </figcaption>
               <blockquote>{review.text}</blockquote>
