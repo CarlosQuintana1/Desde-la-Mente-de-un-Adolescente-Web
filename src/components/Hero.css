@@ -89,6 +89,35 @@
   z-index: 2;
 }
 
+.hero-quote {
+  max-width: 590px;
+  margin: 0;
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--accent-light);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.55);
+}
+
+.hero-quote p {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+.hero-quote-author {
+  display: block;
+  margin-top: 1.35rem;
+  color: var(--accent-light);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .hero h1 {
   font-family: var(--font-primary);
   font-size: 3.5rem;
@@ -293,11 +322,18 @@
 
 @media (max-width: 768px) {
   .hero-content {
-    padding: 3rem 1.5rem 6rem;
+    justify-content: flex-start;
+    padding: 4.5rem 1.5rem 3rem;
   }
 
-  .hero h1 {
-    font-size: 2.75rem;
+  .hero-quote {
+    max-width: 100%;
+    padding-left: 1rem;
+  }
+
+  .hero-quote p {
+    font-size: 0.98rem;
+    line-height: 1.58;
   }
 
   .hero-background {
@@ -306,8 +342,8 @@
 }
 
 @media (max-width: 480px) {
-  .hero h1 {
-    font-size: 2.2rem;
+  .hero-quote p {
+    font-size: 0.91rem;
   }
 
   .hero-actions {
@@ -322,8 +358,8 @@
 }
 
 @media (max-width: 359px) {
-  .hero h1 {
-    font-size: 1.875rem;
+  .hero-quote p {
+    font-size: 0.86rem;
   }
 
   .hero-actions .btn-primary,

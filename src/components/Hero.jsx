@@ -26,14 +26,12 @@ export default function Hero() {
         />
       </picture>
       <div className="hero-content">
-        <h1 className={l('reveal-left')}>
-          Desde la<br />
-          <span className="accent">Mente</span> de un<br />
-          <span className="accent2">Adolescente</span>
-        </h1>
-        <p className={l('hero-sub reveal-right')}>
-          Un espacio donde las ideas no tienen edad.
-        </p>
+        <blockquote className={l('hero-quote reveal-left')}>
+          <p>
+            Nunca podré ser todas las personas que quiero ser ni vivir todas las vidas que quiero vivir. Jamás podré aprender a hacer todas las cosas que quiero aprender a hacer. Y ¿por qué quiero? Quiero vivir y sentir todas las tonalidades, matices y variaciones de la experiencia mental y física que sea posible.
+          </p>
+          <cite className={l('hero-quote-author reveal-right')}>Sylvia Plath</cite>
+        </blockquote>
       </div>
       <div className={l('hero-scroll reveal-blur')}>
         <span>Desliza</span>
