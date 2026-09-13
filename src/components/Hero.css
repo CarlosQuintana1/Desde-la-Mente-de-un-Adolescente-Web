@@ -250,7 +250,7 @@
 
   .hero-content {
     align-items: flex-end;
-    padding: 4.5rem 1.5rem clamp(6.75rem, 15svh, 8rem);
+    padding: 4.5rem 1.5rem clamp(5.75rem, 12svh, 6.75rem);
   }
 
   .hero-quote {
@@ -276,7 +276,11 @@
   }
 
   .hero-scroll {
-    bottom: 0.35rem;
+    bottom: 0;
+  }
+
+  .hero-scroll .line {
+    height: 32px;
   }
 }
 
