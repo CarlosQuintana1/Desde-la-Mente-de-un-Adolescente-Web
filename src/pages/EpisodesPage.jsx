@@ -42,7 +42,7 @@ export default function EpisodesPage() {
       <div className="page-hero reveal visible page-hero--inner">
         <Link to="/" viewTransition className="back-link">← Inicio</Link>
         <h1>Todos los <span className="accent">Episodios</span></h1>
-        <p>Explora nuestras conversaciones con mentes brillantes de la ciencia, la tecnología y las artes.</p>
+        <p>Explora todas nuestras conversaciones.</p>
       </div>
 
       <section className="episodios episodios--page" id="episodios" ref={gridRef}>
