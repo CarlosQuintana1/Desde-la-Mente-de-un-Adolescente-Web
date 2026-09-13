@@ -16,13 +16,13 @@ export default function Hero() {
   return (
     <section className="hero" id="inicio">
       <picture className="hero-background">
-        <source media="(max-width: 768px)" srcSet="/assets/img/fondoDM.webp" />
+        <source media="(max-width: 768px)" srcSet="/assets/img/hero-planeta-movil.webp" />
         <img
-          src="/assets/img/fondopro.webp"
+          src="/assets/img/hero-planeta-arbol.webp"
           alt=""
           aria-hidden="true"
-          width="1920"
-          height="1081"
+          width="1672"
+          height="941"
           fetchPriority="high"
         />
       </picture>

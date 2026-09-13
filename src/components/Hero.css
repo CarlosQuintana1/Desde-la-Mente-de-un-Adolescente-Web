@@ -285,6 +285,12 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-background img {
+    object-position: right center;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-content {
     padding: 3rem 1.5rem 6rem;
