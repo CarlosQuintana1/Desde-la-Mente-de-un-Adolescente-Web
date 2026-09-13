@@ -24,9 +24,8 @@ export default function About() {
         </div>
         <div className="acercadma-details">
           <p style={paragraphStyle}>
-            <strong>Desde la Mente de un Adolescente</strong> es un podcast donde cada
-            episodio es una conversación profunda con personas excepcionales en ciencia,
-            tecnología, arte y humanidades. Exploramos sus
+            Un podcast donde cada episodio es una conversación profunda con personas
+            excepcionales en ciencia, tecnología, arte y humanidades. Exploramos sus
             pensamientos, experiencias y consejos para inspirar a una nueva generación.
           </p>
           <div className="acercadma-host" style={hostStyle}>

@@ -41,6 +41,8 @@
   line-height: 1.75;
   max-width: 680px;
   margin: 0;
+  text-align: justify;
+  text-align-last: start;
 }
 
 .acercadma-host {
