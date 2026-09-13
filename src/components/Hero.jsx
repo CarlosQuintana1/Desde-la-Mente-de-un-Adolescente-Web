@@ -113,12 +113,9 @@ export default function Hero() {
         <div className="hero-content">
           <blockquote className="hero-quote">
             <p>
-              Nunca podré ser todas las personas que quiero ser ni vivir todas las vidas que quiero vivir.
+              Cierren sus bibliotecas si quieren, pero no hay puerta, cerradura ni cerrojo que puedan poner a la libertad de mi mente.
             </p>
-            <p>
-              Quiero vivir y sentir todas las tonalidades, matices y variaciones de la experiencia mental y física que sea posible.
-            </p>
-            <cite className="hero-quote-author">Sylvia Plath</cite>
+            <cite className="hero-quote-author">Virginia Woolf · Un cuarto propio, 1929</cite>
           </blockquote>
         </div>
 
