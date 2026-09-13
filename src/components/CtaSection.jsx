@@ -7,6 +7,7 @@ import './CtaSection.css';
 const platforms = [
   { href: SITE.spotify, img: '/assets/img/spotify.webp', label: 'Spotify' },
   { href: SITE.apple, img: '/assets/img/applepodcast.webp', label: 'Apple Podcasts' },
+  { href: SITE.deezer, img: '/assets/img/deezer.svg', label: 'Deezer' },
 ];
 
 export default function CtaSection() {

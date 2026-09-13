@@ -4,6 +4,7 @@ export const SITE = {
     'https://open.spotify.com/show/0aOMar0gio93MweMk2YNJT?si=4220a05c2ae2481e',
   apple:
     'https://podcasts.apple.com/mx/podcast/desde-la-mente-de-un-adolescente/id1726697685',
+  deezer: 'https://www.deezer.com/pt/show/1000458742',
   instagram:
     'https://www.instagram.com/desdelamentedeunadolescente/',
 };
