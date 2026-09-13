@@ -5,6 +5,7 @@ import Lenis from 'lenis';
 import Hero from './components/Hero';
 import About from './components/About';
 import Episodes from './components/Episodes';
+import Reviews from './components/Reviews';
 import ContactForm from './components/ContactForm';
 import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
@@ -50,6 +51,7 @@ function HomePage() {
       <Hero />
       <About />
       <Episodes />
+      <Reviews />
       <ContactForm />
       <CtaSection />
     </>

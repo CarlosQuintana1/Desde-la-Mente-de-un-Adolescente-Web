@@ -1,0 +1,116 @@
+/* REVIEWS SECTION */
+.resenas {
+  padding: 4rem 3rem 2rem;
+  position: relative;
+}
+
+.resenas-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.resenas-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.resenas-tag {
+  display: block;
+  margin-bottom: 1rem;
+  color: var(--accent-light);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.resenas-header h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.resenas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.resena-card {
+  min-width: 0;
+  margin: 0;
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow);
+}
+
+.resena-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.35rem;
+}
+
+.resena-avatar {
+  display: grid;
+  flex: 0 0 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--accent-dim);
+  color: var(--accent-light);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.resena-author-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.resena-author-info strong {
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.resena-author-info span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.resena-card blockquote {
+  position: relative;
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+  color: var(--text-secondary);
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .resenas {
+    padding: 3rem 1.5rem 1rem;
+  }
+
+  .resenas-header {
+    margin-bottom: 2rem;
+  }
+
+  .resenas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resena-card {
+    padding: 1.5rem;
+  }
+}
