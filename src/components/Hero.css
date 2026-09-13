@@ -209,6 +209,20 @@
   background: linear-gradient(to bottom, var(--text-muted), transparent);
 }
 
+@media (min-width: 1025px) {
+  .hero-content {
+    transform: translate3d(-22px, calc(var(--hero-quote-y) + 1.9rem), 0);
+  }
+
+  .hero.is-loaded .hero-content {
+    transform: translate3d(0, calc(var(--hero-quote-y) + 1.9rem), 0);
+  }
+
+  .hero-quote-author {
+    margin-top: 0.65rem;
+  }
+}
+
 @keyframes hero-scroll-float {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(-8px); }
