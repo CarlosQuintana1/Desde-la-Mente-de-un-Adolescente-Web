@@ -280,6 +280,10 @@
     line-height: 1.58;
   }
 
+  .hero-quote-author {
+    margin-top: 0.45rem;
+  }
+
   .hero-title-frame {
     padding: 1.5rem;
   }
