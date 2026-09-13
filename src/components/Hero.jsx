@@ -113,7 +113,14 @@ export default function Hero() {
         <div className="hero-content">
           <blockquote className="hero-quote">
             <p>
-              Nunca podré ser todas las personas que quiero ser ni vivir todas las vidas que quiero vivir. Jamás podré aprender a hacer todas las cosas que quiero aprender a hacer. Y ¿por qué quiero? Quiero vivir y sentir todas las tonalidades, matices y variaciones de la experiencia mental y física que sea posible.
+              Nunca podré ser todas las personas que quiero ser ni vivir todas las vidas que quiero vivir.
+            </p>
+            <p>
+              Jamás podré aprender a hacer todas las cosas que quiero aprender a hacer.
+            </p>
+            <p>Y ¿por qué quiero?</p>
+            <p>
+              Quiero vivir y sentir todas las tonalidades, matices y variaciones de la experiencia mental y física que sea posible.
             </p>
             <cite className="hero-quote-author">Sylvia Plath</cite>
           </blockquote>

@@ -105,6 +105,12 @@
   font-weight: 400;
   line-height: 1.65;
   letter-spacing: 0;
+  text-align: justify;
+  text-align-last: start;
+}
+
+.hero-quote p + p {
+  margin-top: 0.65em;
 }
 
 .hero-quote-author {
