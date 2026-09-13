@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { SITE } from '../data/constants';
 import './Hero.css';
 
 export default function Hero() {
@@ -36,23 +35,6 @@ export default function Hero() {
           Un espacio donde las ideas no tienen edad.
         </p>
         <div className={l('hero-actions reveal-up')}>
-          <a
-            href={SITE.spotify}
-            target="_blank" rel="noopener noreferrer"
-            className="btn-primary"
-          >
-            <span>
-              <img 
-                src="/assets/img/spotify.webp" 
-                alt="" 
-                className="btn-play-icon" 
-                width={20} 
-                height={20} 
-                style={{ objectFit: 'contain' }}
-              />
-              Escuchar en Spotify
-            </span>
-          </a>
           <a href="#episodios" className="btn-secondary"
             onClick={(e) => {
               e.preventDefault();
