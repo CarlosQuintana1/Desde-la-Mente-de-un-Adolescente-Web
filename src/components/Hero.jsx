@@ -34,16 +34,6 @@ export default function Hero() {
         <p className={l('hero-sub reveal-right')}>
           Un espacio donde las ideas no tienen edad.
         </p>
-        <div className={l('hero-actions reveal-up')}>
-          <a href="#episodios" className="btn-secondary"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('episodios')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            Ver Episodios
-          </a>
-        </div>
       </div>
       <div className={l('hero-scroll reveal-blur')}>
         <span>Desliza</span>
