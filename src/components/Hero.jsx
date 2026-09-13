@@ -115,7 +115,7 @@ export default function Hero() {
             <p>
               Cierren sus bibliotecas si quieren, pero no hay puerta, cerradura ni cerrojo que puedan poner a la libertad de mi mente.
             </p>
-            <cite className="hero-quote-author">Virginia Woolf · Un cuarto propio, 1929</cite>
+            <cite className="hero-quote-author">Virginia Woolf</cite>
           </blockquote>
         </div>
 
