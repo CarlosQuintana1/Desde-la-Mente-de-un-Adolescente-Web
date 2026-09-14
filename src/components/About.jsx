@@ -10,7 +10,6 @@ export default function About() {
   const headingStyle = scrollRevealStyle(progress, 'up', 0.08);
   const accentStyle = scrollRevealStyle(progress, 'up', 0.16);
   const paragraphStyle = scrollRevealStyle(progress, 'up', 0.24);
-  const hostStyle = scrollRevealStyle(progress, 'up', 0.32);
 
   return (
     <section className="acercadma" id="acercadma" ref={ref}>
@@ -30,9 +29,6 @@ export default function About() {
             excepcionales en ciencia, tecnología, arte y humanidades. Exploramos sus
             pensamientos, experiencias y consejos para inspirar a una nueva generación.
           </p>
-          <div className="acercadma-host" style={hostStyle}>
-            <span>Creado por <strong>Carlos Quintana</strong></span>
-          </div>
         </div>
       </div>
     </section>
