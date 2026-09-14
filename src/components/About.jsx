@@ -27,7 +27,7 @@ export default function About() {
           <p style={paragraphStyle}>
             Un podcast donde cada episodio es una conversación profunda con personas
             excepcionales en ciencia, tecnología, arte y humanidades. Exploramos sus
-            pensamientos, experiencias y consejos para inspirar a una nueva generación.
+            pensamientos, experiencias y consejos para inspirar a <span className="acercadma-accent">una nueva generación</span>.
           </p>
         </div>
       </div>
