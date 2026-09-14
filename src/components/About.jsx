@@ -7,9 +7,10 @@ export default function About() {
   const [ref, progress] = useScrollProgress();
 
   const tagStyle = scrollRevealStyle(progress, 'up', 0);
-  const headingStyle = scrollRevealStyle(progress, 'left', 0.08);
-  const paragraphStyle = scrollRevealStyle(progress, 'right', 0.16);
-  const hostStyle = scrollRevealStyle(progress, 'scale', 0.24);
+  const headingStyle = scrollRevealStyle(progress, 'up', 0.08);
+  const accentStyle = scrollRevealStyle(progress, 'up', 0.16);
+  const paragraphStyle = scrollRevealStyle(progress, 'up', 0.24);
+  const hostStyle = scrollRevealStyle(progress, 'up', 0.32);
 
   return (
     <section className="acercadma" id="acercadma" ref={ref}>
@@ -18,8 +19,9 @@ export default function About() {
           <div className="acercadma-tag" style={tagStyle}>
             Sobre el podcast
           </div>
-          <h2 style={headingStyle}>
-            Entrevistando a mentes brillantes que están redefiniendo el futuro
+          <h2>
+            <span style={headingStyle}>Entrevistando a</span>{' '}
+            <span className="acercadma-accent" style={accentStyle}>Mentes Brillantes</span>
           </h2>
         </div>
         <div className="acercadma-details">
