@@ -55,7 +55,21 @@
 }
 
 .acercadma-host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2.5vw, 1.25rem);
   margin-top: 1.25rem;
+}
+
+.acercadma-host::before,
+.acercadma-host::after {
+  content: '';
+  width: clamp(2.5rem, 12vw, 4.5rem);
+  height: 1px;
+  flex: 0 1 clamp(2.5rem, 12vw, 4.5rem);
+  background: var(--accent-light);
+  opacity: 0.9;
 }
 
 .acercadma-host span {
@@ -87,5 +101,19 @@
 @media (max-width: 359px) {
   .acercadma-content h2 {
     font-size: 1.5rem;
+  }
+
+  .acercadma-host {
+    gap: 0.5rem;
+  }
+
+  .acercadma-host::before,
+  .acercadma-host::after {
+    width: 2.25rem;
+    flex-basis: 2.25rem;
+  }
+
+  .acercadma-host span {
+    font-size: 0.75rem;
   }
 }
