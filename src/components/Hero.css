@@ -10,8 +10,8 @@
   --hero-title-y: 28px;
   --hero-scroll-opacity: 1;
   position: relative;
-  height: 440vh;
-  height: 440svh;
+  height: 360vh;
+  height: 360svh;
   margin-bottom: calc(-1 * var(--hero-overlap, 0px));
   background: var(--bg-primary);
 }
@@ -255,8 +255,8 @@
 
 @media (max-width: 768px) {
   .hero {
-    height: 440vh;
-    height: 440svh;
+    height: 360vh;
+    height: 360svh;
   }
 
   .hero-background img {

@@ -12,6 +12,7 @@ function smoothstep(start, end, value) {
 export default function Hero() {
   const [loaded, setLoaded] = useState(false);
   const heroRef = useRef(null);
+  const treeRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 100);
@@ -30,24 +31,16 @@ export default function Hero() {
     let stageHeight = stage.clientHeight;
     let titleHeight = title.offsetHeight;
 
-    const updateTree = (progress, dock, reduced = false) => {
+    const updateTree = (progress, dock) => {
       const set = (name, value) => hero.style.setProperty(name, value.toFixed(4));
       const compactHeight = stageHeight < 600 ? 72 : 104;
       const scale = Math.min(0.82, compactHeight / titleHeight);
       set('--title-scale', 1 - dock * (1 - scale));
       hero.style.setProperty('--title-dock-y', `${dock * (-stageHeight / 2 + 24 + titleHeight * scale / 2)}px`);
       set('--tree-opacity', smoothstep(0, 0.06, progress));
-      set('--tree-wave', reduced ? 0 : smoothstep(0, 0.07, progress) * (1 - smoothstep(0.10, 0.23, progress)));
-      set('--wave-width', 1 - smoothstep(0.1, 0.23, progress) * 0.65);
-      set('--tree-roots', smoothstep(0.10, 0.23, progress));
-      set('--tree-trunk', smoothstep(0.18, 0.34, progress));
-      disciplines.forEach((_, index) => {
-        const start = 0.29 + index * 0.15;
-        const branch = smoothstep(start + 0.025, start + 0.18, progress);
-        set(`--branch-${index}`, branch);
-        set(`--label-${index}`, smoothstep(start, start + 0.045, progress));
-        set(`--travel-${index}`, reduced ? 0 : 1 - smoothstep(start, start + 0.14, progress));
-        set(`--pulse-${index}`, reduced ? 0 : Math.sin(branch * Math.PI) * 0.85);
+      treeRef.current?.draw(progress);
+      disciplines.forEach((discipline, index) => {
+        set(`--label-${index}`, smoothstep(discipline.start * 0.88, discipline.start * 0.88 + 0.10, progress));
       });
       set('--tree-complete', smoothstep(0.91, 0.99, progress));
     };
@@ -59,11 +52,11 @@ export default function Hero() {
       const rect = hero.getBoundingClientRect();
       const travel = Math.max(hero.offsetHeight - stageHeight, 1);
       const sequence = clamp(-rect.top / travel);
-      const progress = clamp(sequence * 3.5);
+      const progress = clamp(sequence * 2.9);
 
       if (reducedMotion.matches) {
         const finalFrame = sequence >= 0.3;
-        updateTree(finalFrame ? 1 : 0, finalFrame ? 1 : 0, true);
+        updateTree(finalFrame ? 1 : 0, finalFrame ? 1 : 0);
         hero.style.setProperty('--hero-scale', '1');
         hero.style.setProperty('--hero-quote-opacity', finalFrame ? '0' : '1');
         hero.style.setProperty('--hero-quote-y', '0px');
@@ -82,7 +75,7 @@ export default function Hero() {
       const title1 = smoothstep(0.56, 0.68, progress);
       const title2 = smoothstep(0.6, 0.72, progress);
       const title3 = smoothstep(0.64, 0.76, progress);
-      updateTree(clamp((sequence - 0.34) / 0.60), smoothstep(0.26, 0.38, sequence));
+      updateTree(clamp((sequence - 0.40) / 0.55), smoothstep(0.32, 0.44, sequence));
 
       hero.style.setProperty('--hero-scale', (1 + zoom * 0.95).toFixed(3));
       hero.style.setProperty('--hero-quote-opacity', (1 - quoteExit).toFixed(3));
@@ -171,7 +164,7 @@ export default function Hero() {
           </h1>
         </div>
 
-        <MindTree />
+        <MindTree ref={treeRef} />
 
         <div className="hero-scroll">
           <span>Desliza</span>

@@ -13,7 +13,9 @@ try {
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(1300);
     let forward;
-    for (const progress of reduced ? [0, 1, 0] : [0, 0.23, 0.57, 0.72, 1, 0.57, 0]) {
+    const growth = [];
+    assert.equal(await page.locator('.mind-tree-wave, .mind-tree filter, .mind-tree mask').count(), 0);
+    for (const progress of reduced ? [0, 1, 0] : [0, 0.27, 0.42, 0.57, 0.72, 1, 0.57, 0]) {
       await page.evaluate(p => {
         const hero = document.querySelector('.hero');
         window.scrollTo({ top: p * (hero.offsetHeight - hero.querySelector('.hero-stage').clientHeight), behavior: 'instant' });
@@ -22,11 +24,18 @@ try {
       const result = await page.evaluate(() => {
         const hero = document.querySelector('.hero');
         const property = name => Number(hero.style.getPropertyValue(name));
+        const canvas = hero.querySelector('canvas');
+        const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+        let painted = 0, top = canvas.height, bottom = 0, hash = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] > 30) { painted++; const y = Math.floor(i / 4 / canvas.width); top = Math.min(top, y); bottom = Math.max(bottom, y); }
+          hash = (hash * 31 + data[i + 3]) >>> 0;
+        }
         return {
           overflow: document.documentElement.scrollWidth - innerWidth,
           quote: property('--hero-quote-opacity'),
           complete: property('--tree-complete'),
-          branches: [0, 1, 2, 3].map(i => property(`--branch-${i}`)),
+          geometry: { painted, top, bottom, hash },
           labels: [...hero.querySelectorAll('.mind-tree-label')].map(label => {
             const r = label.getBoundingClientRect();
             return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, opacity: Number(getComputedStyle(label).opacity) };
@@ -36,17 +45,18 @@ try {
       assert.equal(result.overflow, 0);
       if (progress === 0) assert.equal(result.quote, 1);
       if (progress === 0.57) {
-        assert(result.branches[0] > 0 && result.branches[1] === 0);
+        assert(result.geometry.painted > 50);
         if (forward) assert.deepEqual(result, forward);
         forward = result;
       }
+      if ([0.42, 0.57, 0.72, 1].includes(progress) && !reduced && growth.length < 4) growth.push(result.geometry);
       if (progress === 1) {
         assert.equal(result.complete, 1);
         for (const label of result.labels) {
           assert.equal(label.opacity, 1);
           assert(label.left >= 0 && label.right <= width && label.top >= 0 && label.bottom <= height);
         }
-        // Inspect the rendered screenshot, including SVG masks and the raster asset.
+        // Inspect visible pixels as well as the canvas backing store.
         const screenshot = await page.screenshot();
         const paintedPixels = await page.evaluate(async data => {
           const image = new Image();
@@ -62,6 +72,13 @@ try {
           return visible;
         }, `data:image/png;base64,${screenshot.toString('base64')}`);
         assert(paintedPixels > 500, 'Tree painting must be visible, not just its labels');
+      }
+    }
+    if (!reduced) {
+      assert.equal(growth.length, 4);
+      for (let i = 1; i < growth.length; i++) {
+        assert(growth[i].painted > growth[i - 1].painted, 'Growth must add geometry');
+        assert(growth[i].top < growth[i - 1].top, 'The growing tip must advance upwards');
       }
     }
     await page.goto(`${url.replace(/\/$/, '')}/#acercadma`, { waitUntil: 'networkidle' });
