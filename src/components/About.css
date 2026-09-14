@@ -12,15 +12,6 @@
   text-align: center;
 }
 
-.acercadma-tag {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--accent-light);
-  margin-bottom: 0.75rem;
-}
-
 .acercadma-content h2 {
   font-family: var(--font-secondary);
   font-size: 2.25rem;
