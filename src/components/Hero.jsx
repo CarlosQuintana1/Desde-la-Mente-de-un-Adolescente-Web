@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './Hero.css';
+import MindTree, { disciplines } from './MindTree';
 
 const clamp = (value, min = 0, max = 1) => Math.min(Math.max(value, min), max);
 
@@ -24,17 +25,45 @@ export default function Hero() {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let active = true;
     let frame = 0;
+    const stage = hero.querySelector('.hero-stage');
+    const title = hero.querySelector('.hero-title');
+    let stageHeight = stage.clientHeight;
+    let titleHeight = title.offsetHeight;
+
+    const updateTree = (progress, dock, reduced = false) => {
+      const set = (name, value) => hero.style.setProperty(name, value.toFixed(4));
+      const compactHeight = stageHeight < 600 ? 72 : 104;
+      const scale = Math.min(0.82, compactHeight / titleHeight);
+      set('--title-scale', 1 - dock * (1 - scale));
+      hero.style.setProperty('--title-dock-y', `${dock * (-stageHeight / 2 + 24 + titleHeight * scale / 2)}px`);
+      set('--tree-opacity', smoothstep(0, 0.06, progress));
+      set('--tree-wave', reduced ? 0 : smoothstep(0, 0.07, progress) * (1 - smoothstep(0.10, 0.23, progress)));
+      set('--wave-width', 1 - smoothstep(0.1, 0.23, progress) * 0.65);
+      set('--tree-roots', smoothstep(0.10, 0.23, progress));
+      set('--tree-trunk', smoothstep(0.18, 0.34, progress));
+      disciplines.forEach((_, index) => {
+        const start = 0.29 + index * 0.15;
+        const branch = smoothstep(start + 0.025, start + 0.18, progress);
+        set(`--branch-${index}`, branch);
+        set(`--label-${index}`, smoothstep(start, start + 0.045, progress));
+        set(`--travel-${index}`, reduced ? 0 : 1 - smoothstep(start, start + 0.14, progress));
+        set(`--pulse-${index}`, reduced ? 0 : Math.sin(branch * Math.PI) * 0.85);
+      });
+      set('--tree-complete', smoothstep(0.91, 0.99, progress));
+    };
 
     const update = () => {
       frame = 0;
       if (!active) return;
 
       const rect = hero.getBoundingClientRect();
-      const travel = Math.max(hero.offsetHeight - window.innerHeight, 1);
-      const progress = clamp(-rect.top / travel);
+      const travel = Math.max(hero.offsetHeight - stageHeight, 1);
+      const sequence = clamp(-rect.top / travel);
+      const progress = clamp(sequence * 3.5);
 
       if (reducedMotion.matches) {
-        const finalFrame = progress >= 0.5;
+        const finalFrame = sequence >= 0.3;
+        updateTree(finalFrame ? 1 : 0, finalFrame ? 1 : 0, true);
         hero.style.setProperty('--hero-scale', '1');
         hero.style.setProperty('--hero-quote-opacity', finalFrame ? '0' : '1');
         hero.style.setProperty('--hero-quote-y', '0px');
@@ -53,6 +82,7 @@ export default function Hero() {
       const title1 = smoothstep(0.56, 0.68, progress);
       const title2 = smoothstep(0.6, 0.72, progress);
       const title3 = smoothstep(0.64, 0.76, progress);
+      updateTree(clamp((sequence - 0.34) / 0.60), smoothstep(0.26, 0.38, sequence));
 
       hero.style.setProperty('--hero-scale', (1 + zoom * 0.95).toFixed(3));
       hero.style.setProperty('--hero-quote-opacity', (1 - quoteExit).toFixed(3));
@@ -69,6 +99,18 @@ export default function Hero() {
       if (!active || frame) return;
       frame = requestAnimationFrame(update);
     };
+    const measure = () => {
+      stageHeight = stage.clientHeight;
+      titleHeight = title.offsetHeight;
+      const tree = hero.querySelector('.mind-tree-art');
+      const treeTop = parseFloat(getComputedStyle(tree.parentElement).top);
+      const overlap = window.innerWidth <= 768 ? Math.max(0, stageHeight - treeTop - tree.offsetHeight - 40) : 0;
+      hero.style.setProperty('--hero-overlap', `${overlap}px`);
+      requestUpdate();
+    };
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(stage);
+    resizeObserver.observe(title);
 
     const observer = new IntersectionObserver(([entry]) => {
       active = entry.isIntersecting;
@@ -84,6 +126,7 @@ export default function Hero() {
 
     return () => {
       observer.disconnect();
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
       reducedMotion.removeEventListener('change', requestUpdate);
@@ -127,6 +170,8 @@ export default function Hero() {
             <span>Adolescente</span>
           </h1>
         </div>
+
+        <MindTree />
 
         <div className="hero-scroll">
           <span>Desliza</span>
