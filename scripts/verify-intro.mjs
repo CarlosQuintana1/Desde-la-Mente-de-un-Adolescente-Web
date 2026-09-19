@@ -1,4 +1,14 @@
 import assert from 'node:assert/strict';
+import { branches, clamp, point } from '../src/components/treeGrowth.js';
+
+for (const item of branches.filter(item => item.parent)) {
+  assert.deepEqual(item.curve[0], point(item.parent.curve, item.at));
+  assert(item.width <= item.parent.width * (1 - item.at) + item.parent.endWidth * item.at);
+}
+const tips = [0.1, 0.3, 0.5, 1].map(progress => Math.min(...branches
+  .filter(item => progress > item.start)
+  .map(item => point(item.curve, clamp((progress - item.start) / item.duration))[1])));
+for (let i = 1; i < tips.length; i++) assert(tips[i] < tips[i - 1], 'Geometry must grow upwards before camera framing');
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, headless: true });
@@ -15,7 +25,7 @@ try {
     let forward;
     const growth = [];
     assert.equal(await page.locator('.mind-tree-wave, .mind-tree filter, .mind-tree mask').count(), 0);
-    for (const progress of reduced ? [0, 1, 0] : [0, 0.27, 0.42, 0.57, 0.72, 1, 0.57, 0]) {
+    for (const progress of reduced ? [0, 1, 0] : [0, 0.27, 0.42, 0.46, 0.50, 0.57, 0.61, 0.65, 0.72, 1, 0.57, 0]) {
       await page.evaluate(p => {
         const hero = document.querySelector('.hero');
         window.scrollTo({ top: p * (hero.offsetHeight - hero.querySelector('.hero-stage').clientHeight), behavior: 'instant' });
@@ -35,7 +45,7 @@ try {
           overflow: document.documentElement.scrollWidth - innerWidth,
           quote: property('--hero-quote-opacity'),
           complete: property('--tree-complete'),
-          geometry: { painted, top, bottom, hash },
+          geometry: { painted, top, bottom, hash, height: canvas.height },
           labels: [...hero.querySelectorAll('.mind-tree-label')].map(label => {
             const r = label.getBoundingClientRect();
             return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, opacity: Number(getComputedStyle(label).opacity) };
@@ -43,6 +53,8 @@ try {
         };
       });
       assert.equal(result.overflow, 0);
+      if (progress === 0.42 && !reduced) assert(result.geometry.top < result.geometry.height * 0.4, 'Seed must be framed near the title');
+      if (process.env.SCREENSHOT_DIR && progress > 0.4) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/tree-${width}-${progress}${reduced ? '-reduced' : ''}.png` });
       if (progress === 0) assert.equal(result.quote, 1);
       if (progress === 0.57) {
         assert(result.geometry.painted > 50);
@@ -78,7 +90,7 @@ try {
       assert.equal(growth.length, 4);
       for (let i = 1; i < growth.length; i++) {
         assert(growth[i].painted > growth[i - 1].painted, 'Growth must add geometry');
-        assert(growth[i].top < growth[i - 1].top, 'The growing tip must advance upwards');
+        assert(growth[i].top < growth[i].bottom, 'Framed growth must remain visible');
       }
     }
     await page.goto(`${url.replace(/\/$/, '')}/#acercadma`, { waitUntil: 'networkidle' });

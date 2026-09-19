@@ -10,7 +10,7 @@ function branch(curve, width, start, duration, color, leaf = false, parent = nul
   branches.push(item);
   return item;
 }
-const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 32, 0.09, 0.35, '#77a69e');
+const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 30, 0.06, 0.38, '#77a69e');
 const colors = ['#91dfce', '#a4afff', '#e3a5ce', '#e7ce99'];
 const crown = [
   branch([point(trunk.curve, 1), [348, 345], [196, 390], [239, 216]], 18, 0.44, 0.22, colors[0], false, trunk, 1),
@@ -45,12 +45,17 @@ crown.forEach((parent, group) => {
     }
   });
 });
-for (let i = 0; i < 7; i++) {
-  const x = 96 + i * 102;
-  const root = branch([[400, 760], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
+const taproot = branch([[400, 760], [433, 822], [365, 874], [394, 949]], 30, 0.12, 0.28, '#819db2');
+for (let i = 0; i < 6; i++) {
+  const side = i % 2 ? 1 : -1;
+  const tier = Math.floor(i / 2);
+  const at = 0.12 + tier * 0.17;
+  const origin = point(taproot.curve, at);
+  const x = 400 + side * (286 - tier * 77);
+  const root = branch([origin, [origin[0] + side * 32, origin[1] + 45], [x - side * 65, 830 + tier * 25], [x, 910 + tier * 15]], 10 - tier * 2, taproot.start + taproot.duration * at, 0.24, '#819db2', false, taproot, at);
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
-    branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + at * root.duration, 0.16, '#96b7af', false, root, at);
+    branch([p, [p[0] + side * 16, p[1] + 15], [p[0] + side * (j ? 38 : -12), p[1] + 32], [p[0] + side * (j ? 45 : -18), p[1] + 57]], 2.2, root.start + at * root.duration, 0.16, '#96b7af', false, root, at);
   }
 }
 branches.forEach(item => {
@@ -69,7 +74,7 @@ branches.forEach(item => {
 });
 export { branches };
 
-function branchShape(item, growth) {
+function branchShape(item, growth, progress) {
   if (growth <= 0) return null;
   const count = Math.floor(growth * 64);
   const points = item.points.slice(0, count + 1);
@@ -80,14 +85,20 @@ function branchShape(item, growth) {
     const a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
     const length = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
     const t = i === points.length - 1 ? growth : i / 64;
-    const tip = Math.min(1, (growth - t) * 16 + 0.06);
-    const taper = tip + (1 - tip) * (item.continues ? ease((growth - 0.9) / 0.1) : 0);
+    const tip = ease(Math.min(1, (growth - t) * 12)) * 0.8 + 0.2;
+    const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
+    const taper = tip + (1 - tip) * joined;
     const width = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
     sides[1].push([p[0] + (b[1] - a[1]) / length * width, p[1] - (b[0] - a[0]) / length * width]);
   });
   const shape = new Path2D();
-  [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
+  sides[0].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
+  const end = points.at(-1), before = points.at(-2);
+  const length = Math.hypot(end[0] - before[0], end[1] - before[1]) || 1;
+  const radiusAtTip = Math.hypot(sides[0].at(-1)[0] - end[0], sides[0].at(-1)[1] - end[1]);
+  shape.quadraticCurveTo(end[0] + (end[0] - before[0]) / length * radiusAtTip * 2, end[1] + (end[1] - before[1]) / length * radiusAtTip * 2, ...sides[1].at(-1));
+  sides[1].reverse().slice(1).forEach(p => shape.lineTo(...p));
   shape.closePath();
   const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) / 2;
   const joint = new Path2D();
@@ -131,17 +142,21 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
+    const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
+    const growingTop = shapes.reduce((top, { points, item }) => Math.min(top, ...points.map(p => p[1] - item.width / 2)), 736);
+    // Follow the sprout until the crown reaches its final framing.
+    const cameraY = Math.min(490, Math.max(0, growingTop - 110)) * (1 - ease((progress - 0.38) / 0.22));
+    ctx.translate(0, -cameraY);
     const seedScale = 1 - ease((progress - 0.13) / 0.19);
     if (progress > 0 && seedScale > 0) {
-      const opening = ease((progress - 0.04) / 0.14);
+      const opening = ease((progress - 0.04) / 0.09);
       for (const side of [-1, 1]) {
-        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760);
-        ctx.rotate(side * (0.25 + opening * 0.45)); ctx.scale(seedScale * (1 - opening * 0.55), seedScale * (1 - opening * 0.35));
-        ctx.beginPath(); ctx.moveTo(0, -23); ctx.bezierCurveTo(side * 28, -5, side * 19, 20, 0, 25); ctx.quadraticCurveTo(side * 4, 0, 0, -23);
+        ctx.save(); ctx.translate(400 + side * opening * 8 * seedScale, 760);
+        ctx.rotate(side * opening * 0.3); ctx.scale(seedScale * 1.3, seedScale * 1.3);
+        ctx.beginPath(); ctx.moveTo(0, -18); ctx.bezierCurveTo(side * 22, -18, side * 22, 18, 0, 18); ctx.closePath();
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
       }
     }
-    const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration))).filter(Boolean);
     // One continuous surface prevents separate branch fills from cutting across junctions.
     const body = new Path2D();
     shapes.forEach(({ shape }) => body.addPath(shape));
@@ -150,9 +165,9 @@ export function createTreeRenderer(canvas) {
     shapes.forEach(({ points, item }) => {
       if (points.length < 5) return;
       ctx.beginPath();
-      points.slice(2, -1).forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p));
+      points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p));
       ctx.strokeStyle = item.gradient;
-      ctx.lineWidth = item.width > 10 ? item.width * 0.24 : 0.55;
+      ctx.lineWidth = item.width > 10 ? item.width * 0.10 : 0.45;
       ctx.stroke();
     });
     ctx.restore();
