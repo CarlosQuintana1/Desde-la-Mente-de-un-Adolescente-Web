@@ -47,9 +47,10 @@ crown.forEach((parent, group) => {
 });
 for (let i = 0; i < 7; i++) {
   const x = 96 + i * 102;
-  const offset = (i - 3) * 4;
-  const depth = Math.abs(i - 3) * 1.5;
-  const root = branch([[400 + offset, 760 + depth], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
+  const origin = point(trunk.curve, 0.035);
+  const offset = (i - 3) * 3;
+  const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
+  root.isRoot = true;
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
     branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + at * root.duration, 0.16, '#96b7af', false, root, at);
@@ -94,7 +95,7 @@ function branchShape(item, growth, progress) {
   [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
   shape.closePath();
   const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) / 2;
-  if (item !== trunk) {
+  if (item.curve !== trunk.curve) {
     const joint = new Path2D();
     joint.arc(...points[0], radius, 0, Math.PI * 2, true);
     shape.addPath(joint);
@@ -111,30 +112,6 @@ function branchShape(item, growth, progress) {
     }
   }
   return { shape, points, item };
-}
-function drawRootCollar(ctx, progress, bark) {
-  const growth = ease((progress - 0.02) / 0.10);
-  if (!growth) return;
-  ctx.save();
-  ctx.translate(400, 760);
-  ctx.scale(growth, growth);
-  ctx.beginPath();
-  ctx.moveTo(-14, -25);
-  ctx.bezierCurveTo(-14, -10, -18, 2, -29, 14);
-  ctx.bezierCurveTo(-16, 9, -7, 10, 0, 19);
-  ctx.bezierCurveTo(7, 10, 16, 9, 29, 14);
-  ctx.bezierCurveTo(18, 2, 14, -10, 14, -25);
-  ctx.closePath();
-  ctx.fillStyle = bark;
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(-2, -20);
-  ctx.bezierCurveTo(-4, -6, -2, 7, 0, 15);
-  ctx.strokeStyle = '#b1c6b7';
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.stroke();
-  ctx.restore();
 }
 function drawCrownCollar(ctx, progress, bark) {
   const growth = ease((progress - crown[0].start + 0.01) / 0.03);
@@ -183,7 +160,9 @@ export function createTreeRenderer(canvas) {
   bark.addColorStop(0, '#466d74'); bark.addColorStop(0.5, '#779e99'); bark.addColorStop(1, '#8c94b5');
   const items = branches.map(item => {
     const gradient = ctx.createLinearGradient(...item.curve[0], ...item.curve[3]);
-    gradient.addColorStop(0, '#8daea6'); gradient.addColorStop(0.4, '#b1c6b7'); gradient.addColorStop(1, item.color);
+    gradient.addColorStop(0, item.isRoot ? '#8daea600' : '#8daea6');
+    if (item.isRoot) gradient.addColorStop(0.2, '#8daea6');
+    gradient.addColorStop(0.4, '#b1c6b7'); gradient.addColorStop(1, item.color);
     return { ...item, gradient };
   });
   ctx.restore();
@@ -216,7 +195,6 @@ export function createTreeRenderer(canvas) {
     });
     ctx.restore();
     drawCrownCollar(ctx, progress, bark);
-    drawRootCollar(ctx, progress, bark);
     items.forEach(item => drawLeaf(ctx, item, progress));
     ctx.restore();
   };
