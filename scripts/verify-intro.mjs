@@ -8,7 +8,7 @@ for (const item of branches.filter(item => item.parent)) {
 const tips = [0.1, 0.3, 0.5, 1].map(progress => Math.min(...branches
   .filter(item => progress > item.start)
   .map(item => point(item.curve, clamp((progress - item.start) / item.duration))[1])));
-for (let i = 1; i < tips.length; i++) assert(tips[i] < tips[i - 1], 'Geometry must grow upwards before camera framing');
+for (let i = 1; i < tips.length; i++) assert(tips[i] < tips[i - 1], 'Geometry must grow upwards');
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, headless: true });
@@ -53,7 +53,7 @@ try {
         };
       });
       assert.equal(result.overflow, 0);
-      if (progress === 0.42 && !reduced) assert(result.geometry.top < result.geometry.height * 0.4, 'Seed must be framed near the title');
+      if (progress === 0.42 && !reduced) assert(result.geometry.top > result.geometry.height * 0.7 && result.geometry.bottom < result.geometry.height * 0.82, 'Seed must remain anchored at the base');
       if (process.env.SCREENSHOT_DIR && progress > 0.4) await page.screenshot({ path: `${process.env.SCREENSHOT_DIR}/tree-${width}-${progress}${reduced ? '-reduced' : ''}.png` });
       if (progress === 0) assert.equal(result.quote, 1);
       if (progress === 0.57) {
@@ -91,6 +91,7 @@ try {
       for (let i = 1; i < growth.length; i++) {
         assert(growth[i].painted > growth[i - 1].painted, 'Growth must add geometry');
         assert(growth[i].top < growth[i].bottom, 'Framed growth must remain visible');
+        assert(growth[i].top < growth[i - 1].top, 'The growing tip must advance upwards without camera motion');
       }
     }
     await page.goto(`${url.replace(/\/$/, '')}/#acercadma`, { waitUntil: 'networkidle' });

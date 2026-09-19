@@ -143,10 +143,6 @@ export function createTreeRenderer(canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
     const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
-    const growingTop = shapes.reduce((top, { points, item }) => Math.min(top, ...points.map(p => p[1] - item.width / 2)), 736);
-    // Follow the sprout until the crown reaches its final framing.
-    const cameraY = Math.min(490, Math.max(0, growingTop - 110)) * (1 - ease((progress - 0.38) / 0.22));
-    ctx.translate(0, -cameraY);
     const seedScale = 1 - ease((progress - 0.13) / 0.19);
     if (progress > 0 && seedScale > 0) {
       const opening = ease((progress - 0.04) / 0.09);
