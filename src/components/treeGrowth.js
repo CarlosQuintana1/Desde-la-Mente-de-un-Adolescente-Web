@@ -13,8 +13,8 @@ function branch(curve, width, start, duration, color, leaf = false, parent = nul
 const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 32, 0.09, 0.35, '#77a69e');
 const colors = ['#91dfce', '#a4afff', '#e3a5ce', '#e7ce99'];
 const crown = [
-  branch([point(trunk.curve, 1), [348, 345], [196, 390], [239, 216]], 18, 0.44, 0.22, colors[0], false, trunk, 1),
-  branch([point(trunk.curve, 1), [449, 342], [617, 368], [574, 208]], 18, 0.44, 0.23, colors[1], false, trunk, 1),
+  branch([point(trunk.curve, 1), [400, 394], [226, 377], [239, 216]], 18, 0.44, 0.22, colors[0], false, trunk, 1),
+  branch([point(trunk.curve, 1), [400, 394], [593, 364], [574, 208]], 18, 0.44, 0.23, colors[1], false, trunk, 1),
   branch([point(trunk.curve, 0.68), [298, 402], [183, 535], [113, 399]], 15, 0.34, 0.23, colors[2], false, trunk, 0.68),
   branch([point(trunk.curve, 0.78), [486, 383], [622, 530], [689, 389]], 15, 0.37, 0.23, colors[3], false, trunk, 0.78),
 ];
@@ -47,7 +47,9 @@ crown.forEach((parent, group) => {
 });
 for (let i = 0; i < 7; i++) {
   const x = 96 + i * 102;
-  const root = branch([[400, 760], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
+  const offset = (i - 3) * 4;
+  const depth = Math.abs(i - 3) * 1.5;
+  const root = branch([[400 + offset, 760 + depth], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
     branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + at * root.duration, 0.16, '#96b7af', false, root, at);
@@ -69,19 +71,21 @@ branches.forEach(item => {
 });
 export { branches };
 
-function branchShape(item, growth) {
+function branchShape(item, growth, progress) {
   if (growth <= 0) return null;
   const count = Math.floor(growth * 64);
   const points = item.points.slice(0, count + 1);
   if (count < 64) points.push(point(item.curve, growth));
   if (points.length < 2) return null;
   const sides = [[], []];
+  const tipFloor = item.width > 10 ? 0.2 : 0.06;
   points.forEach((p, i) => {
     const a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
     const length = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
     const t = i === points.length - 1 ? growth : i / 64;
-    const tip = Math.min(1, (growth - t) * 16 + 0.06);
-    const taper = tip + (1 - tip) * (item.continues ? ease((growth - 0.9) / 0.1) : 0);
+    const tip = Math.min(1, (growth - t) * 16 + tipFloor);
+    const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
+    const taper = tip + (1 - tip) * joined;
     const width = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
     sides[1].push([p[0] + (b[1] - a[1]) / length * width, p[1] - (b[0] - a[0]) / length * width]);
@@ -90,10 +94,65 @@ function branchShape(item, growth) {
   [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
   shape.closePath();
   const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) / 2;
-  const joint = new Path2D();
-  joint.arc(...points[0], radius, 0, Math.PI * 2, true);
-  shape.addPath(joint);
+  if (item !== trunk) {
+    const joint = new Path2D();
+    joint.arc(...points[0], radius, 0, Math.PI * 2, true);
+    shape.addPath(joint);
+  }
+  if (item.width > 10) {
+    const tipPoint = points.at(-1);
+    const tipT = count < 64 ? growth : 1;
+    const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
+    const tipRadius = (item.width * (1 - tipT) + item.endWidth * tipT) * Math.min(1, growth * 4) * tipFloor * (count < 64 ? 1 : 1 - joined) / 2;
+    if (tipRadius > 0.2) {
+      const tipCap = new Path2D();
+      tipCap.arc(...tipPoint, tipRadius, 0, Math.PI * 2, true);
+      shape.addPath(tipCap);
+    }
+  }
   return { shape, points, item };
+}
+function drawRootCollar(ctx, progress, bark) {
+  const growth = ease((progress - 0.02) / 0.10);
+  if (!growth) return;
+  ctx.save();
+  ctx.translate(400, 760);
+  ctx.scale(growth, growth);
+  ctx.beginPath();
+  ctx.moveTo(-14, -25);
+  ctx.bezierCurveTo(-14, -10, -18, 2, -29, 14);
+  ctx.bezierCurveTo(-16, 9, -7, 10, 0, 19);
+  ctx.bezierCurveTo(7, 10, 16, 9, 29, 14);
+  ctx.bezierCurveTo(18, 2, 14, -10, 14, -25);
+  ctx.closePath();
+  ctx.fillStyle = bark;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(-2, -20);
+  ctx.bezierCurveTo(-4, -6, -2, 7, 0, 15);
+  ctx.strokeStyle = '#b1c6b7';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.restore();
+}
+function drawCrownCollar(ctx, progress, bark) {
+  const growth = ease((progress - crown[0].start + 0.01) / 0.03);
+  const opacity = 1 - ease((progress - crown[0].start - 0.08) / 0.12);
+  if (!growth || !opacity) return;
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.translate(400, 432);
+  ctx.scale(growth, growth);
+  ctx.beginPath();
+  ctx.moveTo(-9, 7);
+  ctx.bezierCurveTo(-8, -6, -6, -14, -5, -18);
+  ctx.quadraticCurveTo(0, -24, 5, -18);
+  ctx.bezierCurveTo(6, -14, 8, -6, 9, 7);
+  ctx.closePath();
+  ctx.fillStyle = bark;
+  ctx.fill();
+  ctx.restore();
 }
 function drawLeaf(ctx, item, progress) {
   if (!item.leaf) return;
@@ -141,7 +200,7 @@ export function createTreeRenderer(canvas) {
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
       }
     }
-    const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration))).filter(Boolean);
+    const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
     // One continuous surface prevents separate branch fills from cutting across junctions.
     const body = new Path2D();
     shapes.forEach(({ shape }) => body.addPath(shape));
@@ -156,6 +215,8 @@ export function createTreeRenderer(canvas) {
       ctx.stroke();
     });
     ctx.restore();
+    drawCrownCollar(ctx, progress, bark);
+    drawRootCollar(ctx, progress, bark);
     items.forEach(item => drawLeaf(ctx, item, progress));
     ctx.restore();
   };
