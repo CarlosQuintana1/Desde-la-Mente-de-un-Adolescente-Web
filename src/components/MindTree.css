@@ -42,7 +42,11 @@
 }
 
 @media (max-width: 768px) {
-  .mind-tree { inset: 144px 18px 24px; align-items: flex-start; }
+  .mind-tree {
+    inset: 144px 18px 24px;
+    top: calc(144px + max(0px, (100svh - 168px - (100vw - 36px) * 1.25) / 2));
+    align-items: flex-start;
+  }
   .mind-tree-art { width: 100%; height: auto; max-height: 100%; aspect-ratio: 4 / 5; }
   .mind-tree-label { font-size: 0.85rem; }
   .mind-tree-label.left { right: auto; left: 0; }
