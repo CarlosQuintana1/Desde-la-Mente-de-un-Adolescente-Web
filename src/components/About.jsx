@@ -25,9 +25,10 @@ export default function About() {
         </div>
         <div className="acercadma-details">
           <p style={paragraphStyle}>
-            Un podcast donde cada episodio es una conversación profunda con personas
-            excepcionales en ciencia, tecnología, arte y humanidades. Exploramos sus
-            pensamientos, experiencias y consejos para inspirar a <span className="acercadma-accent">una nueva generación</span>.
+            <span className="acercadma-line">Un podcast donde cada episodio es una conversación profunda con</span>
+            <span className="acercadma-line">personas excepcionales en ciencia, tecnología, arte y humanidades.</span>
+            <span className="acercadma-line">Exploramos sus pensamientos, experiencias y consejos para inspirar a</span>
+            <span className="acercadma-line"><span className="acercadma-accent">una nueva generación.</span></span>
           </p>
         </div>
       </div>
