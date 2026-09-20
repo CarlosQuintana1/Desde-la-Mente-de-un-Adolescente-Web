@@ -127,8 +127,8 @@ export default function Episodes() {
       config = CATEGORY_CONFIG.Arte;
     }
 
-    const displayCategory = category.startsWith('Tecnología · ')
-      ? category.replace('Tecnología · ', '')
+    const displayCategory = category.includes('·')
+      ? category.split('·').slice(1).join('·').trim()
       : category;
 
     return (
