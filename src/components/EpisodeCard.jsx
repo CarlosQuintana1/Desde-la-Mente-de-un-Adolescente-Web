@@ -64,10 +64,14 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
       config = CATEGORY_CONFIG.Arte;
     }
 
+    const displayCategory = category.startsWith('Tecnología · ')
+      ? category.replace('Tecnología · ', '')
+      : category;
+
     return (
       <span className={config.className}>
         {config.icon}
-        {category}
+        {displayCategory}
       </span>
     );
   };
