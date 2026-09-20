@@ -133,13 +133,14 @@ function branchShape(item, growth, progress) {
     }
   });
   const shape = new Path2D();
-  [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
+  [...sides[0], ...[...sides[1]].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
   shape.closePath();
+  const caps = new Path2D();
   const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) / 2;
   if (item.curve !== trunk.curve && !(item.parent === trunk && item.at === 1)) {
     const joint = new Path2D();
     joint.arc(...points[0], radius, 0, Math.PI * 2, true);
-    shape.addPath(joint);
+    caps.addPath(joint);
   }
   if (item.width > 10) {
     const tipPoint = points.at(-1);
@@ -149,7 +150,7 @@ function branchShape(item, growth, progress) {
     if (tipRadius > 0.2) {
       const tipCap = new Path2D();
       tipCap.arc(...tipPoint, tipRadius, 0, Math.PI * 2, true);
-      shape.addPath(tipCap);
+      caps.addPath(tipCap);
     }
   }
   const illumination = new Path2D();
@@ -157,7 +158,35 @@ function branchShape(item, growth, progress) {
     [...lightSides[0], ...lightSides[1].reverse()].forEach((p, i) => i ? illumination.lineTo(...p) : illumination.moveTo(...p));
     illumination.closePath();
   }
-  return { shape, illumination, points, item };
+  shape.addPath(caps);
+  return { shape, caps, sides, illumination, points, item };
+}
+
+function smoothForkContour(shapes) {
+  const stem = shapes.find(({ item }) => item.curve === trunk.curve);
+  const limb = shapes.find(({ item }) => item.curve === crown[0].curve);
+  const sibling = shapes.find(({ item }) => item.curve === crown[1].curve);
+  if (!stem || !limb || !sibling || limb.sides[1].length < 3 || sibling.sides[1].length < 3) return;
+  const a = stem.sides[1].at(-3), joint = stem.sides[1].at(-1), b = limb.sides[1][2];
+  if (Math.hypot(joint[0] - limb.sides[1][0][0], joint[1] - limb.sides[1][0][1]) > 0.01) return;
+  const midpoint = (p, q) => p.map((value, axis) => (value + q[axis]) / 2);
+  const leftControl = midpoint(a, joint), rightControl = midpoint(joint, b);
+  const seam = midpoint(leftControl, rightControl);
+  // Split one quadratic curve across both outlines so the join has a shared tangent.
+  for (const part of [stem, limb, sibling]) {
+    const shape = new Path2D();
+    part.sides[0].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
+    if (part === stem) {
+      shape.lineTo(...seam);
+      shape.quadraticCurveTo(...leftControl, ...a);
+      for (let i = part.sides[1].length - 4; i >= 0; i--) shape.lineTo(...part.sides[1][i]);
+    } else {
+      for (let i = part.sides[1].length - 1; i >= 2; i--) shape.lineTo(...part.sides[1][i]);
+      if (part === sibling) shape.lineTo(...b);
+      shape.quadraticCurveTo(...rightControl, ...seam);
+    }
+    shape.closePath(); shape.addPath(part.caps); part.shape = shape;
+  }
 }
 function drawLeaf(ctx, item, progress) {
   if (!item.leaf) return;
@@ -216,6 +245,7 @@ export function createTreeRenderer(canvas) {
       }
     }
     const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
+    smoothForkContour(shapes);
     // One continuous surface prevents separate branch fills from cutting across junctions.
     const body = new Path2D();
     shapes.forEach(({ shape }) => body.addPath(shape));
