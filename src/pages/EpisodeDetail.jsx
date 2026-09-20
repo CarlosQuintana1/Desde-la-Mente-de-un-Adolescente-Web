@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
+import EpisodeActions from '../components/EpisodeActions';
 import ScienceIcon from '../components/icons/ScienceIcon';
 import TechIcon from '../components/icons/TechIcon';
 import ArtIcon from '../components/icons/ArtIcon';
@@ -41,50 +41,6 @@ const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', '
 function formatoFecha(iso) {
   const [a, m, d] = iso.split('-').map(Number);
   return `${d} de ${MESES[m - 1]} de ${a}`;
-}
-
-function getSpotifyEpisodeId(url) {
-  try {
-    const segments = new URL(url).pathname.split('/').filter(Boolean);
-    const episodeIndex = segments.indexOf('episode');
-    return episodeIndex >= 0 ? segments[episodeIndex + 1] : null;
-  } catch {
-    return null;
-  }
-}
-
-function SpotifyEmbed({ spotifyUrl, episodeTitle }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const episodeId = getSpotifyEpisodeId(spotifyUrl);
-
-  if (!episodeId) return null;
-
-  const embedId = `spotify-embed-${episodeId}`;
-
-  return (
-    <div className="spotify-embed">
-      <button
-        type="button"
-        className="spotify-embed-control"
-        onClick={() => setIsOpen((open) => !open)}
-        aria-expanded={isOpen}
-        aria-controls={isOpen ? embedId : undefined}
-      >
-        <img src="/assets/img/spotify.webp" alt="" width="18" height="18" aria-hidden="true" />
-        {isOpen ? 'Ocultar reproductor' : 'Escuchar en la página'}
-      </button>
-      {isOpen && (
-        <div className="spotify-embed-panel" id={embedId}>
-          <iframe
-            src={`https://open.spotify.com/embed/episode/${episodeId}?utm_source=generator&theme=0`}
-            title={`Reproductor de Spotify: ${episodeTitle}`}
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          />
-        </div>
-      )}
-    </div>
-  );
 }
 
 export default function EpisodeDetail() {
@@ -161,31 +117,7 @@ export default function EpisodeDetail() {
             <p className="ultimo-desc" style={{ fontSize: '1.05rem', marginBottom: '1.5rem' }}>{ep.desc}</p>
             {ep.quote && <p className="ultimo-cita">{ep.quote}</p>}
             
-            <div className="ultimo-actions">
-              <a href={ep.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
-                <span>
-                  <img 
-                    src="/assets/img/spotify.webp" 
-                    alt="" 
-                    width={18} 
-                    height={18} 
-                    style={{ objectFit: 'contain', verticalAlign: 'middle' }} 
-                  />
-                  Reproducir ahora
-                </span>
-              </a>
-              <div className="episodio-links">
-                <a href={ep.links.instagram} target="_blank" rel="noopener noreferrer">
-                  <img src="/assets/img/instagram.webp" alt="" width={18} height={18} />
-                  <span>Instagram</span>
-                </a>
-                <a href={ep.links.apple} target="_blank" rel="noopener noreferrer">
-                  <img src="/assets/img/applepodcast.webp" alt="" width={18} height={18} />
-                  <span>Apple Podcasts</span>
-                </a>
-              </div>
-            </div>
-            <SpotifyEmbed spotifyUrl={ep.links.spotify} episodeTitle={`Ep. ${ep.number}: ${ep.name}`} />
+            <EpisodeActions key={ep.number} episode={ep} />
           </div>
         </div>
 

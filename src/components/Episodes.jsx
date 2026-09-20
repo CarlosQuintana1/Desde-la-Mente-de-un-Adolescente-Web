@@ -4,6 +4,7 @@ import { episodes } from '../data/episodes';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { scrollRevealStyle } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
+import EpisodeActions from './EpisodeActions';
 import ScienceIcon from './icons/ScienceIcon';
 import TechIcon from './icons/TechIcon';
 import ArtIcon from './icons/ArtIcon';
@@ -188,30 +189,7 @@ export default function Episodes() {
             <p className="ultimo-desc" style={descStyle}>{latestEp.desc}</p>
             {latestEp.quote && <p className="ultimo-cita" style={citaStyle}>{latestEp.quote}</p>}
             
-            <div className="ultimo-actions" style={actionsStyle}>
-              <a href={latestEp.links.spotify} target="_blank" rel="noopener noreferrer" className="btn-primary btn-play">
-                <span>
-                  <img 
-                    src="/assets/img/spotify.webp" 
-                    alt="" 
-                    width={18} 
-                    height={18} 
-                    style={{ objectFit: 'contain', verticalAlign: 'middle' }} 
-                  />
-                  Reproducir ahora
-                </span>
-              </a>
-              <div className="episodio-links">
-                <a href={latestEp.links.instagram} target="_blank" rel="noopener noreferrer">
-                  <img src="/assets/img/instagram.webp" alt="" width={18} height={18} />
-                  <span>Instagram</span>
-                </a>
-                <a href={latestEp.links.apple} target="_blank" rel="noopener noreferrer">
-                  <img src="/assets/img/applepodcast.webp" alt="" width={18} height={18} />
-                  <span>Apple Podcasts</span>
-                </a>
-              </div>
-            </div>
+            <EpisodeActions key={latestEp.number} episode={latestEp} style={actionsStyle} />
           </div>
         </div>
       </div>
