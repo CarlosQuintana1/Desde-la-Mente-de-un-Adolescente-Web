@@ -2,35 +2,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
 import EpisodeActions from '../components/EpisodeActions';
-import ScienceIcon from '../components/icons/ScienceIcon';
-import TechIcon from '../components/icons/TechIcon';
-import ArtIcon from '../components/icons/ArtIcon';
 import '../components/Episodes.css';
-
-const CATEGORY_CONFIG = {
-  Ciencia: { className: 'episodio-category episodio-category-ciencia', icon: <ScienceIcon /> },
-  Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <TechIcon /> },
-  Arte: { className: 'episodio-category episodio-category-arte', icon: <ArtIcon /> },
-};
-
-const renderCategoryBadge = (category) => {
-  let config = { className: "episodio-category", icon: null };
-  
-  if (category.startsWith('Ciencia')) {
-    config = CATEGORY_CONFIG.Ciencia;
-  } else if (category.startsWith('Tecnología')) {
-    config = CATEGORY_CONFIG.Tecnologia;
-  } else if (category.startsWith('Arte')) {
-    config = CATEGORY_CONFIG.Arte;
-  }
-
-  return (
-    <span className={config.className}>
-      {config.icon}
-      {category}
-    </span>
-  );
-};
 
 const cleanTitle = (title) => {
   return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
@@ -98,12 +70,9 @@ export default function EpisodeDetail() {
             />
           </div>
           <div className="ultimo-info">
-            <div>
-              {renderCategoryBadge(ep.category)}
-            </div>
             <h2
               className="ultimo-titulo"
-              style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0', viewTransitionName: `episode-title-${ep.number}` }}
+              style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '0 0 1rem', viewTransitionName: `episode-title-${ep.number}` }}
             >
               {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
