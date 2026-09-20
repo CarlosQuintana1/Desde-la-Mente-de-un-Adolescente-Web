@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { branches, clamp, growthPoint, point } from '../src/components/treeGrowth.js';
+import { branches, clamp, disciplines, growthPoint, point } from '../src/components/treeGrowth.js';
+
+for (const discipline of disciplines) {
+  assert.equal(branches.filter(item => item.discipline === discipline).length, 21, 'Every discipline must include its main branch and all descendants');
+}
 
 for (const progress of [0.08, 0.09, 0.10, 0.11]) {
   const trunk = branches[0];
@@ -30,17 +34,39 @@ const url = process.argv[2] || 'http://127.0.0.1:4179';
 try {
   const geometryPage = await browser.newPage();
   const source = await readFile(new URL('../src/components/treeGrowth.js', import.meta.url), 'utf8');
-  const translucentFills = await geometryPage.evaluate(async source => {
-    const { createTreeRenderer } = await import(URL.createObjectURL(new Blob([source], { type: 'text/javascript' })));
-    const canvas = document.createElement('canvas'); canvas.width = 800; canvas.height = 1000;
+  const rendering = await geometryPage.evaluate(async source => {
+    const { createTreeRenderer, branches, point } = await import(URL.createObjectURL(new Blob([source], { type: 'text/javascript' })));
+    const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = 2000;
     const ctx = canvas.getContext('2d'), fill = ctx.fill.bind(ctx);
-    let translucent = 0;
-    ctx.fill = (...args) => { if (ctx.globalAlpha < 1) translucent++; fill(...args); };
+    let translucent = 0, captureBranches = false, branchImage;
+    ctx.fill = (...args) => {
+      if (ctx.globalAlpha < 1) translucent++;
+      // Inspect the branch layer before opaque leaves cover some sample points.
+      if (captureBranches && !branchImage && args.length === 0) branchImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      fill(...args);
+    };
     const draw = createTreeRenderer(canvas);
     for (let step = 370; step <= 520; step++) draw(step / 1000);
-    return translucent;
+    const jointAlpha = [];
+    for (const p of [0.42, 0.44, 0.48, 1]) {
+      draw(p);
+      for (const offset of [-3, 0, 3]) jointAlpha.push(ctx.getImageData(Math.round((400 + offset) * 2), Math.round((432 - offset * 59 / 133) * 2), 1, 1).data[3]);
+    }
+    captureBranches = true; draw(1);
+    const branchCanvas = document.createElement('canvas'); branchCanvas.width = canvas.width; branchCanvas.height = canvas.height;
+    const branchContext = branchCanvas.getContext('2d'); branchContext.putImageData(branchImage, 0, 0);
+    const lights = branches.filter(item => item.parent === branches[0]).flatMap(item => [0.12, 0.5, 0.85].map(t => {
+      const p = point(item.curve, t), expected = item.color.match(/[a-f\d]{2}/gi).map(value => parseInt(value, 16));
+      const pixels = branchContext.getImageData(Math.round(p[0] * 2) - 2, Math.round(p[1] * 2) - 2, 5, 5).data;
+      let closest = Infinity;
+      for (let i = 0; i < pixels.length; i += 4) closest = Math.min(closest, Math.hypot(...expected.map((channel, axis) => channel - pixels[i + axis])));
+      return { discipline: item.discipline.name, t, distance: closest };
+    }));
+    return { translucent, jointAlpha, lights };
   }, source);
-  assert.equal(translucentFills, 0, 'The crown must grow as geometry, without a fading junction overlay');
+  assert.equal(rendering.translucent, 0, 'The crown must grow as geometry, without a fading junction overlay');
+  assert(rendering.jointAlpha.every(alpha => alpha > 240), 'The trunk and crown must stay connected during growth');
+  assert(rendering.lights.every(sample => sample.distance < 30), `Each discipline color must cover the start, middle and end of its branch: ${JSON.stringify(rendering.lights)}`);
   await geometryPage.close();
   for (const [width, height, reduced] of [[1440, 900, false], [390, 844, false], [320, 568, false], [844, 390, false], [390, 844, true]]) {
     const page = await browser.newPage({ viewport: { width, height }, isMobile: width < 769, hasTouch: width < 769, reducedMotion: reduced ? 'reduce' : 'no-preference' });

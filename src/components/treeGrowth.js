@@ -11,13 +11,20 @@ function branch(curve, width, start, duration, color, leaf = false, parent = nul
   return item;
 }
 const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 32, 0.09, 0.35, '#77a69e');
-const colors = ['#91dfce', '#a4afff', '#e3a5ce', '#e7ce99'];
+export const disciplines = [
+  { name: 'Ciencia', color: '#91dfce', start: 0.66, side: 'left', top: '1%' },
+  { name: 'Tecnología', color: '#a4afff', start: 0.67, side: 'right', top: '1%' },
+  { name: 'Arte', color: '#e3a5ce', start: 0.57, side: 'left', top: '55%' },
+  { name: 'Humanidades', color: '#e7ce99', start: 0.60, side: 'right', top: '55%' },
+];
+const colors = disciplines.map(item => item.color);
 const crown = [
   branch([point(trunk.curve, 1), [400, 394], [226, 377], [239, 216]], 18, 0.44, 0.22, colors[0], false, trunk, 1),
   branch([point(trunk.curve, 1), [400, 394], [593, 364], [574, 208]], 18, 0.44, 0.23, colors[1], false, trunk, 1),
   branch([point(trunk.curve, 0.68), [298, 402], [183, 535], [113, 399]], 15, 0.34, 0.23, colors[2], false, trunk, 0.68),
   branch([point(trunk.curve, 0.78), [486, 383], [622, 530], [689, 389]], 15, 0.37, 0.23, colors[3], false, trunk, 0.78),
 ];
+crown.forEach((item, index) => { item.discipline = disciplines[index]; });
 // Children start only after their parent tip reaches the attachment point.
 function twig(parent, at, end, bend, width, leaf = true) {
   const origin = point(parent.curve, at);
@@ -26,7 +33,9 @@ function twig(parent, at, end, bend, width, leaf = true) {
   const length = Math.hypot(...direction) || 1;
   const reach = Math.min(20, Math.hypot(end[0] - origin[0], end[1] - origin[1]) * 0.22);
   const control = [origin[0] + direction[0] / length * reach, origin[1] + direction[1] / length * reach];
-  return branch([origin, control, [end[0] - bend * 0.3, end[1] + 35], end], width, parent.start + parent.duration * at, 0.19, parent.color, leaf, parent, at);
+  const item = branch([origin, control, [end[0] - bend * 0.3, end[1] + 35], end], width, parent.start + parent.duration * at, 0.19, parent.color, leaf, parent, at);
+  item.discipline = parent.discipline;
+  return item;
 }
 const ends = [
   [[91, 287], [129, 152], [221, 95], [331, 112], [367, 238]],
@@ -94,14 +103,26 @@ function branchShape(item, growth, progress) {
   if (points.length < 2) return null;
   const sides = [[], []];
   const tipFloor = item.width > 10 ? 0.2 : 0.06;
+  const crownWidth = item.curve === trunk.curve && growth === 1
+    ? Math.max(item.endWidth * tipFloor, ...crown.slice(0, 2).map(child => {
+      const amount = clamp((progress - child.start) / child.duration);
+      return child.width * Math.min(1, amount * 4) * Math.min(1, amount * 16 + tipFloor);
+    }))
+    : 0;
   points.forEach((p, i) => {
-    const a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
+    let a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
+    const crownBase = item.parent === trunk && item.at === 1;
+    if ((crownBase && i === 0) || (item.curve === trunk.curve && i === points.length - 1 && growth === 1)) {
+      a = trunk.curve[2]; b = trunk.curve[3];
+    }
     const length = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
     const t = i === points.length - 1 ? growth : i / 64;
     const tip = Math.min(1, (growth - t) * 16 + tipFloor);
     const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
     const taper = tip + (1 - tip) * joined;
-    const width = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper / 2;
+    const neck = crownWidth ? ease((t - 0.92) / 0.08) : 0;
+    const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper;
+    const width = (diameter * (1 - neck) + crownWidth * neck) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
     sides[1].push([p[0] + (b[1] - a[1]) / length * width, p[1] - (b[0] - a[0]) / length * width]);
   });
@@ -109,7 +130,7 @@ function branchShape(item, growth, progress) {
   [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
   shape.closePath();
   const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) / 2;
-  if (item.curve !== trunk.curve) {
+  if (item.curve !== trunk.curve && !(item.parent === trunk && item.at === 1)) {
     const joint = new Path2D();
     joint.arc(...points[0], radius, 0, Math.PI * 2, true);
     shape.addPath(joint);
@@ -158,7 +179,7 @@ export function createTreeRenderer(canvas) {
     const gradient = ctx.createLinearGradient(...item.curve[0], ...item.curve[3]);
     gradient.addColorStop(0, item.isRoot ? '#8daea600' : '#8daea6');
     if (item.isRoot) gradient.addColorStop(0.2, '#8daea6');
-    gradient.addColorStop(0.4, '#b1c6b7'); gradient.addColorStop(1, item.color);
+    gradient.addColorStop(0.4, '#b1c6b7'); gradient.addColorStop(1, item.discipline ? '#8daea6' : item.color);
     return { ...item, gradient };
   });
   ctx.restore();
@@ -188,6 +209,18 @@ export function createTreeRenderer(canvas) {
       ctx.strokeStyle = item.gradient;
       ctx.lineWidth = item.width > 10 ? item.width * 0.24 : 0.55;
       ctx.stroke();
+    });
+    shapes.forEach(({ shape, points, item }) => {
+      if (!item.discipline) return;
+      const light = ease((progress - item.discipline.start * 0.88) / 0.10);
+      if (!light) return;
+      ctx.save(); ctx.clip(shape);
+      ctx.beginPath();
+      points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p));
+      ctx.strokeStyle = item.discipline.color;
+      ctx.globalAlpha = light;
+      ctx.lineWidth = Math.max(0.85, item.width * 0.32);
+      ctx.stroke(); ctx.restore();
     });
     ctx.restore();
     items.forEach(item => drawLeaf(ctx, item, progress));

@@ -1,13 +1,8 @@
 import { useImperativeHandle, useLayoutEffect, useRef } from 'react';
-import { createTreeRenderer } from './treeGrowth';
+import { createTreeRenderer, disciplines } from './treeGrowth';
 import './MindTree.css';
 
-export const disciplines = [
-  { name: 'Ciencia', color: '#91dfce', start: 0.66, side: 'left', top: '1%' },
-  { name: 'Tecnología', color: '#a4afff', start: 0.67, side: 'right', top: '1%' },
-  { name: 'Arte', color: '#e3a5ce', start: 0.57, side: 'left', top: '55%' },
-  { name: 'Humanidades', color: '#e7ce99', start: 0.60, side: 'right', top: '55%' },
-];
+export { disciplines };
 
 export default function MindTree({ ref }) {
   const canvasRef = useRef(null);
