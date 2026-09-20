@@ -219,7 +219,7 @@ export default function Episodes() {
       <div className="recientes-section">
         <div className="recientes-header" style={recentHeaderStyle}>
           <h2>Episodios Recientes</h2>
-          <Link to="/episodios" viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
+          <Link to="/episodios" state={{ restoreScroll: true }} viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
         </div>
 
         <div className="carousel-wrapper" style={carouselStyle} role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
@@ -236,6 +236,7 @@ export default function Episodes() {
           <div className={`carousel-container${!canScrollLeft ? ' at-start' : ''}${!canScrollRight ? ' at-end' : ''}`}>
             <div 
               className="carousel-track" 
+              data-scroll-key="recent-episodes"
               ref={sliderRef}
               role="presentation"
             >

@@ -38,9 +38,9 @@ export default function EpisodesPage() {
   }, []);
 
   return (
-    <div>
+    <div data-scroll-page="/episodios">
       <div className="page-hero reveal visible page-hero--inner">
-        <Link to="/" viewTransition className="back-link">← Inicio</Link>
+        <Link to="/" state={{ restoreScroll: true, scrollTo: 'episodios' }} viewTransition className="back-link">← Inicio</Link>
         <h1>Todos los <span className="accent">Episodios</span></h1>
         <p>Explora todas nuestras conversaciones.</p>
       </div>

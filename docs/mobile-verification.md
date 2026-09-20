@@ -42,6 +42,19 @@
 5. Test with a coarse pointer and reduced motion on a real device before
    claiming phone performance is solved. Viewport tests are not FPS measurements.
 
+## Navigation and about entrance, 2026-09-20
+
+- Verified at 390 x 844 with touch emulation and 1440 x 900 with desktop Lenis.
+- Home carousel -> episode -> browser Back and the Inicio link restore both page
+  height and horizontal carousel position. Browser Forward still opens the detail.
+- Full listing -> episode -> browser Back and Todos los episodios restore the
+  listing position; reloading the listing preserves it too.
+- The listing's Inicio link returns to the home episode section. A direct detail
+  visit falls back to that section when there is no saved home position.
+- Direct `/#acercadma` still aligns the section. About enters once with staggered
+  opacity/translation, and is immediately visible with reduced motion enabled.
+- Build and browser checks passed without page errors or horizontal overflow.
+
 ## Limits and rollback
 
 Browser checks used the desktop in-app browser at explicit viewport sizes.

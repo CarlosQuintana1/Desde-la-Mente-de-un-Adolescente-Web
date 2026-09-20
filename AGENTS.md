@@ -30,8 +30,9 @@ be verified by loading the page and looking at it, or by querying D1.
 - `index.html` — entry document; head tags, JSON-LD, icon and manifest links
 - `src/main.jsx` — React root, `BrowserRouter`, and a guard that redirects the legacy
   `episodios.html` path
-- `src/App.jsx` — layout, routes (`/`, `/episodios`, `/episodio/:id`, `*`), Lenis setup,
-  and `ScrollManager`, which owns every programmatic scroll
+- `src/App.jsx` — layout, routes (`/`, `/episodios`, `/episodio/:id`, `*`) and Lenis setup
+- `src/components/ScrollManager.jsx` — route scrolling and history restoration;
+  saves page and carousel positions and waits for `data-scroll-page` after lazy loading
 - `src/data/episodes.js` — the only source of episode content: number, images, copy, links,
   plus `fecha`, `duracion` and `notas` pulled from the podcast RSS feed
 - `src/data/constants.js` — `SITE.url` is the canonical origin; changing it updates the

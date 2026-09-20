@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 export default function NotFound() {
+  const { pathname } = useLocation();
   return (
-    <div>
+    <div data-scroll-page={pathname}>
       <SEO title="Página no encontrada" />
       <div className="page-hero fade-up visible page-hero--inner" style={{ textAlign: 'center', padding: '10rem 2rem' }}>
         <h1>Página <span className="accent">no encontrada</span></h1>

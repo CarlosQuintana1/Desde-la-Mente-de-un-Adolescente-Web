@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
 import ScienceIcon from '../components/icons/ScienceIcon';
@@ -89,13 +89,14 @@ function SpotifyEmbed({ spotifyUrl, episodeTitle }) {
 
 export default function EpisodeDetail() {
   const { id } = useParams();
+  const { pathname } = useLocation();
   
   // Find the episode matching the number (id in URL)
   const ep = episodes.find((e) => e.number === id || e.number === id?.padStart(2, '0'));
 
   if (!ep) {
     return (
-      <div>
+      <div data-scroll-page={pathname}>
         <SEO title="Episodio no encontrado" />
         <div className="page-hero fade-up visible page-hero--inner" style={{ textAlign: 'center', padding: '10rem 2rem' }}>
           <h1>Episodio <span className="accent">no encontrado</span></h1>
@@ -109,7 +110,7 @@ export default function EpisodeDetail() {
   }
 
   return (
-    <div>
+    <div data-scroll-page={pathname}>
       <SEO 
         title={`Ep. ${ep.number}: ${ep.name}`} 
         description={`${ep.title} con ${ep.name}. ${ep.desc}`}
@@ -120,8 +121,8 @@ export default function EpisodeDetail() {
 
       <div className="page-hero fade-up visible page-hero--inner" style={{ paddingTop: '2rem' }}>
         <div className="episode-nav">
-          <Link to="/" state={{ scrollTo: 'episodios' }} viewTransition className="back-link">← Inicio</Link>
-          <Link to="/episodios" viewTransition className="back-link">Todos los episodios →</Link>
+          <Link to="/" state={{ restoreScroll: true, scrollTo: 'episodios' }} viewTransition className="back-link">← Inicio</Link>
+          <Link to="/episodios" state={{ restoreScroll: true }} viewTransition className="back-link">Todos los episodios →</Link>
         </div>
         <h1>Detalle del <span className="accent">Episodio</span></h1>
         <p style={{ maxWidth: 'none' }}>Conoce más a fondo sobre la trayectoria y pasiones de nuestro invitado.</p>
