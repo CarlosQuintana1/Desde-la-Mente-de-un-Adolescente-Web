@@ -28,7 +28,7 @@ export default function EpisodeActions({ episode, style }) {
           >
             <span>
               <img src="/assets/img/spotify.webp" alt="" width="18" height="18" aria-hidden="true" />
-              {isOpen ? 'Ocultar reproductor' : 'Escuchar en la página'}
+              {isOpen ? 'Ocultar reproductor' : 'Escuchar ahora'}
             </span>
           </button>
         )}
