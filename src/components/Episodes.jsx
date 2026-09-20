@@ -184,7 +184,7 @@ export default function Episodes() {
               className="ultimo-titulo"
               style={{ ...episodeTitleStyle, viewTransitionName: `episode-title-${latestEp.number}` }}
             >
-              Ep #{latestEp.number}: {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
+              {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
             <p className="ultimo-desc" style={descStyle}>{latestEp.desc}</p>
             {latestEp.quote && <p className="ultimo-cita" style={citaStyle}>{latestEp.quote}</p>}

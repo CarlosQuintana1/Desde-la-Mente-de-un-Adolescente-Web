@@ -105,7 +105,7 @@ export default function EpisodeDetail() {
               className="ultimo-titulo"
               style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', margin: '1rem 0', viewTransitionName: `episode-title-${ep.number}` }}
             >
-              Ep #{ep.number}: {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
+              {cleanTitle(ep.title)} con <span className="ultimo-invitado">{ep.name}</span>
             </h2>
             {(ep.fecha || ep.duracion) && (
               <p className="episodio-meta">
