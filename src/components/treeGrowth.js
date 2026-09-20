@@ -72,11 +72,25 @@ branches.forEach(item => {
 });
 export { branches };
 
+export function growthPoint(item, t, progress) {
+  const p = point(item.curve, t);
+  const settled = ease((progress - 0.11) / 0.07);
+  if (item.curve === trunk.curve) p[0] = 400 + (p[0] - 400) * settled;
+  if (item.isRoot) {
+    const weight = (1 - settled) * (1 - t) ** 3;
+    p[0] += (400 - item.curve[0][0]) * weight;
+    p[1] += (760 - item.curve[0][1]) * weight;
+  }
+  return p;
+}
+
 function branchShape(item, growth, progress) {
   if (growth <= 0) return null;
   const count = Math.floor(growth * 64);
-  const points = item.points.slice(0, count + 1);
-  if (count < 64) points.push(point(item.curve, growth));
+  const points = progress < 0.18 && (item.isRoot || item.curve === trunk.curve)
+    ? item.points.slice(0, count + 1).map((_, i) => growthPoint(item, i / 64, progress))
+    : item.points.slice(0, count + 1);
+  if (count < 64) points.push(growthPoint(item, growth, progress));
   if (points.length < 2) return null;
   const sides = [[], []];
   const tipFloor = item.width > 10 ? 0.2 : 0.06;
@@ -112,24 +126,6 @@ function branchShape(item, growth, progress) {
     }
   }
   return { shape, points, item };
-}
-function drawCrownCollar(ctx, progress, bark) {
-  const growth = ease((progress - crown[0].start + 0.01) / 0.03);
-  const opacity = 1 - ease((progress - crown[0].start - 0.08) / 0.12);
-  if (!growth || !opacity) return;
-  ctx.save();
-  ctx.globalAlpha = opacity;
-  ctx.translate(400, 432);
-  ctx.scale(growth, growth);
-  ctx.beginPath();
-  ctx.moveTo(-9, 7);
-  ctx.bezierCurveTo(-8, -6, -6, -14, -5, -18);
-  ctx.quadraticCurveTo(0, -24, 5, -18);
-  ctx.bezierCurveTo(6, -14, 8, -6, 9, 7);
-  ctx.closePath();
-  ctx.fillStyle = bark;
-  ctx.fill();
-  ctx.restore();
 }
 function drawLeaf(ctx, item, progress) {
   if (!item.leaf) return;
@@ -194,7 +190,6 @@ export function createTreeRenderer(canvas) {
       ctx.stroke();
     });
     ctx.restore();
-    drawCrownCollar(ctx, progress, bark);
     items.forEach(item => drawLeaf(ctx, item, progress));
     ctx.restore();
   };

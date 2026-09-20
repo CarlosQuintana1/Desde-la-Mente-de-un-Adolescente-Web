@@ -1,8 +1,21 @@
 import assert from 'node:assert/strict';
-import { branches, clamp, point } from '../src/components/treeGrowth.js';
+import { readFile } from 'node:fs/promises';
+import { branches, clamp, growthPoint, point } from '../src/components/treeGrowth.js';
+
+for (const progress of [0.08, 0.09, 0.10, 0.11]) {
+  const trunk = branches[0];
+  assert.equal(growthPoint(trunk, clamp((progress - trunk.start) / trunk.duration), progress)[0], 400, 'Sprout must emerge at the seed center');
+  for (const root of branches.filter(item => item.isRoot)) {
+    assert.deepEqual(growthPoint(root, 0, progress), [400, 760], 'Early roots must share the seed center');
+  }
+}
+for (const item of branches) {
+  for (const t of [0, 0.25, 0.5, 1]) assert.deepEqual(growthPoint(item, t, 1), point(item.curve, t), 'Mature tree geometry must remain unchanged');
+}
 
 for (const item of branches.filter(item => item.parent)) {
   assert.deepEqual(item.curve[0], point(item.parent.curve, item.at));
+  assert.deepEqual(growthPoint(item, 0, item.start), growthPoint(item.parent, item.at, item.start));
   assert(item.width <= item.parent.width * (1 - item.at) + item.parent.endWidth * item.at);
 }
 const tips = [0.1, 0.3, 0.5, 1].map(progress => Math.min(...branches
@@ -15,6 +28,20 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PAT
 const url = process.argv[2] || 'http://127.0.0.1:4179';
 
 try {
+  const geometryPage = await browser.newPage();
+  const source = await readFile(new URL('../src/components/treeGrowth.js', import.meta.url), 'utf8');
+  const translucentFills = await geometryPage.evaluate(async source => {
+    const { createTreeRenderer } = await import(URL.createObjectURL(new Blob([source], { type: 'text/javascript' })));
+    const canvas = document.createElement('canvas'); canvas.width = 800; canvas.height = 1000;
+    const ctx = canvas.getContext('2d'), fill = ctx.fill.bind(ctx);
+    let translucent = 0;
+    ctx.fill = (...args) => { if (ctx.globalAlpha < 1) translucent++; fill(...args); };
+    const draw = createTreeRenderer(canvas);
+    for (let step = 370; step <= 520; step++) draw(step / 1000);
+    return translucent;
+  }, source);
+  assert.equal(translucentFills, 0, 'The crown must grow as geometry, without a fading junction overlay');
+  await geometryPage.close();
   for (const [width, height, reduced] of [[1440, 900, false], [390, 844, false], [320, 568, false], [844, 390, false], [390, 844, true]]) {
     const page = await browser.newPage({ viewport: { width, height }, isMobile: width < 769, hasTouch: width < 769, reducedMotion: reduced ? 'reduce' : 'no-preference' });
     const errors = [];
