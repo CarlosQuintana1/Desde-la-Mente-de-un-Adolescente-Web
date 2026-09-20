@@ -122,7 +122,7 @@ export default function EpisodeDetail() {
         </div>
 
         {ep.notas && (
-          <details className="episodio-notas">
+          <details className="episodio-notas" open>
             <summary>Sobre este episodio</summary>
             <div className="episodio-notas-cuerpo">
               {ep.notas.split('\n').map((linea, i) => <p key={i}>{linea}</p>)}
