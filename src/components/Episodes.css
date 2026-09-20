@@ -151,6 +151,12 @@
   overflow: hidden;
 }
 
+.ultimo-actions .btn-play > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .ultimo-actions .btn-play:hover {
   background-color: #4f46e5;
   transform: translateY(-2px);
