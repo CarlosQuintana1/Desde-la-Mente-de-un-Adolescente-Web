@@ -102,6 +102,7 @@ function branchShape(item, growth, progress) {
   if (count < 64) points.push(growthPoint(item, growth, progress));
   if (points.length < 2) return null;
   const sides = [[], []];
+  const lightSides = [[], []];
   const tipFloor = item.width > 10 ? 0.2 : 0.06;
   const crownWidth = item.curve === trunk.curve && growth === 1
     ? Math.max(item.endWidth * tipFloor, ...crown.slice(0, 2).map(child => {
@@ -125,6 +126,11 @@ function branchShape(item, growth, progress) {
     const width = (diameter * (1 - neck) + crownWidth * neck) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
     sides[1].push([p[0] + (b[1] - a[1]) / length * width, p[1] - (b[0] - a[0]) / length * width]);
+    if (item.discipline) {
+      const inset = width * 0.32;
+      lightSides[0].push([p[0] - (b[1] - a[1]) / length * inset, p[1] + (b[0] - a[0]) / length * inset]);
+      lightSides[1].push([p[0] + (b[1] - a[1]) / length * inset, p[1] - (b[0] - a[0]) / length * inset]);
+    }
   });
   const shape = new Path2D();
   [...sides[0], ...sides[1].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
@@ -146,7 +152,12 @@ function branchShape(item, growth, progress) {
       shape.addPath(tipCap);
     }
   }
-  return { shape, points, item };
+  const illumination = new Path2D();
+  if (item.discipline) {
+    [...lightSides[0], ...lightSides[1].reverse()].forEach((p, i) => i ? illumination.lineTo(...p) : illumination.moveTo(...p));
+    illumination.closePath();
+  }
+  return { shape, illumination, points, item };
 }
 function drawLeaf(ctx, item, progress) {
   if (!item.leaf) return;
@@ -176,11 +187,19 @@ export function createTreeRenderer(canvas) {
   const bark = ctx.createLinearGradient(100, 800, 710, 180);
   bark.addColorStop(0, '#466d74'); bark.addColorStop(0.5, '#779e99'); bark.addColorStop(1, '#8c94b5');
   const items = branches.map(item => {
+    const joinsTrunk = item.discipline && item.parent === trunk;
     const gradient = ctx.createLinearGradient(...item.curve[0], ...item.curve[3]);
-    gradient.addColorStop(0, item.isRoot ? '#8daea600' : '#8daea6');
+    gradient.addColorStop(0, item.isRoot || joinsTrunk ? '#8daea600' : '#8daea6');
+    if (joinsTrunk) gradient.addColorStop(0.1, '#8daea6');
     if (item.isRoot) gradient.addColorStop(0.2, '#8daea6');
     gradient.addColorStop(0.4, '#b1c6b7'); gradient.addColorStop(1, item.discipline ? '#8daea6' : item.color);
-    return { ...item, gradient };
+    let lightPaint = item.discipline?.color;
+    if (joinsTrunk) {
+      lightPaint = ctx.createLinearGradient(...item.curve[0], ...point(item.curve, 0.1));
+      lightPaint.addColorStop(0, `${item.color}00`);
+      lightPaint.addColorStop(1, item.color);
+    }
+    return { ...item, gradient, lightPaint };
   });
   ctx.restore();
   return progress => {
@@ -202,7 +221,11 @@ export function createTreeRenderer(canvas) {
     shapes.forEach(({ shape }) => body.addPath(shape));
     ctx.fillStyle = bark; ctx.fill(body);
     ctx.save(); ctx.clip(body); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    shapes.forEach(({ points, item }) => {
+    shapes.forEach(({ illumination, points, item }) => {
+      if (item.discipline) {
+        ctx.fillStyle = item.gradient; ctx.fill(illumination);
+        return;
+      }
       if (points.length < 5) return;
       ctx.beginPath();
       points.slice(2, -1).forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p));
@@ -210,17 +233,14 @@ export function createTreeRenderer(canvas) {
       ctx.lineWidth = item.width > 10 ? item.width * 0.24 : 0.55;
       ctx.stroke();
     });
-    shapes.forEach(({ shape, points, item }) => {
+    shapes.forEach(({ illumination, item }) => {
       if (!item.discipline) return;
       const light = ease((progress - item.discipline.start * 0.88) / 0.10);
       if (!light) return;
-      ctx.save(); ctx.clip(shape);
-      ctx.beginPath();
-      points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p));
-      ctx.strokeStyle = item.discipline.color;
+      ctx.save();
+      ctx.fillStyle = item.lightPaint;
       ctx.globalAlpha = light;
-      ctx.lineWidth = Math.max(0.85, item.width * 0.32);
-      ctx.stroke(); ctx.restore();
+      ctx.fill(illumination); ctx.restore();
     });
     ctx.restore();
     items.forEach(item => drawLeaf(ctx, item, progress));

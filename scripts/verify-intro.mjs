@@ -38,11 +38,16 @@ try {
     const { createTreeRenderer, branches, point } = await import(URL.createObjectURL(new Blob([source], { type: 'text/javascript' })));
     const canvas = document.createElement('canvas'); canvas.width = 1600; canvas.height = 2000;
     const ctx = canvas.getContext('2d'), fill = ctx.fill.bind(ctx);
-    let translucent = 0, captureBranches = false, branchImage;
+    let translucent = 0, captureBranches = false, branchImage, pathCount = 0;
+    const mainLights = [];
     ctx.fill = (...args) => {
-      if (ctx.globalAlpha < 1) translucent++;
+      if (ctx.globalAlpha < 1 && args.length === 0) translucent++;
       // Inspect the branch layer before opaque leaves cover some sample points.
       if (captureBranches && !branchImage && args.length === 0) branchImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      if (captureBranches && args[0] instanceof Path2D) {
+        if (pathCount >= 1 && pathCount <= 4) mainLights.push(args[0]);
+        pathCount++;
+      }
       fill(...args);
     };
     const draw = createTreeRenderer(canvas);
@@ -62,11 +67,33 @@ try {
       for (let i = 0; i < pixels.length; i += 4) closest = Math.min(closest, Math.hypot(...expected.map((channel, axis) => channel - pixels[i + axis])));
       return { discipline: item.discipline.name, t, distance: closest };
     }));
-    return { translucent, jointAlpha, lights };
+    const transitions = branches.filter(item => item.parent === branches[0]).map((item, index) => {
+      const expected = item.color.match(/[a-f\d]{2}/gi).map(value => parseInt(value, 16));
+      // Measure each light alone so crossing twigs do not inflate its width.
+      const layer = document.createElement('canvas'); layer.width = canvas.width; layer.height = canvas.height;
+      const isolated = layer.getContext('2d'); isolated.scale(2, 2); isolated.fillStyle = item.color; isolated.fill(mainLights[index]);
+      const distanceAt = (p, context = branchContext) => {
+        const pixel = context.getImageData(Math.round(p[0] * 2), Math.round(p[1] * 2), 1, 1).data;
+        if (pixel[3] < 200) return Infinity;
+        return Math.hypot(...expected.map((channel, axis) => channel - pixel[axis]));
+      };
+      const widths = [0.24, 0.64].map(t => {
+        const p = point(item.curve, t), next = point(item.curve, t + 0.001);
+        const dx = next[0] - p[0], dy = next[1] - p[1], length = Math.hypot(dx, dy);
+        let width = 0;
+        for (let offset = -8; offset <= 8; offset += 0.25) {
+          if (distanceAt([p[0] - dy / length * offset, p[1] + dx / length * offset], isolated) < 30) width += 0.25;
+        }
+        return width;
+      });
+      return { name: item.discipline.name, base: distanceAt(point(item.curve, 0.015)), widths };
+    });
+    return { translucent, jointAlpha, lights, transitions };
   }, source);
   assert.equal(rendering.translucent, 0, 'The crown must grow as geometry, without a fading junction overlay');
   assert(rendering.jointAlpha.every(alpha => alpha > 240), 'The trunk and crown must stay connected during growth');
   assert(rendering.lights.every(sample => sample.distance < 30), `Each discipline color must cover the start, middle and end of its branch: ${JSON.stringify(rendering.lights)}`);
+  assert(rendering.transitions.every(sample => sample.base > 30 && sample.widths[1] > 0 && sample.widths[1] < sample.widths[0]), `Lights must blend into the trunk and taper with their branches: ${JSON.stringify(rendering.transitions)}`);
   await geometryPage.close();
   for (const [width, height, reduced] of [[1440, 900, false], [390, 844, false], [320, 568, false], [844, 390, false], [390, 844, true]]) {
     const page = await browser.newPage({ viewport: { width, height }, isMobile: width < 769, hasTouch: width < 769, reducedMotion: reduced ? 'reduce' : 'no-preference' });
