@@ -60,12 +60,26 @@
   width: 2.5rem;
   height: 2.5rem;
   place-items: center;
-  border: 1px solid var(--border-strong);
+  border: 1px solid color-mix(in srgb, var(--avatar-color) 65%, transparent);
   border-radius: 50%;
-  background: var(--accent-dim);
-  color: var(--accent-light);
-  font-size: 1rem;
-  font-weight: 700;
+  background: color-mix(in srgb, var(--avatar-color) 18%, transparent);
+  color: var(--avatar-color);
+}
+
+.resena-avatar-orange {
+  --avatar-color: #f59e0b;
+}
+
+.resena-avatar-green {
+  --avatar-color: #34d399;
+}
+
+.resena-avatar-purple {
+  --avatar-color: #a78bfa;
+}
+
+.resena-avatar svg {
+  display: block;
 }
 
 .resena-author-info {
