@@ -125,9 +125,9 @@ function branchShape(item, growth, progress) {
     const tip = tipFloor + (1 - tipFloor) * Math.sin(clamp((growth - t) / tipLength) * Math.PI / 2);
     const joined = item.continues && item.curve !== trunk.curve ? ease((progress - item.start - item.duration) / 0.07) : 0;
     const taper = tip + (1 - tip) * joined;
-    const neck = crownWidth ? ease((t - (1 - tipLength)) / tipLength) : 0;
     const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper;
-    const width = (diameter * (1 - neck) + crownWidth * neck) / 2;
+    // Grow the fork into the existing tip without narrowing the completed stem.
+    const width = (diameter + crownWidth * (1 - tip)) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
     sides[1].push([p[0] + (b[1] - a[1]) / length * width, p[1] - (b[0] - a[0]) / length * width]);
     if (item.discipline) {
