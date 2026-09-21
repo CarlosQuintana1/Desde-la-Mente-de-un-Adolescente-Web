@@ -7,6 +7,7 @@ export function point(curve, t) {
 const branches = [];
 function branch(curve, width, start, duration, color, leaf = false, parent = null, at = 0) {
   const item = { curve, width, start, duration, color, leaf, parent, at, endWidth: width * (width > 20 ? 0.45 : 0.12), points: Array.from({ length: 65 }, (_, i) => point(curve, i / 64)) };
+  item.length = item.points.slice(1).reduce((total, p, i) => total + Math.hypot(p[0] - item.points[i][0], p[1] - item.points[i][1]), 0);
   branches.push(item);
   return item;
 }
@@ -103,11 +104,13 @@ function branchShape(item, growth, progress) {
   if (points.length < 2) return null;
   const sides = [[], []];
   const lightSides = [[], []];
-  const tipFloor = item.width > 10 ? 0.2 : 0.06;
+  const tipFloor = item.width > 10 ? 0 : 0.06;
+  const tipLength = item.width > 10 ? Math.min(0.35, item.width * 3 / item.length) : 1 / 16;
   const crownWidth = item.curve === trunk.curve && growth === 1
     ? Math.max(item.endWidth * tipFloor, ...crown.slice(0, 2).map(child => {
       const amount = clamp((progress - child.start) / child.duration);
-      return child.width * Math.min(1, amount * 4) * Math.min(1, amount * 16 + tipFloor);
+      const childTipLength = Math.min(0.35, child.width * 3 / child.length);
+      return child.width * Math.min(1, amount * 4) * Math.sin(clamp(amount / childTipLength) * Math.PI / 2);
     }))
     : 0;
   points.forEach((p, i) => {
@@ -119,10 +122,10 @@ function branchShape(item, growth, progress) {
       a = trunk.curve[2]; b = trunk.curve[3];
     }
     const length = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-    const tip = tipFloor + (1 - tipFloor) * ease((growth - t) * 16);
-    const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
+    const tip = tipFloor + (1 - tipFloor) * Math.sin(clamp((growth - t) / tipLength) * Math.PI / 2);
+    const joined = item.continues && item.curve !== trunk.curve ? ease((progress - item.start - item.duration) / 0.07) : 0;
     const taper = tip + (1 - tip) * joined;
-    const neck = crownWidth ? ease((t - 0.92) / 0.08) : 0;
+    const neck = crownWidth ? ease((t - (1 - tipLength)) / tipLength) : 0;
     const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper;
     const width = (diameter * (1 - neck) + crownWidth * neck) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
