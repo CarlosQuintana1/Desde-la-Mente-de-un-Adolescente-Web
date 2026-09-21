@@ -2,15 +2,14 @@ import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
 import { scrollRevealStyle } from '../utils/classNames';
-import ScienceIcon from './icons/ScienceIcon';
-import TechIcon from './icons/TechIcon';
-import ArtIcon from './icons/ArtIcon';
+import { Atom, Cpu, Palette, BookOpen } from 'lucide-react';
 import './EpisodeCard.css';
 
 const CATEGORY_CONFIG = {
-  Ciencia: { className: 'episodio-category episodio-category-ciencia', icon: <ScienceIcon /> },
-  Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <TechIcon /> },
-  Arte: { className: 'episodio-category episodio-category-arte', icon: <ArtIcon /> },
+  Ciencia: { className: 'episodio-category episodio-category-ciencia', icon: <Atom aria-hidden="true" /> },
+  Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <Cpu aria-hidden="true" /> },
+  Arte: { className: 'episodio-category episodio-category-arte', icon: <Palette aria-hidden="true" /> },
+  Humanidades: { className: 'episodio-category episodio-category-humanidades', icon: <BookOpen aria-hidden="true" /> },
 };
 
 export default function EpisodeCard({ ep, index, sectionProgress }) {
@@ -62,6 +61,8 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
       config = CATEGORY_CONFIG.Tecnologia;
     } else if (category.startsWith('Arte')) {
       config = CATEGORY_CONFIG.Arte;
+    } else if (category.startsWith('Humanidades')) {
+      config = CATEGORY_CONFIG.Humanidades;
     }
 
     const displayCategory = category.includes('·')
