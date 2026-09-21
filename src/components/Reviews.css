@@ -1,6 +1,6 @@
 /* REVIEWS SECTION */
 .resenas {
-  padding: 4rem 3rem 2rem;
+  padding: 2rem 3rem 2rem;
   position: relative;
 }
 
@@ -116,7 +116,7 @@
 
 @media (max-width: 768px) {
   .resenas {
-    padding: 3rem 1.5rem 1rem;
+    padding: 2rem 1.5rem 1rem;
   }
 
   .resenas-header {
