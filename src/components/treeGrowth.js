@@ -99,7 +99,7 @@ function branchShape(item, growth, progress) {
   const points = progress < 0.18 && (item.isRoot || item.curve === trunk.curve)
     ? item.points.slice(0, count + 1).map((_, i) => growthPoint(item, i / 64, progress))
     : item.points.slice(0, count + 1);
-  if (count < 64) points.push(growthPoint(item, growth, progress));
+  if (count < 64 && growth > count / 64) points.push(growthPoint(item, growth, progress));
   if (points.length < 2) return null;
   const sides = [[], []];
   const lightSides = [[], []];
@@ -111,14 +111,15 @@ function branchShape(item, growth, progress) {
     }))
     : 0;
   points.forEach((p, i) => {
-    let a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
+    const t = i === points.length - 1 ? growth : i / 64;
+    let a = growthPoint(item, Math.max(0, t - 0.001), progress);
+    let b = growthPoint(item, Math.min(1, t + 0.001), progress);
     const crownBase = item.parent === trunk && item.at === 1;
     if ((crownBase && i === 0) || (item.curve === trunk.curve && i === points.length - 1 && growth === 1)) {
       a = trunk.curve[2]; b = trunk.curve[3];
     }
     const length = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-    const t = i === points.length - 1 ? growth : i / 64;
-    const tip = Math.min(1, (growth - t) * 16 + tipFloor);
+    const tip = tipFloor + (1 - tipFloor) * ease((growth - t) * 16);
     const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
     const taper = tip + (1 - tip) * joined;
     const neck = crownWidth ? ease((t - 0.92) / 0.08) : 0;
