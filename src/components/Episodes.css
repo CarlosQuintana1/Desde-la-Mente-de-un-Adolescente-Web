@@ -116,7 +116,8 @@
 }
 
 .episode-credential {
-  color: #e8cf91;
+  color: var(--accent-light);
+  font-weight: 600;
 }
 
 .ultimo-cita {
