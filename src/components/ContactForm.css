@@ -32,6 +32,10 @@
   font-size: 1.05rem;
 }
 
+.contacto-header .highlight {
+  color: var(--accent-light);
+}
+
 .contacto-form-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);

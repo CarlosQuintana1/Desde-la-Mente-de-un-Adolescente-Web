@@ -302,7 +302,7 @@ export default function ContactForm() {
       <ContactFormSection>
         <ContactFormHeader
           title="Contáctanos"
-          description="¿Tienes alguna sugerencia, pregunta o quieres colaborar con nosotros? Escríbenos y nos pondremos en contacto contigo."
+          description={<>¿Tienes alguna <span className="highlight">sugerencia, pregunta o quieres colaborar</span> con nosotros? Escríbenos y nos pondremos en contacto contigo.</>}
         />
         <ContactFormCard>
           <ContactFormFrame>
