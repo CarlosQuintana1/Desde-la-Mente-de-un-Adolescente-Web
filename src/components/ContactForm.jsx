@@ -16,7 +16,7 @@ export function ContactFormProvider({ children }) {
   const [formState, setFormState] = useState({
     nombre: '',
     email: '',
-    asunto: 'general',
+    asunto: 'invitado',
     mensaje: '',
     sitio: '',
   });
@@ -77,7 +77,7 @@ export function ContactFormProvider({ children }) {
       setFormState({
         nombre: '',
         email: '',
-        asunto: 'general',
+        asunto: 'invitado',
         mensaje: '',
         sitio: '',
       });
@@ -318,9 +318,7 @@ export default function ContactForm() {
 
             <ContactFormGroup label="Motivo de contacto" name="asunto" icon={SubjectIcon} className="full-width">
               <ContactFormSelect name="asunto">
-                <option value="general">Consulta general</option>
                 <option value="invitado">Sugerencia de invitado</option>
-                <option value="carlos">Pregunta directa para Carlos</option>
                 <option value="patrocinio">Patrocinio / Colaboración</option>
                 <option value="feedback">Feedback del podcast</option>
               </ContactFormSelect>
