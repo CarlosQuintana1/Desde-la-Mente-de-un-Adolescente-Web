@@ -115,6 +115,10 @@
   margin-bottom: 1.25rem;
 }
 
+.episode-credential {
+  color: #e8cf91;
+}
+
 .ultimo-cita {
   font-family: var(--font-secondary);
   font-size: 0.85rem;

@@ -2,6 +2,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
 import EpisodeActions from '../components/EpisodeActions';
+import EpisodeDescription from '../components/EpisodeDescription';
 import '../components/Episodes.css';
 
 const cleanTitle = (title) => {
@@ -83,7 +84,7 @@ export default function EpisodeDetail() {
                 {ep.duracion && `${ep.duracion} min`}
               </p>
             )}
-            <p className="ultimo-desc" style={{ fontSize: '1.05rem', marginBottom: '1.5rem' }}>{ep.desc}</p>
+            <p className="ultimo-desc" style={{ fontSize: '1.05rem', marginBottom: '1.5rem' }}><EpisodeDescription episode={ep} /></p>
             {ep.quote && <p className="ultimo-cita">{ep.quote}</p>}
             
             <EpisodeActions key={ep.number} episode={ep} />

@@ -5,6 +5,7 @@ import { useScrollProgress } from '../hooks/useScrollProgress';
 import { scrollRevealStyle } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
 import EpisodeActions from './EpisodeActions';
+import EpisodeDescription from './EpisodeDescription';
 import PlayIcon from './icons/PlayIcon';
 import './Episodes.css';
 
@@ -150,7 +151,7 @@ export default function Episodes() {
             >
               {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
-            <p className="ultimo-desc" style={descStyle}>{latestEp.desc}</p>
+            <p className="ultimo-desc" style={descStyle}><EpisodeDescription episode={latestEp} /></p>
             {latestEp.quote && <p className="ultimo-cita" style={citaStyle}>{latestEp.quote}</p>}
             
             <EpisodeActions key={latestEp.number} episode={latestEp} style={actionsStyle} />
