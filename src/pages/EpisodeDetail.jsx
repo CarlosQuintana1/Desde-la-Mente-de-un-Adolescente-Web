@@ -3,6 +3,7 @@ import { episodes } from '../data/episodes';
 import SEO from '../components/SEO';
 import EpisodeActions from '../components/EpisodeActions';
 import EpisodeDescription from '../components/EpisodeDescription';
+import EpisodeNotes from '../components/EpisodeNotes';
 import '../components/Episodes.css';
 
 const cleanTitle = (title) => {
@@ -89,16 +90,8 @@ export default function EpisodeDetail() {
             
             <EpisodeActions key={ep.number} episode={ep} />
           </div>
+          {ep.notas && <EpisodeNotes notes={ep.notas} />}
         </div>
-
-        {ep.notas && (
-          <details className="episodio-notas" open>
-            <summary>Sobre este episodio</summary>
-            <div className="episodio-notas-cuerpo">
-              {ep.notas.split('\n').map((linea, i) => <p key={i}>{linea}</p>)}
-            </div>
-          </details>
-        )}
       </section>
     </div>
   );

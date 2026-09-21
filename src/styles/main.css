@@ -372,19 +372,36 @@ html.lenis body {
 }
 
 .episodio-notas {
-  max-width: 760px;
-  margin: 3rem auto 0;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-card);
+  grid-column: 1 / -1;
+  min-width: 0;
+  border-top: 1px solid var(--border);
 }
 
 .episodio-notas summary {
   cursor: pointer;
-  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  padding: 1.25rem 0;
   font-family: var(--font-primary);
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.episodio-notas summary::-webkit-details-marker {
+  display: none;
+}
+
+.episodio-notas summary svg {
+  flex-shrink: 0;
+  color: var(--accent-light);
+  transform: rotate(-90deg);
+}
+
+.episodio-notas[open] summary svg {
+  transform: none;
 }
 
 .episodio-notas summary:hover {
@@ -392,16 +409,34 @@ html.lenis body {
 }
 
 .episodio-notas-cuerpo {
-  padding: 0 1.5rem 1.5rem;
+  max-width: 78ch;
+  padding: 0;
+  font-size: 0.95rem;
+  text-align: left;
+  overflow-wrap: break-word;
   color: var(--text-secondary);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
-.episodio-notas-cuerpo p {
-  margin-bottom: 0.9rem;
+.episodio-notas-cuerpo p,
+.episodio-notas-cuerpo ul {
+  margin: 0 0 0.75rem;
 }
 
-.episodio-notas-cuerpo p:last-child {
+.episodio-notas-cuerpo ul {
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.episodio-notas-cuerpo li + li {
+  margin-top: 0.2rem;
+}
+
+.episodio-notas-cuerpo li::marker {
+  color: var(--accent-light);
+}
+
+.episodio-notas-cuerpo > :last-child {
   margin-bottom: 0;
 }
 
