@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
 import { scrollRevealStyle } from '../utils/classNames';
-import { Atom, Cpu, Palette, BookOpen } from 'lucide-react';
+import { Atom, Cpu, Palette, BookOpen, FlaskConical, Waves, Telescope, Dna, Plane, Clapperboard, Orbit, Sprout } from 'lucide-react';
 import './EpisodeCard.css';
 
 const CATEGORY_CONFIG = {
@@ -10,6 +10,19 @@ const CATEGORY_CONFIG = {
   Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <Cpu aria-hidden="true" /> },
   Arte: { className: 'episodio-category episodio-category-arte', icon: <Palette aria-hidden="true" /> },
   Humanidades: { className: 'episodio-category episodio-category-humanidades', icon: <BookOpen aria-hidden="true" /> },
+};
+
+const CAREER_ICONS = {
+  'Química': FlaskConical,
+  Semiconductores: Cpu,
+  'Biología Marina': Waves,
+  'Astrofísica': Telescope,
+  'Biotecnología': Dna,
+  'Aeronáutica': Plane,
+  Cine: Clapperboard,
+  'Astronomía': Orbit,
+  'Nanotecnología': Atom,
+  'Biología': Sprout,
 };
 
 export default function EpisodeCard({ ep, index, sectionProgress }) {
@@ -69,9 +82,11 @@ export default function EpisodeCard({ ep, index, sectionProgress }) {
       ? category.split('·').slice(1).join('·').trim()
       : category;
 
+    const CareerIcon = CAREER_ICONS[displayCategory];
+
     return (
       <span className={config.className}>
-        {config.icon}
+        {CareerIcon ? <CareerIcon aria-hidden="true" /> : config.icon}
         {displayCategory}
       </span>
     );
