@@ -5,17 +5,8 @@ import { useScrollProgress } from '../hooks/useScrollProgress';
 import { scrollRevealStyle } from '../utils/classNames';
 import EpisodeCard from './EpisodeCard';
 import EpisodeActions from './EpisodeActions';
-import ScienceIcon from './icons/ScienceIcon';
-import TechIcon from './icons/TechIcon';
-import ArtIcon from './icons/ArtIcon';
 import PlayIcon from './icons/PlayIcon';
 import './Episodes.css';
-
-const CATEGORY_CONFIG = {
-  Ciencia: { className: 'episodio-category episodio-category-ciencia', icon: <ScienceIcon /> },
-  Tecnologia: { className: 'episodio-category episodio-category-tecnologia', icon: <TechIcon /> },
-  Arte: { className: 'episodio-category episodio-category-arte', icon: <ArtIcon /> },
-};
 
 const DocumentIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18" aria-hidden="true" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -117,29 +108,6 @@ export default function Episodes() {
     scrollAnimationRef.current = requestAnimationFrame(animate);
   };
 
-  const renderCategoryBadge = (category) => {
-    let config = { className: "episodio-category", icon: null };
-    
-    if (category.startsWith('Ciencia')) {
-      config = CATEGORY_CONFIG.Ciencia;
-    } else if (category.startsWith('Tecnología')) {
-      config = CATEGORY_CONFIG.Tecnologia;
-    } else if (category.startsWith('Arte')) {
-      config = CATEGORY_CONFIG.Arte;
-    }
-
-    const displayCategory = category.includes('·')
-      ? category.split('·').slice(1).join('·').trim()
-      : category;
-
-    return (
-      <span className={config.className}>
-        {config.icon}
-        {displayCategory}
-      </span>
-    );
-  };
-
   const cleanTitle = (title) => {
     return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
   };
@@ -147,7 +115,6 @@ export default function Episodes() {
   const titleStyle = scrollRevealStyle(progress, 'up', 0);
   const cardStyle = scrollRevealStyle(progress, 'scale', 0.1);
   const imgStyle = scrollRevealStyle(progress, 'left', 0.15);
-  const categoryStyle = scrollRevealStyle(progress, 'up', 0.2);
   const episodeTitleStyle = scrollRevealStyle(progress, 'right', 0.25);
   const descStyle = scrollRevealStyle(progress, 'blur', 0.3);
   const citaStyle = scrollRevealStyle(progress, 'scale', 0.35);
@@ -177,9 +144,6 @@ export default function Episodes() {
             />
           </div>
           <div className="ultimo-info">
-            <div style={categoryStyle}>
-              {renderCategoryBadge(latestEp.category)}
-            </div>
             <h3
               className="ultimo-titulo"
               style={{ ...episodeTitleStyle, viewTransitionName: `episode-title-${latestEp.number}` }}
