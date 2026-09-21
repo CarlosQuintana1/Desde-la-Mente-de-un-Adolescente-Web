@@ -109,6 +109,7 @@
 .ultimo-desc {
   font-family: var(--font-secondary);
   font-size: 0.95rem;
+  white-space: pre-line;
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 1.25rem;

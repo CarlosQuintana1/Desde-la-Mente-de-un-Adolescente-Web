@@ -8,7 +8,7 @@ export const episodes = [
     name: 'Nina Padme',
     fecha: '2024-06-27',
     duracion: 42,
-    desc: 'Destacada mujer mexicana en el campo de la química. Miembro de The New York Academy of Sciences.',
+    desc: 'Destacada mujer mexicana en el campo de la química.\nMiembro de The New York Academy of Sciences.',
     quote: '"No solo contemples, crea, no aguardes, lidera."',
     notas: `En nuestro décimo episodio, entrevistamos a Nina Padme.
 •Destacada mujer mexicana en el campo de la química y la ciencia.
