@@ -2,7 +2,7 @@ import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { BREAKPOINTS, TILT, TIMING } from '../data/constants';
 import { scrollRevealStyle } from '../utils/classNames';
-import { Atom, Cpu, Palette, BookOpen, FlaskConical, Waves, Telescope, Dna, Plane, Clapperboard, Orbit, Sprout } from 'lucide-react';
+import { Atom, Cpu, Palette, BookOpen, FlaskConical, Fish, Telescope, Dna, Plane, Clapperboard, Orbit, Sprout } from 'lucide-react';
 import './EpisodeCard.css';
 
 const CATEGORY_CONFIG = {
@@ -15,7 +15,7 @@ const CATEGORY_CONFIG = {
 const CAREER_ICONS = {
   'Química': FlaskConical,
   Semiconductores: Cpu,
-  'Biología Marina': Waves,
+  'Biología Marina': Fish,
   'Astrofísica': Telescope,
   'Biotecnología': Dna,
   'Aeronáutica': Plane,
