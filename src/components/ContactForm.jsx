@@ -1,4 +1,5 @@
-import { useState, createContext, use } from 'react';
+import { useState, useRef, createContext, use } from 'react';
+import { CONTACT_LIMITS, validateContact } from '../utils/contactValidation';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { scrollRevealStyle } from '../utils/classNames';
 import UserIcon from './icons/UserIcon';
@@ -6,8 +7,6 @@ import MailIcon from './icons/MailIcon';
 import SubjectIcon from './icons/SubjectIcon';
 import MessageIcon from './icons/MessageIcon';
 import './ContactForm.css';
-
-const EMAIL_REGEX = /\S+@\S+\.\S+/;
 
 const ContactFormContext = createContext(null);
 
@@ -24,22 +23,11 @@ export function ContactFormProvider({ children }) {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const sending = useRef(false);
 
   const validate = () => {
-    const newErrors = {};
-    if (!formState.nombre.trim()) {
-      newErrors.nombre = 'Por favor, introduce tu nombre.';
-    }
-    if (!formState.email.trim()) {
-      newErrors.email = 'Por favor, introduce tu correo electrónico.';
-    } else if (!EMAIL_REGEX.test(formState.email)) {
-      newErrors.email = 'Por favor, introduce un correo electrónico válido.';
-    }
-    if (!formState.mensaje.trim()) {
-      newErrors.mensaje = 'Por favor, escribe tu mensaje.';
-    } else if (formState.mensaje.trim().length < 10) {
-      newErrors.mensaje = 'El mensaje debe tener al menos 10 caracteres.';
-    }
+    const result = validateContact(formState);
+    const newErrors = result.errores || (result.error ? { envio: result.error } : {});
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -54,8 +42,9 @@ export function ContactFormProvider({ children }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (sending.current || !validate()) return;
 
+    sending.current = true;
     setIsSubmitting(true);
 
     try {
@@ -84,6 +73,7 @@ export function ContactFormProvider({ children }) {
     } catch {
       setErrors({ envio: 'No se pudo enviar el mensaje. Revisa tu conexión e intenta de nuevo.' });
     } finally {
+      sending.current = false;
       setIsSubmitting(false);
     }
   };
@@ -177,6 +167,7 @@ export function ContactFormInput({ name, type = 'text', placeholder, ...props })
         type={type}
         id={name}
         name={name}
+        maxLength={CONTACT_LIMITS[name]}
         className="form-control"
         placeholder={placeholder}
         value={state.formState[name]}
@@ -197,6 +188,7 @@ export function ContactFormInput({ name, type = 'text', placeholder, ...props })
 
 export function ContactFormSelect({ name, children }) {
   const { state, actions } = use(ContactFormContext);
+  const error = state.errors[name];
   return (
     <>
       <select
@@ -206,10 +198,13 @@ export function ContactFormSelect({ name, children }) {
         value={state.formState[name]}
         onChange={actions.handleChange}
         disabled={state.isSubmitting}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${name}-error` : undefined}
       >
         {children}
       </select>
       <div className="select-arrow" />
+      {error && <span id={`${name}-error`} className="form-error">{error}</span>}
     </>
   );
 }
@@ -221,6 +216,7 @@ export function ContactFormTextarea({ name, placeholder }) {
   return (
     <>
       <textarea
+        maxLength={CONTACT_LIMITS[name]}
         id={name}
         name={name}
         className="form-control"

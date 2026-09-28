@@ -13,14 +13,14 @@ No TypeScript, no linter, no test runner. Package manager is pnpm.
 - `pnpm dev` — Vite dev server, front end only, no Functions and no D1
 - `pnpm exec wrangler pages dev` — serves the built output with Functions and a local D1
 - `pnpm run build` — generates `public/sitemap.xml`, then builds to `dist/`
+- `pnpm test` — contact validation and endpoint tests using Node 24's in-memory SQLite
 - `pnpm run preview` — serves `dist/` statically
 - `pnpm run deploy` — build, then `wrangler pages deploy`
 - `pnpm run mensajes` — prints the latest contact messages from the remote D1
 
 ## Verification
-There is no type checker and no test suite, so `pnpm run build` is the only automated gate:
-it fails on syntax errors and unresolved imports, and nothing else. Anything beyond that must
-be verified by loading the page and looking at it, or by querying D1.
+There is no type checker. Run `pnpm test` for contact security and `pnpm run build` for
+syntax errors and unresolved imports. Verify UI changes in a browser as well.
 
 > Antes de reportar algo como terminado, ejecuta o inspecciona el resultado real. Reporta lo
 > que observaste, no lo que esperabas. Si no pudiste verificar algo, dilo explícito: "no
@@ -54,8 +54,11 @@ be verified by loading the page and looking at it, or by querying D1.
 
 ## Backend
 The form POSTs JSON to `/api/contacto`. Messages land in the D1 database `dm-contacto`,
-table `mensajes`. Anti-abuse: a hidden `sitio` honeypot field, and a cap of 3 submissions per
-10 minutes keyed on a truncated SHA-256 of the client IP. The raw IP is never stored.
+table `mensajes`. Anti-abuse: same-origin JSON POSTs, 16 KiB streamed body limit, shared
+plain-text validation and a hidden `sitio` honeypot. Atomic SQL limits each IP hash to
+10 attempts per rolling minute (including invalid bodies) and 3 saved messages per 10 minutes.
+`contacto_intentos` records attempts; bounded cleanup removes entries older than a day as
+new attempts arrive. The raw IP is never stored by this endpoint.
 Schema changes: edit `schema.sql`, then
 `wrangler d1 execute dm-contacto --remote --file=schema.sql`.
 

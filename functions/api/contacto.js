@@ -1,15 +1,33 @@
-const ASUNTOS = ['general', 'invitado', 'carlos', 'patrocinio', 'feedback'];
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const LIMITE = 3;
-const VENTANA_MIN = 10;
+import { validateContact } from '../../src/utils/contactValidation.js';
 
-const json = (data, status = 200) =>
+const MAX_BYTES = 16 * 1024;
+
+const json = (data, status = 200, headers = {}) =>
   new Response(JSON.stringify(data), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' },
+    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', ...headers },
   });
 
-const limpiar = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+async function readBody(request) {
+  if (Number(request.headers.get('content-length')) > MAX_BYTES) throw new RangeError();
+  if (!request.body) throw new SyntaxError();
+  const reader = request.body.getReader();
+  const chunks = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > MAX_BYTES) { await reader.cancel(); throw new RangeError(); }
+      chunks.push(value);
+    }
+  } finally { reader.releaseLock(); }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+  return JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+}
 
 async function hashIp(ip) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip));
@@ -40,47 +58,56 @@ async function avisarTelegram(env, m) {
   }
 }
 
-export async function onRequestPost({ request, env, waitUntil }) {
-  if (!env.DB) return json({ ok: false, error: 'El formulario no esta configurado.' }, 500);
+async function onRequestPost({ request, env, waitUntil }) {
+  const origin = request.headers.get('origin');
+  const fetchSite = request.headers.get('sec-fetch-site');
+  if (origin !== new URL(request.url).origin || (fetchSite && fetchSite !== 'same-origin')) {
+    return json({ ok: false, error: 'Envía el mensaje desde el formulario del sitio.' }, 403);
+  }
+  const ip = request.headers.get('cf-connecting-ip');
+  if (!env.DB || !ip) return json({ ok: false, error: 'El formulario no está disponible temporalmente.' }, 503);
+  const ipHash = await hashIp(ip);
+  try {
+    // Count rejected submissions too; a single SQL statement prevents concurrent bypasses.
+    const attempt = await env.DB.prepare(`INSERT INTO contacto_intentos (ip_hash)
+      SELECT ? WHERE (SELECT COUNT(*) FROM contacto_intentos
+        WHERE ip_hash = ? AND creado > datetime('now', '-1 minute')) < 10
+      RETURNING id`).bind(ipHash, ipHash).first();
+    if (!attempt) return json({ ok: false, error: 'Demasiados intentos. Espera un minuto.' }, 429, { 'retry-after': '60' });
+    const cleanup = env.DB.prepare(`DELETE FROM contacto_intentos WHERE id IN
+      (SELECT id FROM contacto_intentos WHERE creado < datetime('now', '-1 day') LIMIT 100)`)
+      .run().catch(() => {});
+    if (waitUntil) waitUntil(cleanup); else await cleanup;
+  } catch {
+    return json({ ok: false, error: 'No se pudo procesar el mensaje. Intenta más tarde.' }, 503);
+  }
+  if (request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json'
+    || (request.headers.has('content-encoding') && request.headers.get('content-encoding') !== 'identity')) {
+    return json({ ok: false, error: 'Solo se permite el formato JSON del formulario.' }, 415);
+  }
 
   let body;
   try {
-    body = await request.json();
-  } catch {
-    return json({ ok: false, error: 'Formato invalido.' }, 400);
+    body = await readBody(request);
+  } catch (error) {
+    return json({ ok: false, error: error instanceof RangeError ? 'El envío es demasiado grande.' : 'Formato inválido.' }, error instanceof RangeError ? 413 : 400);
   }
 
-  // honeypot: un bot llena todos los campos, una persona no ve este
-  if (limpiar(body.sitio, 200)) return json({ ok: true });
-
-  const nombre = limpiar(body.nombre, 80);
-  const email = limpiar(body.email, 120);
-  const asunto = ASUNTOS.includes(body.asunto) ? body.asunto : 'general';
-  const mensaje = limpiar(body.mensaje, 2000);
-
-  const errores = {};
-  if (nombre.length < 2) errores.nombre = 'Por favor, introduce tu nombre.';
-  if (!EMAIL.test(email)) errores.email = 'Por favor, introduce un correo electrónico válido.';
-  if (mensaje.length < 10) errores.mensaje = 'El mensaje debe tener al menos 10 caracteres.';
-  if (Object.keys(errores).length) return json({ ok: false, errores }, 400);
-
-  const ipHash = await hashIp(request.headers.get('cf-connecting-ip') || '');
+  const validation = validateContact(body);
+  if (validation.honeypot) return json({ ok: true });
+  if (!validation.data) return json({ ok: false, error: validation.error, errores: validation.errores }, 400);
+  const { nombre, email, asunto, mensaje } = validation.data;
   const pais = request.cf?.country || null;
 
   try {
-    const recientes = await env.DB
-      .prepare("SELECT COUNT(*) AS n FROM mensajes WHERE ip_hash = ? AND creado > datetime('now', ?)")
-      .bind(ipHash, `-${VENTANA_MIN} minutes`)
+    const saved = await env.DB
+      .prepare(`INSERT INTO mensajes (nombre, email, asunto, mensaje, pais, ip_hash)
+        SELECT ?, ?, ?, ?, ?, ? WHERE
+        (SELECT COUNT(*) FROM mensajes WHERE ip_hash = ? AND creado > datetime('now', '-10 minutes')) < 3
+        RETURNING id`)
+      .bind(nombre, email, asunto, mensaje, pais, ipHash, ipHash)
       .first();
-
-    if ((recientes?.n ?? 0) >= LIMITE) {
-      return json({ ok: false, error: 'Ya enviaste varios mensajes. Intenta de nuevo en un rato.' }, 429);
-    }
-
-    await env.DB
-      .prepare('INSERT INTO mensajes (nombre, email, asunto, mensaje, pais, ip_hash) VALUES (?, ?, ?, ?, ?, ?)')
-      .bind(nombre, email, asunto, mensaje, pais, ipHash)
-      .run();
+    if (!saved) return json({ ok: false, error: 'Ya enviaste 3 mensajes. Espera 10 minutos antes de enviar otro.' }, 429, { 'retry-after': '600' });
   } catch {
     return json({ ok: false, error: 'No se pudo guardar el mensaje. Intenta de nuevo.' }, 500);
   }
@@ -91,5 +118,6 @@ export async function onRequestPost({ request, env, waitUntil }) {
   return json({ ok: true });
 }
 
-export const onRequest = ({ request }) =>
-  request.method === 'POST' ? undefined : json({ ok: false, error: 'Metodo no permitido.' }, 405);
+export const onRequest = context => context.request.method === 'POST'
+  ? onRequestPost(context)
+  : json({ ok: false, error: 'Método no permitido.' }, 405, { allow: 'POST' });

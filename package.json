@@ -4,6 +4,7 @@
   "description": "Repositorio del Proyecto: Desarrollo del sitio web del podcast \"Desde la Mente de un Adolescente\"",
   "main": "app.js",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "dev": "vite",
     "build": "node scripts/sitemap.mjs && vite build",
     "preview": "vite preview",
