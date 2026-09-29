@@ -17,7 +17,7 @@ export function useSectionEntrance() {
       entries.forEach(entry => {
         if (entry.isIntersecting) reveal(entry.target);
       });
-    }, { rootMargin: '0px 0px -40px 0px', threshold: 0 });
+    }, { rootMargin: '0px 0px 64px 0px', threshold: 0 });
 
     targets.forEach(target => {
       // Restored pages must not replay entrances for content already passed.
