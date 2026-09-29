@@ -1,23 +1,23 @@
-import { useScrollProgress } from '../hooks/useScrollProgress';
+import { useSectionEntrance } from '../hooks/useSectionEntrance';
 import './About.css';
 
 
 export default function About() {
-  const [ref, progress] = useScrollProgress({ offset: 80 });
+  const ref = useSectionEntrance();
 
   return (
-    <section className={`acercadma${progress ? ' is-visible' : ''}`} id="acercadma" ref={ref}>
+    <section className="acercadma" id="acercadma" ref={ref}>
       <div className="acercadma-content">
         <div className="acercadma-intro">
-          <div className="acercadma-tag acercadma-reveal">
+          <div className="acercadma-tag" data-entrance>
             Un Podcast
           </div>
           <h2>
-            <span className="acercadma-reveal" style={{ '--entrance-delay': '100ms' }}>Entrevistando a</span>{' '}
-            <span className="acercadma-accent acercadma-reveal" style={{ '--entrance-delay': '200ms' }}>Mentes Brillantes</span>
+            <span data-entrance style={{ '--entrance-delay': '60ms' }}>Entrevistando a</span>{' '}
+            <span className="acercadma-accent" data-entrance style={{ '--entrance-delay': '120ms' }}>Mentes Brillantes</span>
           </h2>
         </div>
-        <div className="acercadma-details">
+        <div className="acercadma-details" data-entrance style={{ '--entrance-delay': '180ms' }}>
           <p>
             <span className="acercadma-line">Cada episodio es una conversación profunda con</span>
             <span className="acercadma-line">personas excepcionales en ciencia, tecnología, arte y humanidades.</span>

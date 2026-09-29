@@ -1,5 +1,4 @@
-import { useScrollProgress } from '../hooks/useScrollProgress';
-import { scrollRevealStyle } from '../utils/classNames';
+import { useSectionEntrance } from '../hooks/useSectionEntrance';
 import './Reviews.css';
 
 const reviews = [
@@ -30,12 +29,12 @@ function PersonIcon() {
 }
 
 export default function Reviews() {
-  const [ref, progress] = useScrollProgress();
+  const ref = useSectionEntrance();
 
   return (
     <section className="resenas" id="resenas" ref={ref}>
       <div className="resenas-container">
-        <div className="resenas-header" style={scrollRevealStyle(progress, 'up', 0)}>
+        <div className="resenas-header" data-entrance>
           <span className="resenas-tag">Reseñas</span>
           <h2>Lo que dicen del podcast</h2>
         </div>
@@ -45,7 +44,8 @@ export default function Reviews() {
             <figure
               className="resena-card"
               key={review.name}
-              style={scrollRevealStyle(progress, 'up', 0.1 + index * 0.1)}
+              data-entrance
+              style={{ '--entrance-delay': `${index * 70}ms` }}
             >
               <figcaption className="resena-author">
                 <span className={`resena-avatar resena-avatar-${review.avatarColor}`} aria-hidden="true">

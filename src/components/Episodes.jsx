@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { episodes } from '../data/episodes';
-import { useScrollProgress } from '../hooks/useScrollProgress';
-import { scrollRevealStyle } from '../utils/classNames';
+import { useSectionEntrance } from '../hooks/useSectionEntrance';
 import EpisodeCard from './EpisodeCard';
 import EpisodeActions from './EpisodeActions';
 import EpisodeDescription from './EpisodeDescription';
@@ -20,7 +19,7 @@ const DocumentIcon = () => (
 );
 
 export default function Episodes() {
-  const [ref, progress] = useScrollProgress();
+  const ref = useSectionEntrance();
   const sliderRef = useRef(null);
   const scrollAnimationRef = useRef(null);
   const targetScrollLeftRef = useRef(0);
@@ -113,27 +112,17 @@ export default function Episodes() {
     return title.replace(/Dedicar tu vida a( la | los |l )/i, '');
   };
 
-  const titleStyle = scrollRevealStyle(progress, 'up', 0);
-  const cardStyle = scrollRevealStyle(progress, 'scale', 0.1);
-  const imgStyle = scrollRevealStyle(progress, 'left', 0.15);
-  const episodeTitleStyle = scrollRevealStyle(progress, 'right', 0.25);
-  const descStyle = scrollRevealStyle(progress, 'blur', 0.3);
-  const citaStyle = scrollRevealStyle(progress, 'scale', 0.35);
-  const actionsStyle = scrollRevealStyle(progress, 'up', 0.4);
-  const recentHeaderStyle = scrollRevealStyle(progress, 'up', 0.5);
-  const carouselStyle = scrollRevealStyle(progress, 'scale', 0.6);
-
   return (
     <section className="episodios" id="episodios" ref={ref}>
       <div className="ultimo-episodio-section">
-        <div className="section-title-wrap" style={titleStyle}>
+        <div className="section-title-wrap" data-entrance>
           <div className="line" />
           <h2 className="section-tag-title">Último Episodio</h2>
           <div className="line" />
         </div>
 
-        <div className="ultimo-episodio-card" style={cardStyle}>
-          <div className="ultimo-img-wrap" style={imgStyle}>
+        <div className="ultimo-episodio-card" data-entrance style={{ '--entrance-delay': '80ms' }}>
+          <div className="ultimo-img-wrap">
             <span className="episodio-number">EP {latestEp.number}</span>
             <img
               src={latestEp.img}
@@ -147,25 +136,25 @@ export default function Episodes() {
           <div className="ultimo-info">
             <h3
               className="ultimo-titulo"
-              style={{ ...episodeTitleStyle, viewTransitionName: `episode-title-${latestEp.number}` }}
+              style={{ viewTransitionName: `episode-title-${latestEp.number}` }}
             >
               {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
-            <p className="ultimo-desc" style={descStyle}><EpisodeDescription episode={latestEp} /></p>
-            {latestEp.quote && <p className="ultimo-cita" style={citaStyle}>{latestEp.quote}</p>}
+            <p className="ultimo-desc"><EpisodeDescription episode={latestEp} /></p>
+            {latestEp.quote && <p className="ultimo-cita">{latestEp.quote}</p>}
             
-            <EpisodeActions key={latestEp.number} episode={latestEp} style={actionsStyle} />
+            <EpisodeActions key={latestEp.number} episode={latestEp} />
           </div>
         </div>
       </div>
 
       <div className="recientes-section">
-        <div className="recientes-header" style={recentHeaderStyle}>
+        <div className="recientes-header" data-entrance>
           <h2>Episodios Recientes</h2>
           <Link to="/episodios" state={{ restoreScroll: true }} viewTransition className="btn-secondary header-view-all">Ver todos los episodios →</Link>
         </div>
 
-        <div className="carousel-wrapper" style={carouselStyle} role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
+        <div className="carousel-wrapper" role="region" aria-roledescription="carrusel" aria-label="Episodios recientes">
           <button 
             className={`carousel-arrow btn-prev${!canScrollLeft ? ' hidden' : ''}`} 
             onClick={() => scroll('left')} 
@@ -187,11 +176,13 @@ export default function Episodes() {
                 <div 
                   key={ep.number} 
                   className="carousel-item"
+                  data-entrance
+                  style={{ '--entrance-delay': `${Math.min(i, 3) * 60}ms` }}
                   role="group"
                   aria-roledescription="diapositiva"
                   aria-label={`${i + 1} de ${recentEpisodes.length}`}
                 >
-                  <EpisodeCard ep={ep} index={i} sectionProgress={progress} />
+                  <EpisodeCard ep={ep} index={i} sectionProgress={1} />
                 </div>
               ))}
             </div>
