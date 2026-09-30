@@ -60,7 +60,9 @@ for (let i = 0; i < 7; i++) {
   const origin = point(trunk.curve, 0.035);
   const offset = (i - 3) * 3;
   const distance = Math.abs(i - 3);
-  const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - distance, 0.05 + distance * 0.016, 0.28, '#819db2');
+  const start = distance === 0 ? 0.07 : 0.16 + distance * 0.028;
+  const duration = distance === 0 ? 0.31 : 0.24;
+  const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - distance, start, duration, '#819db2');
   root.isRoot = true;
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
@@ -88,9 +90,14 @@ export function growthPoint(item, t, progress) {
   const settled = ease((progress - 0.11) / 0.07);
   if (item.curve === trunk.curve) p[0] = 400 + (p[0] - 400) * settled;
   if (item.isRoot) {
-    const weight = (1 - settled) * (1 - t) ** 3;
+    const weight = (1 - ease((progress - 0.20) / 0.10)) * (1 - t) ** 3;
     p[0] += (400 - item.curve[0][0]) * weight;
     p[1] += (760 - item.curve[0][1]) * weight;
+  }
+  if (item.parent?.isRoot && progress < 0.30) {
+    const origin = growthPoint(item.parent, item.at, progress);
+    const resting = point(item.parent.curve, item.at);
+    p[0] += origin[0] - resting[0]; p[1] += origin[1] - resting[1];
   }
   return p;
 }
@@ -98,7 +105,8 @@ export function growthPoint(item, t, progress) {
 function branchShape(item, growth, progress) {
   if (growth <= 0) return null;
   const count = Math.floor(growth * 64);
-  const points = progress < 0.18 && (item.isRoot || item.curve === trunk.curve)
+  const settling = (progress < 0.30 && (item.isRoot || item.parent?.isRoot)) || (progress < 0.18 && item.curve === trunk.curve);
+  const points = settling
     ? item.points.slice(0, count + 1).map((_, i) => growthPoint(item, i / 64, progress))
     : item.points.slice(0, count + 1);
   if (count < 64 && growth > count / 64) points.push(growthPoint(item, growth, progress));
@@ -106,8 +114,8 @@ function branchShape(item, growth, progress) {
   const sides = [[], []];
   const lightSides = [[], []];
   const germinating = item.isRoot || item.curve === trunk.curve;
-  const maturity = germinating ? ease((progress - 0.13) / 0.17) : 1;
-  const widthScale = germinating ? 0.18 + maturity * 0.82 : 1;
+  const maturity = germinating ? ease((progress - 0.14) / 0.14) : 1;
+  const widthScale = germinating ? 0.30 + maturity * 0.70 : 1;
   const restingTip = item.width > 10 ? 0 : 0.06;
   const tipFloor = restingTip + (1 - restingTip) * (1 - maturity) * 0.65;
   const tipLength = item.width > 10 ? Math.min(0.35, item.width * 3 / item.length) : 1 / 16;
@@ -130,7 +138,10 @@ function branchShape(item, growth, progress) {
     const tip = tipFloor + (1 - tipFloor) * Math.sin(clamp((growth - t) / tipLength) * Math.PI / 2);
     const joined = item.continues && item.curve !== trunk.curve ? ease((progress - item.start - item.duration) / 0.07) : 0;
     const taper = tip + (1 - tip) * joined;
-    const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper * widthScale;
+    const neck = item.curve === trunk.curve
+      ? 1 - 0.6 * (1 - ease((progress - 0.18) / 0.10)) * (1 - ease(t / 0.10))
+      : 1;
+    const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper * widthScale * neck;
     // Grow the fork into the existing tip without narrowing the completed stem.
     const width = (diameter + crownWidth * (1 - tip)) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
@@ -218,6 +229,30 @@ function drawLeaf(ctx, item, progress) {
   for (let i = 1; i < 4; i++) { const y = -size * i * 0.27; ctx.moveTo(0, y); ctx.lineTo(-size * 0.24, y - size * 0.2); ctx.moveTo(0, y); ctx.lineTo(size * 0.22, y - size * 0.2); }
   ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.65; ctx.stroke(); ctx.restore();
 }
+
+function drawSeedlingLeaves(ctx, progress) {
+  const opening = ease((progress - 0.10) / 0.045);
+  const fading = ease((progress - (crown[0].start - 0.08)) / 0.08);
+  if (!opening || fading === 1) return;
+  const growth = clamp((progress - trunk.start) / trunk.duration);
+  const tip = growthPoint(trunk, growth, progress);
+  const before = growthPoint(trunk, Math.max(0, growth - 0.01), progress);
+  ctx.save(); ctx.translate(...tip);
+  ctx.rotate(Math.atan2(tip[1] - before[1], tip[0] - before[0]) + Math.PI / 2);
+  ctx.scale(opening * (1 - fading * 0.45), opening * (1 - fading * 0.45));
+  ctx.globalAlpha = 1 - fading;
+  for (const side of [-1, 1]) {
+    ctx.beginPath(); ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(side * 7, -16, side * 32, -22, side * 36, -13);
+    ctx.bezierCurveTo(side * 39, -2, side * 16, 6, 0, 0);
+    ctx.fillStyle = side < 0 ? '#78aa98' : '#65988e'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(side * 14, -7, side * 29, -12);
+    ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.9; ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function createTreeRenderer(canvas) {
   const ctx = canvas.getContext('2d');
   if (!ctx) return () => {};
@@ -243,13 +278,14 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
-    const seedScale = 1 - ease((progress - 0.085) / 0.085);
+    const seedScale = 1 - ease((progress - 0.10) / 0.065);
     if (progress > 0 && seedScale > 0) {
       const opening = ease((progress - 0.04) / 0.10);
       for (const side of [-1, 1]) {
-        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760);
-        ctx.rotate(side * (0.25 + opening * 0.45)); ctx.scale(seedScale * (1 - opening * 0.55), seedScale * (1 - opening * 0.35));
-        ctx.beginPath(); ctx.moveTo(0, -23); ctx.bezierCurveTo(side * 28, -5, side * 19, 20, 0, 25); ctx.quadraticCurveTo(side * 4, 0, 0, -23);
+        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760 + opening * 6);
+        ctx.rotate(side * opening * 0.7); ctx.scale(seedScale, seedScale);
+        ctx.beginPath(); ctx.moveTo(0, -20);
+        ctx.bezierCurveTo(side * 24, -20, side * 24, 20, 0, 20); ctx.closePath();
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
       }
     }
@@ -282,6 +318,7 @@ export function createTreeRenderer(canvas) {
       ctx.fill(illumination); ctx.restore();
     });
     ctx.restore();
+    drawSeedlingLeaves(ctx, progress);
     items.forEach(item => drawLeaf(ctx, item, progress));
     ctx.restore();
   };
