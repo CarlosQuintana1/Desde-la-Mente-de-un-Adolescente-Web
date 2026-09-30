@@ -10,14 +10,14 @@ function getSpotifyEpisodeId(url) {
   }
 }
 
-export default function EpisodeActions({ episode, style, entrance = false }) {
+export default function EpisodeActions({ episode, style }) {
   const [isOpen, setIsOpen] = useState(false);
   const episodeId = getSpotifyEpisodeId(episode.links.spotify);
   const embedId = `spotify-embed-${episodeId}`;
 
   return (
     <>
-      <div className="ultimo-actions" style={style} data-entrance={entrance ? '' : undefined}>
+      <div className="ultimo-actions" style={style}>
         {episodeId && (
           <button
             type="button"

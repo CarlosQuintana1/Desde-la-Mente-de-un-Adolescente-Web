@@ -114,15 +114,15 @@ export default function Episodes() {
 
   return (
     <section className="episodios" id="episodios" ref={ref}>
-      <div className="ultimo-episodio-section">
-        <div className="section-title-wrap" data-entrance>
+      <div className="ultimo-episodio-section" data-entrance>
+        <div className="section-title-wrap">
           <div className="line" />
           <h2 className="section-tag-title">Último Episodio</h2>
           <div className="line" />
         </div>
 
         <div className="ultimo-episodio-card">
-          <div className="ultimo-img-wrap" data-entrance>
+          <div className="ultimo-img-wrap">
             <span className="episodio-number">EP {latestEp.number}</span>
             <img
               src={latestEp.img}
@@ -136,15 +136,14 @@ export default function Episodes() {
           <div className="ultimo-info">
             <h3
               className="ultimo-titulo"
-              data-entrance
-              style={{ viewTransitionName: `episode-title-${latestEp.number}`, '--entrance-delay': '40ms' }}
+              style={{ viewTransitionName: `episode-title-${latestEp.number}` }}
             >
               {cleanTitle(latestEp.title)} con <span className="ultimo-invitado">{latestEp.name}</span>
             </h3>
-            <p className="ultimo-desc" data-entrance style={{ '--entrance-delay': '60ms' }}><EpisodeDescription episode={latestEp} /></p>
-            {latestEp.quote && <p className="ultimo-cita" data-entrance style={{ '--entrance-delay': '80ms' }}>{latestEp.quote}</p>}
+            <p className="ultimo-desc"><EpisodeDescription episode={latestEp} /></p>
+            {latestEp.quote && <p className="ultimo-cita">{latestEp.quote}</p>}
             
-            <EpisodeActions key={latestEp.number} episode={latestEp} entrance style={{ '--entrance-delay': '100ms' }} />
+            <EpisodeActions key={latestEp.number} episode={latestEp} />
           </div>
         </div>
       </div>
