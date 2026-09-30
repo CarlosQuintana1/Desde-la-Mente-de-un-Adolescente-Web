@@ -230,27 +230,15 @@ function drawLeaf(ctx, item, progress) {
   ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.65; ctx.stroke(); ctx.restore();
 }
 
-function drawSeedlingLeaves(ctx, progress) {
-  const opening = ease((progress - 0.10) / 0.045);
-  const fading = ease((progress - (crown[0].start - 0.08)) / 0.08);
-  if (!opening || fading === 1) return;
-  const growth = clamp((progress - trunk.start) / trunk.duration);
-  const tip = growthPoint(trunk, growth, progress);
-  const before = growthPoint(trunk, Math.max(0, growth - 0.01), progress);
-  ctx.save(); ctx.translate(...tip);
-  ctx.rotate(Math.atan2(tip[1] - before[1], tip[0] - before[0]) + Math.PI / 2);
-  ctx.scale(opening * (1 - fading * 0.45), opening * (1 - fading * 0.45));
-  ctx.globalAlpha = 1 - fading;
-  for (const side of [-1, 1]) {
-    ctx.beginPath(); ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(side * 7, -16, side * 32, -22, side * 36, -13);
-    ctx.bezierCurveTo(side * 39, -2, side * 16, 6, 0, 0);
-    ctx.fillStyle = side < 0 ? '#78aa98' : '#65988e'; ctx.fill();
-    ctx.beginPath(); ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(side * 14, -7, side * 29, -12);
-    ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.9; ctx.stroke();
-  }
-  ctx.restore();
+export function seedPose(progress) {
+  const opening = ease((progress - 0.04) / 0.13);
+  const fall = ease((progress - 0.10) / 0.11);
+  return {
+    angle: opening * Math.PI * 0.95,
+    spread: opening * 12 + fall * 22,
+    y: 780 + fall * 38,
+    opacity: 1 - ease((progress - 0.17) / 0.06),
+  };
 }
 
 export function createTreeRenderer(canvas) {
@@ -278,14 +266,14 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
-    const seedScale = 1 - ease((progress - 0.10) / 0.065);
-    if (progress > 0 && seedScale > 0) {
-      const opening = ease((progress - 0.04) / 0.10);
+    const seed = seedPose(progress);
+    if (progress > 0 && seed.opacity > 0) {
       for (const side of [-1, 1]) {
-        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760 + opening * 6);
-        ctx.rotate(side * opening * 0.7); ctx.scale(seedScale, seedScale);
-        ctx.beginPath(); ctx.moveTo(0, -20);
-        ctx.bezierCurveTo(side * 24, -20, side * 24, 20, 0, 20); ctx.closePath();
+        ctx.save(); ctx.translate(400 + side * seed.spread, seed.y);
+        ctx.rotate(side * seed.angle); ctx.globalAlpha = seed.opacity;
+        // Pivot around the bottom edge so the two halves open downward.
+        ctx.beginPath(); ctx.moveTo(0, -40);
+        ctx.bezierCurveTo(side * 24, -40, side * 24, 0, 0, 0); ctx.closePath();
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
       }
     }
@@ -318,7 +306,6 @@ export function createTreeRenderer(canvas) {
       ctx.fill(illumination); ctx.restore();
     });
     ctx.restore();
-    drawSeedlingLeaves(ctx, progress);
     items.forEach(item => drawLeaf(ctx, item, progress));
     ctx.restore();
   };
