@@ -59,7 +59,10 @@ for (let i = 0; i < 7; i++) {
   const x = 96 + i * 102;
   const origin = point(trunk.curve, 0.035);
   const offset = (i - 3) * 3;
-  const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - Math.abs(i - 3), 0.05 + Math.abs(i - 3) * 0.016, 0.28, '#819db2');
+  const distance = Math.abs(i - 3);
+  const rootStart = distance === 0 ? 0.05 : 0.15 + distance * 0.02;
+  const rootEnd = 0.33 + distance * 0.016;
+  const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - distance, rootStart, rootEnd - rootStart, '#819db2');
   root.isRoot = true;
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
@@ -238,16 +241,6 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
-    const seedScale = 1 - ease((progress - 0.13) / 0.19);
-    if (progress > 0 && seedScale > 0) {
-      const opening = ease((progress - 0.04) / 0.14);
-      for (const side of [-1, 1]) {
-        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760);
-        ctx.rotate(side * (0.25 + opening * 0.45)); ctx.scale(seedScale * (1 - opening * 0.55), seedScale * (1 - opening * 0.35));
-        ctx.beginPath(); ctx.moveTo(0, -23); ctx.bezierCurveTo(side * 28, -5, side * 19, 20, 0, 25); ctx.quadraticCurveTo(side * 4, 0, 0, -23);
-        ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
-      }
-    }
     const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
     smoothForkContour(shapes);
     // One continuous surface prevents separate branch fills from cutting across junctions.
@@ -278,6 +271,16 @@ export function createTreeRenderer(canvas) {
     });
     ctx.restore();
     items.forEach(item => drawLeaf(ctx, item, progress));
+    const seedScale = 1 - ease((progress - 0.13) / 0.19);
+    if (progress > 0 && seedScale > 0) {
+      const opening = ease((progress - 0.04) / 0.14);
+      for (const side of [-1, 1]) {
+        ctx.save(); ctx.translate(400 + side * opening * 12 * seedScale, 760);
+        ctx.rotate(side * (0.25 + opening * 0.45)); ctx.scale(seedScale * (1 - opening * 0.55), seedScale * (1 - opening * 0.35));
+        ctx.beginPath(); ctx.moveTo(0, -23); ctx.bezierCurveTo(side * 28, -5, side * 19, 20, 0, 25); ctx.quadraticCurveTo(side * 4, 0, 0, -23);
+        ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
+      }
+    }
     ctx.restore();
   };
 }
