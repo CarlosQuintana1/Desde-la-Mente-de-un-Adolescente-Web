@@ -64,6 +64,7 @@ export default function Hero() {
         hero.style.setProperty('--hero-title-1', finalFrame ? '1' : '0');
         hero.style.setProperty('--hero-title-2', finalFrame ? '1' : '0');
         hero.style.setProperty('--hero-title-3', finalFrame ? '1' : '0');
+        hero.style.setProperty('--hero-word-shine-position', '100%');
         hero.style.setProperty('--hero-title-y', '0px');
         hero.style.setProperty('--hero-scroll-opacity', progress > 0 ? '0' : '1');
         return;
@@ -84,6 +85,7 @@ export default function Hero() {
       hero.style.setProperty('--hero-title-1', title1.toFixed(3));
       hero.style.setProperty('--hero-title-2', title2.toFixed(3));
       hero.style.setProperty('--hero-title-3', title3.toFixed(3));
+      hero.style.setProperty('--hero-word-shine-position', `${(100 * (1 - smoothstep(0.27, 0.37, sequence))).toFixed(2)}%`);
       hero.style.setProperty('--hero-title-y', `${(28 * (1 - title2)).toFixed(1)}px`);
       hero.style.setProperty('--hero-scroll-opacity', (1 - smoothstep(0, 0.14, progress)).toFixed(3));
     };
@@ -160,7 +162,7 @@ export default function Hero() {
           <h1 className="hero-title">
             <span>Desde la</span>
             <span>mente de un</span>
-            <span>Adolescente</span>
+            <span className="hero-title-adolescent">Adolescente</span>
           </h1>
         </div>
 
