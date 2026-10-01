@@ -1,51 +1,17 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { attachmentAt, branches, clamp, growthPoint, point, seedPose } from '../src/components/treeGrowth.js';
+import { attachmentAt, branches, clamp, growthPoint, point, seedOpacity } from '../src/components/treeGrowth.js';
 
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
 
-test('seed halves open completely downward before fading away', () => {
-  const closed = seedPose(0.04);
-  assert.equal(closed.angle, 0);
-  assert.equal(closed.spread, 0);
-  assert.equal(closed.opacity, 1);
-  const opened = seedPose(0.17);
-  assert.ok(opened.angle > Math.PI / 2);
-  assert.ok(opened.y - 40 * Math.cos(opened.angle) > opened.y);
-  assert.equal(opened.opacity, 1);
-  const falling = seedPose(0.20);
-  assert.ok(falling.y > opened.y);
-  assert.ok(falling.spread > opened.spread);
-  assert.ok(falling.opacity > 0 && falling.opacity < 1);
-  assert.equal(seedPose(0.25).opacity, 0);
-});
-
-test('seed halves fall at different angles and heights after splitting', () => {
-  const a = seedPose(0.20, -1), b = seedPose(0.20, 1);
-  assert.notEqual(a.angle, b.angle);
-  assert.notEqual(a.spread, b.spread);
-  assert.notEqual(a.y, b.y);
-  assert.notEqual(a.scale, b.scale);
-  for (const side of [-1, 1]) {
-    assert.ok(seedPose(0.19, side).angle > Math.PI / 2);
-    assert.equal(seedPose(0.25, side).opacity, 0);
-  }
-});
-
-test('seed opening and falling stay continuous and reversible with scroll', () => {
-  const firstVisit = seedPose(0.12);
-  let previous = seedPose(0);
-  for (let step = 1; step <= 240; step++) {
-    const next = seedPose(step / 1000);
-    assert.ok(next.angle >= previous.angle && next.angle - previous.angle < 0.04);
-    assert.ok(next.spread >= previous.spread && next.spread - previous.spread < 0.5);
-    assert.ok(next.y >= previous.y && next.y - previous.y < 0.6);
-    assert.ok(next.opacity <= previous.opacity && previous.opacity - next.opacity < 0.03);
-    previous = next;
-  }
-  for (const progress of [1, 0.04, 0.20, 0.08]) seedPose(progress);
-  assert.deepEqual(seedPose(0.12), firstVisit);
+test('seed fades away as the shoot emerges and returns when scrolling back', () => {
+  assert.equal(seedOpacity(0.04), 1);
+  const middle = seedOpacity(0.085);
+  assert.ok(middle > 0 && middle < 1);
+  assert.equal(seedOpacity(0.13), 0);
+  assert.equal(seedOpacity(1), 0);
+  assert.equal(seedOpacity(0.085), middle);
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {

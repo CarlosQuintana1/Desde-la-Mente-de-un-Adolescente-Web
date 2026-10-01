@@ -242,17 +242,8 @@ function drawLeaf(ctx, item, progress) {
   ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.65; ctx.stroke(); ctx.restore();
 }
 
-export function seedPose(progress, side = -1) {
-  const lag = side < 0 ? 0 : 0.012;
-  const opening = ease((progress - 0.04 - lag) / 0.13);
-  const fall = ease((progress - 0.10 - lag) / 0.11);
-  return {
-    angle: opening * Math.PI * (side < 0 ? 0.95 : 0.83),
-    spread: opening * 12 + fall * (side < 0 ? 20 : 32),
-    y: 780 + fall * (side < 0 ? 26 : 44),
-    scale: 1 - fall * (side < 0 ? 0.22 : 0.30),
-    opacity: 1 - ease((progress - 0.17 - lag) / 0.06),
-  };
+export function seedOpacity(progress) {
+  return 1 - ease((progress - 0.04) / 0.09);
 }
 
 export function createTreeRenderer(canvas) {
@@ -280,13 +271,10 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
-    if (progress > 0) {
+    const opacity = seedOpacity(progress);
+    if (progress > 0 && opacity > 0) {
       for (const side of [-1, 1]) {
-        const seed = seedPose(progress, side);
-        if (seed.opacity <= 0) continue;
-        ctx.save(); ctx.translate(400 + side * seed.spread, seed.y);
-        ctx.rotate(side * seed.angle); ctx.scale(seed.scale, seed.scale); ctx.globalAlpha = seed.opacity;
-        // Pivot around the bottom edge so the two halves open downward.
+        ctx.save(); ctx.translate(400, 780); ctx.globalAlpha = opacity;
         ctx.beginPath(); ctx.moveTo(0, -40);
         ctx.bezierCurveTo(side * 20, -32, side * 24, -10, 0, 0); ctx.closePath();
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill();
