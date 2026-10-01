@@ -243,7 +243,7 @@ function drawLeaf(ctx, item, progress) {
 }
 
 export function seedOpacity(progress) {
-  return 1 - ease((progress - 0.04) / 0.09);
+  return 1 - ease((progress - 0.095) / 0.055);
 }
 
 export function createTreeRenderer(canvas) {
@@ -273,8 +273,10 @@ export function createTreeRenderer(canvas) {
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
     const opacity = seedOpacity(progress);
     if (progress > 0 && opacity > 0) {
+      const opening = ease((progress - 0.04) / 0.055) * Math.PI * 0.36;
       for (const side of [-1, 1]) {
         ctx.save(); ctx.translate(400, 780); ctx.globalAlpha = opacity;
+        ctx.rotate(side * opening);
         ctx.beginPath(); ctx.moveTo(0, -40);
         ctx.bezierCurveTo(side * 20, -32, side * 24, -10, 0, 0); ctx.closePath();
         ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill();

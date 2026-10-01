@@ -5,13 +5,14 @@ import { attachmentAt, branches, clamp, growthPoint, point, seedOpacity } from '
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
 
-test('seed fades away as the shoot emerges and returns when scrolling back', () => {
+test('seed stays visible while opening, then fades and returns when scrolling back', () => {
   assert.equal(seedOpacity(0.04), 1);
-  const middle = seedOpacity(0.085);
+  assert.equal(seedOpacity(0.095), 1);
+  const middle = seedOpacity(0.1225);
   assert.ok(middle > 0 && middle < 1);
-  assert.equal(seedOpacity(0.13), 0);
+  assert.equal(seedOpacity(0.16), 0);
   assert.equal(seedOpacity(1), 0);
-  assert.equal(seedOpacity(0.085), middle);
+  assert.equal(seedOpacity(0.1225), middle);
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {
