@@ -64,9 +64,12 @@ for (let i = 0; i < 7; i++) {
   const duration = distance === 0 ? 0.31 : 0.24;
   const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - distance, start, duration, '#819db2');
   root.isRoot = true;
+  root.primaryRoot = distance === 0;
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
-    branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + at * root.duration, 0.16, '#96b7af', false, root, at);
+    const seedlingAt = root.primaryRoot && j === 0 ? 0.24 : at;
+    const child = branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + seedlingAt * root.duration, 0.16, '#96b7af', false, root, at);
+    if (seedlingAt !== at) child.seedlingAt = seedlingAt;
   }
 }
 branches.forEach(item => {
@@ -85,6 +88,10 @@ branches.forEach(item => {
 });
 export { branches };
 
+export function attachmentAt(item, progress) {
+  return item.seedlingAt == null ? item.at : item.seedlingAt + (item.at - item.seedlingAt) * ease((progress - 0.16) / 0.14);
+}
+
 export function growthPoint(item, t, progress) {
   const p = point(item.curve, t);
   const settled = ease((progress - 0.11) / 0.07);
@@ -93,9 +100,14 @@ export function growthPoint(item, t, progress) {
     const weight = (1 - ease((progress - 0.20) / 0.10)) * (1 - t) ** 3;
     p[0] += (400 - item.curve[0][0]) * weight;
     p[1] += (760 - item.curve[0][1]) * weight;
+    if (item.primaryRoot) {
+      // Match the stem tangent at the base, then curl the young root outward.
+      const bend = ((30 + 90 * settled) * t - 500 * t ** 2) * (1 - t) ** 2;
+      p[0] += bend * (1 - ease((progress - 0.18) / 0.12));
+    }
   }
   if (item.parent?.isRoot && progress < 0.30) {
-    const origin = growthPoint(item.parent, item.at, progress);
+    const origin = growthPoint(item.parent, attachmentAt(item, progress), progress);
     const resting = point(item.parent.curve, item.at);
     p[0] += origin[0] - resting[0]; p[1] += origin[1] - resting[1];
   }
@@ -117,7 +129,7 @@ function branchShape(item, growth, progress) {
   const maturity = germinating ? ease((progress - 0.14) / 0.14) : 1;
   const widthScale = germinating ? 0.30 + maturity * 0.70 : 1;
   const restingTip = item.width > 10 ? 0 : 0.06;
-  const tipFloor = restingTip + (1 - restingTip) * (1 - maturity) * 0.65;
+  const tipFloor = restingTip + (1 - restingTip) * (1 - maturity) * (item.isRoot ? 0.12 : 0.24);
   const tipLength = item.width > 10 ? Math.min(0.35, item.width * 3 / item.length) : 1 / 16;
   const crownWidth = item.curve === trunk.curve && growth === 1
     ? Math.max(item.endWidth * tipFloor, ...crown.slice(0, 2).map(child => {
@@ -230,14 +242,16 @@ function drawLeaf(ctx, item, progress) {
   ctx.strokeStyle = '#a6c5b6'; ctx.lineWidth = 0.65; ctx.stroke(); ctx.restore();
 }
 
-export function seedPose(progress) {
-  const opening = ease((progress - 0.04) / 0.13);
-  const fall = ease((progress - 0.10) / 0.11);
+export function seedPose(progress, side = -1) {
+  const lag = side < 0 ? 0 : 0.012;
+  const opening = ease((progress - 0.04 - lag) / 0.13);
+  const fall = ease((progress - 0.10 - lag) / 0.11);
   return {
-    angle: opening * Math.PI * 0.95,
-    spread: opening * 12 + fall * 22,
-    y: 780 + fall * 38,
-    opacity: 1 - ease((progress - 0.17) / 0.06),
+    angle: opening * Math.PI * (side < 0 ? 0.95 : 0.83),
+    spread: opening * 12 + fall * (side < 0 ? 20 : 32),
+    y: 780 + fall * (side < 0 ? 26 : 44),
+    scale: 1 - fall * (side < 0 ? 0.22 : 0.30),
+    opacity: 1 - ease((progress - 0.17 - lag) / 0.06),
   };
 }
 
@@ -266,15 +280,19 @@ export function createTreeRenderer(canvas) {
   return progress => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
-    const seed = seedPose(progress);
-    if (progress > 0 && seed.opacity > 0) {
+    if (progress > 0) {
       for (const side of [-1, 1]) {
+        const seed = seedPose(progress, side);
+        if (seed.opacity <= 0) continue;
         ctx.save(); ctx.translate(400 + side * seed.spread, seed.y);
-        ctx.rotate(side * seed.angle); ctx.globalAlpha = seed.opacity;
+        ctx.rotate(side * seed.angle); ctx.scale(seed.scale, seed.scale); ctx.globalAlpha = seed.opacity;
         // Pivot around the bottom edge so the two halves open downward.
         ctx.beginPath(); ctx.moveTo(0, -40);
-        ctx.bezierCurveTo(side * 24, -40, side * 24, 0, 0, 0); ctx.closePath();
-        ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill(); ctx.restore();
+        ctx.bezierCurveTo(side * 20, -32, side * 24, -10, 0, 0); ctx.closePath();
+        ctx.fillStyle = side < 0 ? '#afbd99' : '#7e85ab'; ctx.fill();
+        ctx.beginPath(); ctx.moveTo(side * 2, -35);
+        ctx.bezierCurveTo(side * 12, -28, side * 13, -11, side * 2, -4);
+        ctx.strokeStyle = side < 0 ? '#cad3b9' : '#adb5d0'; ctx.lineWidth = 0.65; ctx.stroke(); ctx.restore();
       }
     }
     const shapes = items.map(item => branchShape(item, clamp((progress - item.start) / item.duration), progress)).filter(Boolean);
