@@ -11,7 +11,7 @@ function branch(curve, width, start, duration, color, leaf = false, parent = nul
   branches.push(item);
   return item;
 }
-const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 32, 0.09, 0.35, '#77a69e');
+const trunk = branch([[400, 760], [337, 641], [459, 565], [400, 432]], 32, 0.04, 0.40, '#77a69e');
 export const disciplines = [
   { name: 'Ciencia', color: '#91dfce', start: 0.66, side: 'left', top: '1%' },
   { name: 'Tecnología', color: '#a4afff', start: 0.67, side: 'right', top: '1%' },
@@ -128,6 +128,9 @@ function branchShape(item, growth, progress) {
   const germinating = item.isRoot || item.curve === trunk.curve;
   const maturity = germinating ? ease((progress - 0.14) / 0.14) : 1;
   const widthScale = germinating ? 0.30 + maturity * 0.70 : 1;
+  // Keep the entire young shoot visible before it thickens into the trunk.
+  const youngWidth = (item.isRoot ? 1.8 : 3.6) * ease(growth * item.length / 8);
+  const youngDiameter = t => youngWidth * (1 - 0.85 * t / growth);
   const restingTip = item.width > 10 ? 0 : 0.06;
   const tipFloor = restingTip + (1 - restingTip) * (1 - maturity) * (item.isRoot ? 0.12 : 0.24);
   const tipLength = item.width > 10 ? Math.min(0.35, item.width * 3 / item.length) : 1 / 16;
@@ -153,7 +156,8 @@ function branchShape(item, growth, progress) {
     const neck = item.curve === trunk.curve
       ? 1 - 0.6 * (1 - ease((progress - 0.18) / 0.10)) * (1 - ease(t / 0.10))
       : 1;
-    const diameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper * widthScale * neck;
+    const matureDiameter = (item.width * (1 - t) + item.endWidth * t) * Math.min(1, growth * 4) * taper * widthScale * neck;
+    const diameter = youngDiameter(t) * (1 - maturity) + matureDiameter * maturity;
     // Grow the fork into the existing tip without narrowing the completed stem.
     const width = (diameter + crownWidth * (1 - tip)) / 2;
     sides[0].push([p[0] - (b[1] - a[1]) / length * width, p[1] + (b[0] - a[0]) / length * width]);
@@ -168,7 +172,7 @@ function branchShape(item, growth, progress) {
   [...sides[0], ...[...sides[1]].reverse()].forEach((p, i) => i ? shape.lineTo(...p) : shape.moveTo(...p));
   shape.closePath();
   const caps = new Path2D();
-  const radius = item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) * widthScale / 2;
+  const radius = (youngDiameter(0) * (1 - maturity) + item.width * Math.min(1, growth * 4) * Math.min(1, growth * 16 + 0.06) * widthScale * maturity) / 2;
   if (item.curve !== trunk.curve && !(item.parent === trunk && item.at === 1)) {
     const joint = new Path2D();
     joint.arc(...points[0], radius, 0, Math.PI * 2, true);
@@ -178,7 +182,7 @@ function branchShape(item, growth, progress) {
     const tipPoint = points.at(-1);
     const tipT = count < 64 ? growth : 1;
     const joined = item.continues ? ease((progress - item.start - item.duration) / 0.07) : 0;
-    const tipRadius = (item.width * (1 - tipT) + item.endWidth * tipT) * Math.min(1, growth * 4) * tipFloor * (count < 64 ? 1 : 1 - joined) * widthScale / 2;
+    const tipRadius = (youngDiameter(tipT) * (1 - maturity) + (item.width * (1 - tipT) + item.endWidth * tipT) * Math.min(1, growth * 4) * tipFloor * (count < 64 ? 1 : 1 - joined) * widthScale * maturity) / 2;
     if (tipRadius > 0.2) {
       const tipCap = new Path2D();
       tipCap.arc(...tipPoint, tipRadius, 0, Math.PI * 2, true);
@@ -243,7 +247,7 @@ function drawLeaf(ctx, item, progress) {
 }
 
 export function seedOpacity(progress) {
-  return 1 - ease((progress - 0.095) / 0.055);
+  return 1 - ease((progress - 0.065) / 0.025);
 }
 
 export function createTreeRenderer(canvas) {
@@ -273,9 +277,9 @@ export function createTreeRenderer(canvas) {
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
     const opacity = seedOpacity(progress);
     if (progress > 0 && opacity > 0) {
-      const opening = ease((progress - 0.04) / 0.055) * Math.PI * 0.36;
+      const opening = ease((progress - 0.035) / 0.03) * Math.PI * 0.36;
       for (const side of [-1, 1]) {
-        ctx.save(); ctx.translate(400, 780); ctx.globalAlpha = opacity;
+        ctx.save(); ctx.translate(...trunk.curve[0]); ctx.globalAlpha = opacity;
         ctx.rotate(side * opening);
         ctx.beginPath(); ctx.moveTo(0, -40);
         ctx.bezierCurveTo(side * 20, -32, side * 24, -10, 0, 0); ctx.closePath();

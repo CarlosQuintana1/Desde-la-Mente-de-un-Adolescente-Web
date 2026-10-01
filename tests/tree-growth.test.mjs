@@ -7,12 +7,12 @@ const rootChildren = branches.filter(item => item.parent?.isRoot);
 
 test('seed stays visible while opening, then fades and returns when scrolling back', () => {
   assert.equal(seedOpacity(0.04), 1);
-  assert.equal(seedOpacity(0.095), 1);
-  const middle = seedOpacity(0.1225);
+  assert.equal(seedOpacity(0.065), 1);
+  const middle = seedOpacity(0.0775);
   assert.ok(middle > 0 && middle < 1);
-  assert.equal(seedOpacity(0.16), 0);
+  assert.equal(seedOpacity(0.10), 0);
   assert.equal(seedOpacity(1), 0);
-  assert.equal(seedOpacity(0.1225), middle);
+  assert.equal(seedOpacity(0.0775), middle);
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {
