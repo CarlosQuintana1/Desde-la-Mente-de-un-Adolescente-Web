@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { attachmentAt, branches, clamp, growthPoint, point, seedOpacity } from '../src/components/treeGrowth.js';
+import { branches, clamp, growthPoint, point, seedOpacity } from '../src/components/treeGrowth.js';
 
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
@@ -28,21 +28,26 @@ test('root branches stay attached while the roots settle into the trunk', () => 
   for (const child of rootChildren) {
     for (const progress of [child.start + 0.001, 0.20, 0.24, 0.28, 0.30]) {
       const a = growthPoint(child, 0, progress);
-      const b = growthPoint(child.parent, attachmentAt(child, progress), progress);
+      const b = growthPoint(child.parent, child.at, progress);
       assert.ok(Math.hypot(a[0] - b[0], a[1] - b[1]) < 0.001);
     }
-    assert.ok(child.start >= child.parent.start + child.parent.duration * (child.seedlingAt ?? child.at) - 1e-9);
+    assert.ok(child.start >= child.parent.start + child.parent.duration * child.at - 1e-9);
   }
 });
 
-test('young primary root curves away from the center and branches behind its growing tip', () => {
+test('primary root remains a continuous taper and fine roots wait for established lateral roots', () => {
   const root = roots.find(item => item.primaryRoot);
   assert.ok(growthPoint(root, 0.25, 0.14)[0] < 390);
-  const child = rootChildren.find(item => item.seedlingAt != null);
-  assert.ok(child.start < 0.14);
-  for (let progress = child.start; progress <= 0.30; progress += 0.001) {
-    const parentGrowth = clamp((progress - root.start) / root.duration);
-    assert.ok(attachmentAt(child, progress) <= parentGrowth + 1e-9);
+  assert.ok(rootChildren.every(child => child.parent !== root));
+  for (const child of rootChildren) {
+    assert.ok(child.start >= 0.34);
+    const parentGrowth = clamp((child.start - child.parent.start) / child.parent.duration);
+    assert.ok(parentGrowth >= child.at + 0.1);
+    const a = point(child.parent.curve, child.at - 0.02), b = point(child.parent.curve, child.at);
+    const c = child.curve[1];
+    const parentDirection = [b[0] - a[0], b[1] - a[1]], childDirection = [c[0] - b[0], c[1] - b[1]];
+    const alignment = (parentDirection[0] * childDirection[0] + parentDirection[1] * childDirection[1]) / (Math.hypot(...parentDirection) * Math.hypot(...childDirection));
+    assert.ok(alignment > 0.999);
   }
 });
 

@@ -65,11 +65,17 @@ for (let i = 0; i < 7; i++) {
   const root = branch([[origin[0] + offset, origin[1] - offset * 0.4], [390 + (i - 3) * 23, 817], [x + (400 - x) * 0.28, 836], [x, 910 + (i % 3) * 20]], 12 - distance, start, duration, '#819db2');
   root.isRoot = true;
   root.primaryRoot = distance === 0;
+  if (root.primaryRoot) continue;
   for (let j = 0; j < 2; j++) {
     const at = 0.58 + j * 0.2, p = point(root.curve, at);
-    const seedlingAt = root.primaryRoot && j === 0 ? 0.24 : at;
-    const child = branch([p, [p[0] + 14, p[1] + 22], [p[0] + (j ? 38 : -32), p[1] + 20], [p[0] + (j ? 45 : -38), p[1] + 55]], 3, root.start + seedlingAt * root.duration, 0.16, '#96b7af', false, root, at);
-    if (seedlingAt !== at) child.seedlingAt = seedlingAt;
+    const previous = point(root.curve, at - 0.02);
+    const direction = [p[0] - previous[0], p[1] - previous[1]];
+    const length = Math.hypot(...direction);
+    const control = [p[0] + direction[0] / length * 12, p[1] + direction[1] / length * 12];
+    const side = j ? 1 : -1;
+    // Fine roots emerge from established roots, following the parent's direction.
+    const childStart = Math.max(0.34 / 0.88, root.start + (at + 0.12) * root.duration);
+    branch([p, control, [p[0] + side * 24, p[1] + 26], [p[0] + side * 34, p[1] + 44]], 2.4, childStart, 0.16, '#96b7af', false, root, at);
   }
 }
 branches.forEach(item => {
@@ -88,10 +94,6 @@ branches.forEach(item => {
 });
 export { branches };
 
-export function attachmentAt(item, progress) {
-  return item.seedlingAt == null ? item.at : item.seedlingAt + (item.at - item.seedlingAt) * ease((progress - 0.16) / 0.14);
-}
-
 export function growthPoint(item, t, progress) {
   const p = point(item.curve, t);
   const settled = ease((progress - 0.11) / 0.07);
@@ -107,7 +109,7 @@ export function growthPoint(item, t, progress) {
     }
   }
   if (item.parent?.isRoot && progress < 0.30) {
-    const origin = growthPoint(item.parent, attachmentAt(item, progress), progress);
+    const origin = growthPoint(item.parent, item.at, progress);
     const resting = point(item.parent.curve, item.at);
     p[0] += origin[0] - resting[0]; p[1] += origin[1] - resting[1];
   }
@@ -277,7 +279,7 @@ export function createTreeRenderer(canvas) {
     ctx.save(); ctx.scale(canvas.width / 800, canvas.height / 1000);
     const opacity = seedOpacity(progress);
     if (progress > 0 && opacity > 0) {
-      const opening = ease((progress - 0.035) / 0.03) * Math.PI * 0.36;
+      const opening = ease((progress - 0.035) / 0.045) * Math.PI * 0.25;
       for (const side of [-1, 1]) {
         ctx.save(); ctx.translate(...trunk.curve[0]); ctx.globalAlpha = opacity;
         ctx.rotate(side * opening);
