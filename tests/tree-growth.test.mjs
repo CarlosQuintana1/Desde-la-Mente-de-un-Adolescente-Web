@@ -1,19 +1,26 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { branches, clamp, growthPoint, point, seedOpacity } from '../src/components/treeGrowth.js';
+import { branchGrowth, branches, clamp, growthPoint, point, seedBlend } from '../src/components/treeGrowth.js';
 
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
 
-test('seed fades gradually while opening and returns when scrolling back', () => {
-  assert.equal(seedOpacity(0.04), 1);
-  const middle = seedOpacity(0.065);
-  assert.ok(middle > 0 && middle < 1);
-  assert.ok(seedOpacity(0.055) > middle);
-  assert.ok(seedOpacity(0.08) < middle);
-  assert.equal(seedOpacity(0.10), 0);
-  assert.equal(seedOpacity(1), 0);
-  assert.equal(seedOpacity(0.065), middle);
+test('seed morph keeps a complete outline and a tip that grows continuously upward', () => {
+  const stem = branches[0];
+  assert.equal(seedBlend(0.02), 1);
+  assert.equal(seedBlend(0.12), 0);
+  let previous = growthPoint(stem, branchGrowth(stem, 0), 0);
+  for (let step = 1; step <= 180; step++) {
+    const progress = step / 1000, growth = branchGrowth(stem, progress);
+    const tip = growthPoint(stem, growth, progress);
+    assert.ok(tip[1] <= previous[1]);
+    assert.ok(previous[1] - tip[1] < 2);
+    assert.deepEqual(growthPoint(stem, 0, progress), [400, 760]);
+    previous = tip;
+  }
+  for (const progress of [0.18, 0.3, 0.65, 1]) {
+    assert.equal(branchGrowth(stem, progress), clamp((progress - stem.start) / stem.duration));
+  }
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {
