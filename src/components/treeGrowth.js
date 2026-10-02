@@ -144,8 +144,8 @@ function branchShape(item, growth, progress) {
   const maturity = germinating ? ease((progress - 0.14) / 0.14) : 1;
   const widthScale = germinating ? 0.30 + maturity * 0.70 : 1;
   // Keep the entire young shoot visible before it thickens into the trunk.
-  const rootWidth = 1.8 + (item.primaryRoot ? 0.6 * (1 - ease((progress - 0.10) / 0.08)) : 0);
-  const youngWidth = (item.isRoot ? rootWidth : 3.6) * ease(growth * item.length / 8);
+  const rootWidth = item.primaryRoot ? 3.6 : 1.8;
+  const youngWidth = (item.isRoot ? rootWidth : 7.2) * ease(growth * item.length / 8);
   const youngDiameter = t => youngWidth * (1 - 0.85 * t / growth);
   const restingTip = item.width > 10 ? 0 : 0.06;
   const tipFloor = restingTip + (1 - restingTip) * (1 - maturity) * (item.isRoot ? 0.12 : 0.24);
