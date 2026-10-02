@@ -5,14 +5,15 @@ import { attachmentAt, branches, clamp, growthPoint, point, seedOpacity } from '
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
 
-test('seed stays visible while opening, then fades and returns when scrolling back', () => {
+test('seed fades gradually while opening and returns when scrolling back', () => {
   assert.equal(seedOpacity(0.04), 1);
-  assert.equal(seedOpacity(0.065), 1);
-  const middle = seedOpacity(0.0775);
+  const middle = seedOpacity(0.065);
   assert.ok(middle > 0 && middle < 1);
+  assert.ok(seedOpacity(0.055) > middle);
+  assert.ok(seedOpacity(0.08) < middle);
   assert.equal(seedOpacity(0.10), 0);
   assert.equal(seedOpacity(1), 0);
-  assert.equal(seedOpacity(0.0775), middle);
+  assert.equal(seedOpacity(0.065), middle);
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {

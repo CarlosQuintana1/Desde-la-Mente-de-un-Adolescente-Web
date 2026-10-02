@@ -247,7 +247,7 @@ function drawLeaf(ctx, item, progress) {
 }
 
 export function seedOpacity(progress) {
-  return 1 - ease((progress - 0.065) / 0.025);
+  return 1 - ease((progress - 0.04) / 0.05);
 }
 
 export function createTreeRenderer(canvas) {
