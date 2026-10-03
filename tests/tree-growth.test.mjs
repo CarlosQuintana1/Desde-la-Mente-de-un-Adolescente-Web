@@ -1,14 +1,35 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { branchGrowth, branches, clamp, growthPoint, point, seedBlend } from '../src/components/treeGrowth.js';
+import { branchGrowth, branches, clamp, growthPoint, point, seedState } from '../src/components/treeGrowth.js';
 
 const roots = branches.filter(item => item.isRoot);
 const rootChildren = branches.filter(item => item.parent?.isRoot);
 
-test('seed morph keeps a complete outline and a tip that grows continuously upward', () => {
+test('the seed opens before fading, with the root emerging before the shoot', () => {
+  const root = roots.find(item => item.primaryRoot), stem = branches[0];
+  assert.equal(seedState(0.025).opening, 0);
+  assert.equal(seedState(0.085).opening, 1);
+  assert.equal(seedState(0.085).opacity, 1);
+  assert.equal(seedState(0.15).opacity, 0);
+  assert.ok(branchGrowth(root, 0.05) > 0);
+  assert.equal(branchGrowth(stem, 0.05), 0);
+  assert.ok(branchGrowth(stem, 0.08) > 0);
+  let previous = seedState(0);
+  let rootGrowth = 0;
+  for (let step = 1; step <= 180; step++) {
+    const progress = step / 1000, state = seedState(progress);
+    assert.ok(state.opening >= previous.opening);
+    assert.ok(state.opacity <= previous.opacity);
+    assert.ok(Math.abs(state.opening - previous.opening) < 0.03);
+    assert.ok(Math.abs(state.opacity - previous.opacity) < 0.03);
+    assert.ok(branchGrowth(root, progress) >= rootGrowth);
+    rootGrowth = branchGrowth(root, progress);
+    previous = state;
+  }
+});
+
+test('the shoot grows continuously upward and rejoins the established tree sequence', () => {
   const stem = branches[0];
-  assert.equal(seedBlend(0.02), 1);
-  assert.equal(seedBlend(0.12), 0);
   let previous = growthPoint(stem, branchGrowth(stem, 0), 0);
   for (let step = 1; step <= 180; step++) {
     const progress = step / 1000, growth = branchGrowth(stem, progress);
@@ -18,14 +39,16 @@ test('seed morph keeps a complete outline and a tip that grows continuously upwa
     assert.deepEqual(growthPoint(stem, 0, progress), [400, 760]);
     previous = tip;
   }
-  for (const progress of [0.18, 0.3, 0.65, 1]) {
-    assert.equal(branchGrowth(stem, progress), clamp((progress - stem.start) / stem.duration));
+  for (const progress of [0.15, 0.18, 0.3, 0.65, 1]) {
+    for (const item of branches) {
+      assert.equal(branchGrowth(item, progress), clamp((progress - item.start) / item.duration));
+    }
   }
 });
 
 test('germination starts with one root at the seed, before the lateral roots', () => {
   for (const progress of [0.08, 0.10, 0.12, 0.14]) {
-    const active = roots.filter(item => progress > item.start);
+    const active = roots.filter(item => branchGrowth(item, progress) > 0);
     assert.equal(active.length, 1);
     assert.deepEqual(growthPoint(active[0], 0, progress), [400, 760]);
   }
